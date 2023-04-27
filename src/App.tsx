@@ -1,18 +1,18 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import SignUpScreen from './screens/SignUpScreen/SignUpScreen'
-import store from './store'
+import React from 'react';
+import { StatusBar } from 'react-native';
+import { Provider } from 'react-redux';
+import Navigator from './Navigator';
+import store from './store';
 
-type Props = {}
+type Props = {};
 
 const App = (props: Props) => {
-
-
   return (
     <Provider store={store}>
-   <SignUpScreen/>
+      <StatusBar barStyle={'dark-content'} showHideTransition={'fade'} backgroundColor={'#fff'} />
+      <Navigator />
     </Provider>
-  )
-}
+  );
+};
 
-export default App
+export default App;
