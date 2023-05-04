@@ -4,6 +4,8 @@ import {
   Auth,
   LoginBody,
   OwnerDashboardResponseData,
+  OwnerPropertListResponseData,
+  OwnerPropertyListParams,
   TenantDashboardResponseData,
 } from '../types';
 
@@ -49,6 +51,18 @@ export const authApi = createApi({
         },
       }),
     }),
+    ownerProperties: builder.mutation<
+      OwnerPropertListResponseData,
+      OwnerPropertyListParams
+    >({
+      query: req => ({
+        url: `owner/property-list?limit=${req.limit}&page=${req.page}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -58,4 +72,5 @@ export const {
   useLoginMutation,
   useOwnerDashboardMutation,
   useTenantDashboardMutation,
+  useOwnerPropertiesMutation,
 } = authApi;
