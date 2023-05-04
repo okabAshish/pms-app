@@ -1,24 +1,34 @@
 import {faBars, faBell, faSearch} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-type Props = {};
-
-const data = [
-  [
-    {icon: faBars, onPress: () => {}},
-    {icon: null, avatar: true, onPress: () => {}},
-    {icon: null, avatar: false, text: 'Dashboard', disabled: true},
-  ],
-  [
-    {icon: faSearch, onPress: () => {}, right: true},
-    {icon: faBell, onPress: () => {}, right: true, notification: true},
-  ],
-];
+interface Props {
+  openDrawer: () => void;
+}
 
 const DashBoardNavBar = (props: Props) => {
+  const navigation = useNavigation();
+
+  const data = [
+    [
+      {
+        icon: faBars,
+        onPress: () => {
+          console.log('Clicked');
+          props.openDrawer();
+        },
+      },
+      {icon: null, avatar: true, onPress: () => {}},
+      {icon: null, avatar: false, text: 'Dashboard', disabled: true},
+    ],
+    [
+      {icon: faSearch, onPress: () => {}, right: true},
+      {icon: faBell, onPress: () => {}, right: true, notification: true},
+    ],
+  ];
   const {user} = useSelector(state => state.auth);
 
   console.log(user?.first_name?.split('')[0] + user?.last_name?.split('')[0]);
@@ -29,14 +39,20 @@ const DashBoardNavBar = (props: Props) => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        backgroundColor: '#fff',
+        paddingHorizontal: 20,
+        paddingTop: 15,
       }}>
       {data.map((item, index) => (
-        <View style={{flexDirection: 'row', alignItems: 'center'}} key={index}>
+        <View
+          style={{flexDirection: 'row', alignItems: 'center'}}
+          key={index + Math.random()}>
           {item?.map((i, h) => (
             <TouchableOpacity
               style={{marginRight: i?.notification ? 0 : 10}}
-              key={h}
-              disabled={i?.disabled}>
+              key={h + i.icon}
+              disabled={i?.disabled}
+              onPress={i.onPress}>
               {i.icon ? (
                 <View
                   style={{

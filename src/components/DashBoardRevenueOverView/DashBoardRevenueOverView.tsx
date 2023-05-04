@@ -1,6 +1,11 @@
 import React from 'react';
 import {Dimensions, Text, View} from 'react-native';
-import {BarChart} from 'react-native-chart-kit';
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryGroup,
+  VictoryTheme,
+} from 'victory-native';
 
 type Props = {};
 
@@ -48,14 +53,73 @@ const DashBoardRevenueOverView = (props: Props) => {
         Amet minim mollit non deserunt ullamco est sit aliqua
       </Text>
       <View>
-        <BarChart
-          data={data}
-          width={screenWidth - 40}
-          height={220}
-          chartConfig={chartConfig}
-          yAxisLabel="$"
-          //   verticalLabelRotation={30}
-        />
+        <VictoryChart theme={VictoryTheme.material} domain={{y: [0.5, 10.5]}}>
+          <VictoryGroup
+            offset={20}
+            style={{data: {width: 10}}}
+            colorScale={['#84FFBE', '#FF9211']}>
+            <VictoryBar
+              cornerRadius={{topLeft: 5, topRight: 5}}
+              data={[
+                {x: 'January', y: 1},
+                {x: 'Febuary', y: 2},
+                {x: 'March', y: 3},
+              ]}
+            />
+            <VictoryBar
+              cornerRadius={{topLeft: 5, topRight: 5}}
+              data={[
+                {x: 'January', y: 2},
+                {x: 'Febuary', y: 3},
+                {x: 'March', y: 4},
+              ]}
+            />
+          </VictoryGroup>
+        </VictoryChart>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginRight: 12,
+            }}>
+            <View
+              style={{
+                backgroundColor: '#FF9211',
+                width: 10,
+                height: 10,
+                borderRadius: 9999,
+                marginRight: 6,
+              }}
+            />
+            <Text style={{fontSize: 12, fontFamily: 'Poppins-Medium'}}>
+              Due
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                backgroundColor: '#84FFBE',
+                width: 10,
+                height: 10,
+                borderRadius: 9999,
+                marginRight: 6,
+              }}
+            />
+            <Text style={{fontSize: 12, fontFamily: 'Poppins-Medium'}}>
+              Paid
+            </Text>
+          </View>
+        </View>
       </View>
     </View>
   );
