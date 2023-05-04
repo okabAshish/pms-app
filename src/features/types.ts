@@ -52,5 +52,7 @@ export interface Auth {
       city_name: any;
     };
     token: string;
+    message?: string;
   };
+  
 }

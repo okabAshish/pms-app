@@ -18,18 +18,21 @@ const Navigator = (props: Props) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(logIn);
   const [loading, setLoading] = useState(false);
+  const [deaf, setdeaf] = useState(false)
 
   const getData = async () => {
     setLoading(true);
+    setdeaf(true)
     try {
+      //AsyncStorage.removeItem('token');
       const token = await AsyncStorage.getItem('token');
-
+      console.log('token',token);
       if (token !== null) {
         // value previously stored
         let _user = await AsyncStorage.getItem('user');
 
-        let user = JSON.parse(_user);
-        dispatch(setUser(user));
+        //let user = JSON.parse(_user);
+        dispatch(setUser(_user));
         dispatch(setToken(token));
         dispatch(setLoggedIn(true));
         setIsLoggedIn(true);
@@ -41,15 +44,15 @@ const Navigator = (props: Props) => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
+ 
+  !isLoggedIn && !deaf &&  getData();
+
 
   if (loading) {
     return <LoadingModal />;
   }
 
-  console.log(isLoggedIn);
+  console.log('is log',isLoggedIn);
 
   return (
     <NavigationContainer>

@@ -38,24 +38,27 @@ const SignUpScreen = (props: Props) => {
 
   const onSignIn = async () => {
     let req = {username: email, password: password, role_id: index};
-
+    console.log(req);
     setLoading(true);
     try {
       await login({body: req})
         .unwrap()
         .then(async res => {
+          console.log(res);
           if (res?.success) {
-            console.log(res);
 
-            if (checked) {
+            //if (checked) {
               await AsyncStorage.setItem('token', res?.data?.token);
-              let user = JSON.stringify(res.data?.user_detail);
+              let user = JSON.stringify(res?.data?.user_detail);
               await AsyncStorage.setItem('user', user);
-            }
-            dispatch(setUser(res?.data?.user_detail));
+              
+            //}
+            dispatch(setUser(user));
             dispatch(setToken(res?.data?.token));
             dispatch(setLoggedIn(true));
             navigation.dispatch(CommonActions.navigate({name: 'Dashboard'}));
+          } else {
+            console.warn('not match');
           }
         });
     } catch (err) {
