@@ -3,37 +3,48 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Text, View} from 'react-native';
 
-type Props = {};
+interface Props {
+  rented: number;
+  total_properties: number;
+  total_invitaion: number;
+}
 
-const report = [
-  {
-    title: 'Property Owners',
-    subTitle: 'Total Properties',
-    value: 8,
-    color_1: '#00ABE4',
-    color_2: 'rgba(0, 171, 228, 0.35)',
-    icon: faHouse,
-  },
-  {
-    title: 'Property',
-    subTitle: 'Total Rented',
-    value: 5,
-    color_1: '#0AB35A',
-    color_2: 'rgba(153, 243, 195, 0.35)',
-    icon: faHouseUser,
-    middle: true,
-  },
-  {
-    title: 'Property Owners',
-    subTitle: 'Total Invitation Sent',
-    value: 15,
-    color_1: '#E4AE00',
-    color_2: 'rgba(255, 229, 145, 0.35)',
-    icon: faLink,
-  },
-];
+const defaultProps: Props = {
+  total_invitaion: 15,
+  total_properties: 8,
+  rented: 5,
+};
 
 const DashboardReport = (props: Props) => {
+  console.log(props);
+
+  const report = [
+    {
+      title: 'Property Owners',
+      subTitle: 'Total Properties',
+      value: props.total_properties,
+      color_1: '#00ABE4',
+      color_2: 'rgba(0, 171, 228, 0.35)',
+      icon: faHouse,
+    },
+    {
+      title: 'Property',
+      subTitle: 'Total Rented',
+      value: props.rented,
+      color_1: '#0AB35A',
+      color_2: 'rgba(153, 243, 195, 0.35)',
+      icon: faHouseUser,
+      middle: true,
+    },
+    {
+      title: 'Property Owners',
+      subTitle: 'Total Invitation Sent',
+      value: props.total_invitaion,
+      color_1: '#E4AE00',
+      color_2: 'rgba(255, 229, 145, 0.35)',
+      icon: faLink,
+    },
+  ];
   return (
     <View
       style={{
@@ -50,7 +61,8 @@ const DashboardReport = (props: Props) => {
             borderColor: '#efefef',
             flex: 1,
             marginHorizontal: item?.middle ? 5 : 0,
-          }}>
+          }}
+          key={index + item.title}>
           <View
             style={{
               padding: 8,
@@ -119,5 +131,7 @@ const DashboardReport = (props: Props) => {
     </View>
   );
 };
+
+DashboardReport.defaultProps = defaultProps;
 
 export default DashboardReport;

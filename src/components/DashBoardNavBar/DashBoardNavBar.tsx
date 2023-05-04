@@ -1,24 +1,32 @@
 import {faBars, faBell, faSearch} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 type Props = {};
 
-const data = [
-  [
-    {icon: faBars, onPress: () => {}},
-    {icon: null, avatar: true, onPress: () => {}},
-    {icon: null, avatar: false, text: 'Dashboard', disabled: true},
-  ],
-  [
-    {icon: faSearch, onPress: () => {}, right: true},
-    {icon: faBell, onPress: () => {}, right: true, notification: true},
-  ],
-];
-
 const DashBoardNavBar = (props: Props) => {
+  const navigation = useNavigation();
+
+  const data = [
+    [
+      {
+        icon: faBars,
+        onPress: () => {
+          console.log('Clicked');
+          navigation.dispatch(DrawerActions.openDrawer());
+        },
+      },
+      {icon: null, avatar: true, onPress: () => {}},
+      {icon: null, avatar: false, text: 'Dashboard', disabled: true},
+    ],
+    [
+      {icon: faSearch, onPress: () => {}, right: true},
+      {icon: faBell, onPress: () => {}, right: true, notification: true},
+    ],
+  ];
   const {user} = useSelector(state => state.auth);
 
   console.log(user?.first_name?.split('')[0] + user?.last_name?.split('')[0]);
@@ -36,7 +44,8 @@ const DashBoardNavBar = (props: Props) => {
             <TouchableOpacity
               style={{marginRight: i?.notification ? 0 : 10}}
               key={h}
-              disabled={i?.disabled}>
+              disabled={i?.disabled}
+              onPress={i.onPress}>
               {i.icon ? (
                 <View
                   style={{

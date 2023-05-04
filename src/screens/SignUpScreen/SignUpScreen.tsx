@@ -49,6 +49,7 @@ const SignUpScreen = (props: Props) => {
 
             if (checked) {
               await AsyncStorage.setItem('token', res?.data?.token);
+              await AsyncStorage.setItem('role_id', String.apply(index));
               let user = JSON.stringify(res.data?.user_detail);
               await AsyncStorage.setItem('user', user);
             }

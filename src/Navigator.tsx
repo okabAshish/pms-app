@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
@@ -11,6 +12,7 @@ import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 type Props = {};
 
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const Navigator = (props: Props) => {
   const dispatch = useDispatch();
@@ -51,16 +53,26 @@ const Navigator = (props: Props) => {
 
   console.log(isLoggedIn);
 
+  const DrawerNavStack = () => {
+    return (
+      <Drawer.Navigator
+        initialRouteName="SignUp"
+        screenOptions={{headerShown: false}}>
+        <Drawer.Screen name="Dashboard" component={DashboardScreen} />
+      </Drawer.Navigator>
+    );
+  };
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen
           name="SignUp"
-          component={isLoggedIn ? DashboardScreen : SignUpScreen}
+          component={isLoggedIn ? DrawerNavStack : SignUpScreen}
         />
-        <Stack.Screen
+        <Drawer.Screen
           name="Dashboard"
-          component={isLoggedIn ? DashboardScreen : SignUpScreen}
+          component={isLoggedIn ? DrawerNavStack : SignUpScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
