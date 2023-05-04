@@ -13,6 +13,7 @@ import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import SliderComponent from './screens/SliderComponent/SliderComponent';
+import InvitationScreen from './screens/InvitationScreen/InvitationScreen';
 
 type Props = {};
 
@@ -85,6 +86,7 @@ const Navigator = (props: Props) => {
               component={isLoggedIn ? DashboardScreen : SignUpScreen}
             />
             <Stack.Screen name="Property" component={PropertyScreen} />
+            <Stack.Screen name="Invitation" component={InvitationScreen} />
           </Stack.Navigator>
         </>
       </Drawer>
