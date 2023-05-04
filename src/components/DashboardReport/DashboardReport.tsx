@@ -62,7 +62,7 @@ const DashboardReport = (props: Props) => {
             flex: 1,
             marginHorizontal: item?.middle ? 5 : 0,
           }}
-          key={index + item.title}>
+          key={item.title + item?.color_1}>
           <View
             style={{
               padding: 8,

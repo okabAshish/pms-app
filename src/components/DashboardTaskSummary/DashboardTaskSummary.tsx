@@ -67,7 +67,7 @@ const DashboardTaskSummary = (props: Props) => {
               minHeight: 100,
               marginHorizontal: 5,
             }}
-            key={index + item?.summaryName}>
+            key={item?.summaryName + item?.color_1}>
             <View
               style={{
                 paddingVertical: 10,

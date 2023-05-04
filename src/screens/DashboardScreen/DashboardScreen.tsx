@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, ScrollView, View} from 'react-native';
-import DashBoardNavBar from '../../components/DashBoardNavBar/DashBoardNavBar';
 import DashBoardRevenueOverView from '../../components/DashBoardRevenueOverView/DashBoardRevenueOverView';
 import DashboardAmountReport from '../../components/DashboardAmountReport/DashboardAmountReport';
 import DashboardReacentTransaction from '../../components/DashboardReacentTransaction/DashboardReacentTransaction';
@@ -78,7 +77,6 @@ const DashboardScreen = (props: Props) => {
           paddingHorizontal: 20,
           paddingTop: 20,
         }}>
-        <DashBoardNavBar />
         <DashboardReport
           key={'Report'}
           total_properties={ownerDashboardData?.total_properties}

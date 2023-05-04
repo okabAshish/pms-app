@@ -61,7 +61,7 @@ const DashboardRecentActivities = (props: Props) => {
           {demoData.map((item, index) => (
             <View
               style={{flexDirection: 'row', alignItems: 'center'}}
-              key={index + item?.message}>
+              key={item?.message + item?.created_at}>
               <View
                 style={{
                   backgroundColor: '#45485F',

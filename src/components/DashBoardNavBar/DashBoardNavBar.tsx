@@ -1,11 +1,13 @@
 import {faBars, faBell, faSearch} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {DrawerActions, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-type Props = {};
+interface Props {
+  openDrawer: () => void;
+}
 
 const DashBoardNavBar = (props: Props) => {
   const navigation = useNavigation();
@@ -16,7 +18,7 @@ const DashBoardNavBar = (props: Props) => {
         icon: faBars,
         onPress: () => {
           console.log('Clicked');
-          navigation.dispatch(DrawerActions.openDrawer());
+          props.openDrawer();
         },
       },
       {icon: null, avatar: true, onPress: () => {}},
@@ -37,13 +39,18 @@ const DashBoardNavBar = (props: Props) => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        backgroundColor: '#fff',
+        paddingHorizontal: 20,
+        paddingTop: 15,
       }}>
       {data.map((item, index) => (
-        <View style={{flexDirection: 'row', alignItems: 'center'}} key={index}>
+        <View
+          style={{flexDirection: 'row', alignItems: 'center'}}
+          key={index + Math.random()}>
           {item?.map((i, h) => (
             <TouchableOpacity
               style={{marginRight: i?.notification ? 0 : 10}}
-              key={h}
+              key={h + i.icon}
               disabled={i?.disabled}
               onPress={i.onPress}>
               {i.icon ? (

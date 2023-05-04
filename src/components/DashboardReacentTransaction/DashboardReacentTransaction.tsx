@@ -113,7 +113,7 @@ const DashboardReacentTransaction = (props: Props) => {
                 paddingTop: 15,
                 paddingBottom: 10,
               }}
-              key={index + item?.property_name + item?.first_name}>
+              key={index + item?.first_name}>
               <View>
                 <Image
                   source={{

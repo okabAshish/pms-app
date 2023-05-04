@@ -50,7 +50,7 @@ const DashboardAmountReport = (props: Props) => {
             padding: 12,
             borderRadius: 9,
           }}
-          key={index + item?.id}>
+          key={index + item?.id + item?.value}>
           <View style={{marginBottom: 6}}>
             {item?.left && (
               <Image source={require('../../assets/images/chart-growth.png')} />
