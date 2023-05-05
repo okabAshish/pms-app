@@ -72,6 +72,15 @@ const SliderComponent = (props: Props) => {
       },
     },
     {
+      name: 'Invitation',
+      slug: 'Invitation',
+      icon: require('../../assets/images/icons/user.svg'),
+      onPress: () => {
+        setActive('Invitation');
+        navigation.dispatch(CommonActions.navigate({name: 'Invitation'}));
+      },
+    },
+    {
       name: 'Contract',
       type: 'Menu',
       slug: 'Contract',

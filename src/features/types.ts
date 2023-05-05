@@ -52,6 +52,7 @@ export interface Auth {
       city_name: any;
     };
     token: string;
+    message?: string;
   };
 }
 
@@ -663,6 +664,36 @@ export interface OwnerTenantListDataWithList {
   };
 }
 
+// Owner Invitation List
+
+export interface OwnerInvitationListParams {
+  limit: number;
+  page: number;
+}
+export interface OwnerInvitationListResponseData {
+  success: boolean;
+  data: OwnerInvitationListLimitData;
+  message: string;
+}
+export interface OwnerInvitationListLimitData {
+  data: OwnerInvitationListData;
+  meta: {
+    from: number;
+    to: number;
+    total: number;
+    count: number;
+    per_page: string;
+    current_page: number;
+    last_page: number;
+  };
+  links: {
+    first_page_url?: string;
+    last_page_url?: string;
+    next_page_url?: string;
+    prev_page_url?: string;
+  };
+}
+
 export interface OwnerTenantListData extends Array<OwnerTenantData> {}
 
 interface OwnerTenantReferenceData {
@@ -788,3 +819,122 @@ export interface OwnerTenantData {
   company_city_name?: any;
   company_state_name?: any;
 }
+export interface OwnerInvitationData {
+  id: number;
+  created_by_user_id?: number;
+  created_by_user_name?: string;
+  inserted_user_id?: number;
+  email?: string;
+  country_code?: string;
+  country_flag?: string;
+  phone?: string;
+  url_key?: string;
+  is_tenant_inserted?: number;
+  already_invited?: number;
+  already_registered?: number;
+  property_id?: number;
+  is_approved_by_tenant?: number;
+  otp?: string;
+  created_at?: string;
+  updated_at?: string;
+  invited_property_data: {
+    id: number;
+    owner_id: number;
+    usage_id?: number;
+    property_type_id?: number;
+    unit_id?: number;
+    city_id?: number;
+    state_id?: number;
+    zip?: string;
+    country_id?: number;
+    street?: any;
+    building_no?: any;
+    building_name?: string;
+    floor_no?: string;
+    area?: any;
+    rented?: number;
+    status?: any;
+    monthly_rent_amt?: any;
+    security_deposit?: any;
+    furnishing_type_id?: number;
+    parking_type?: number;
+    nof_parking?: number;
+    pet_allowed?: number;
+    nof_baths?: number;
+    nof_balconies?: number;
+    nof_bedrooms?: number;
+    availability_date?: string;
+    total_no_floor?: string;
+    age_of_property?: string;
+    contact_phone_no?: string;
+    property_descr?: string;
+    property_name?: string;
+    available_for?: any;
+    notice_period?: any;
+    facing_id?: any;
+    wheel_chair_access?: number;
+    lease_duration?: any;
+    property_latitude?: any;
+    property_longitude?: any;
+    hoa?: number;
+    hoa_fee?: string;
+    hoa_fee_type?: string;
+    balcony_terrace?: number;
+    address_1?: string;
+    address_2?: string;
+    parking_available?: number;
+    property_size_type?: number;
+    created_at?: string;
+    updated_at?: string;
+  };
+  invited_tenant_data: {
+    id: number;
+    user_id: number;
+    title_id?: number;
+    first_name?: string;
+    middle_name?: string;
+    last_name?: string;
+    email?: any;
+    phone?: string;
+    address1?: string;
+    address2?: string;
+    city_id?: number;
+    state_id?: number;
+    zip?: string;
+    account_type?: number;
+    nationality?: number;
+    national_id?: any;
+    passport_number?: any;
+    passport_expiry?: any;
+    visa_number?: any;
+    visa_expiry?: any;
+    profile_photo?: any;
+    company_type_id?: any;
+    company_name?: any;
+    contact_person?: any;
+    contact_person_position_in_company?: any;
+    contact_number?: any;
+    contact_number_region_code?: any;
+    company_website?: any;
+    company_tin_ein_number?: any;
+    property_id?: any;
+    occupation?: any;
+    region_code?: string;
+    annual_income?: string;
+    is_employed?: number;
+    tenant_company_name?: string;
+    tenant_company_ph_number?: string;
+    tenant_company_address_one?: string;
+    tenant_company_address_two?: any;
+    tenant_company_state_id?: string;
+    tenant_company_city_id?: string;
+    tenant_job_title?: any;
+    tenant_source_of_income?: any;
+    is_previously_rented?: number;
+    reason_of_leaving_previous_property?: any;
+    created_at?: string;
+    updated_at?: string;
+  };
+}
+
+export interface OwnerInvitationListData extends Array<OwnerInvitationData> {}

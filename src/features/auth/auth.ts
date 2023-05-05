@@ -5,6 +5,8 @@ import {
   ListParams,
   LoginBody,
   OwnerDashboardResponseData,
+  OwnerInvitationListParams,
+  OwnerInvitationListResponseData,
   OwnerPropertListResponseData,
   OwnerTenantListResponseData,
   TenantDashboardResponseData,
@@ -25,6 +27,16 @@ export const authApi = createApi({
   }),
   endpoints: builder => ({
     login: builder.mutation<Auth, LoginBody>({
+      query: req => ({
+        url: 'login',
+        body: req.body,
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    register: builder.mutation<Auth, LoginBody>({
       query: req => ({
         url: 'login',
         body: req.body,
@@ -75,6 +87,18 @@ export const authApi = createApi({
         },
       }),
     }),
+    ownerInvitation: builder.mutation<
+      OwnerInvitationListResponseData,
+      OwnerInvitationListParams
+    >({
+      query: req => ({
+        url: `owner/invitation-list?limit=${req.limit}&page=${req.page}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -86,4 +110,5 @@ export const {
   useTenantDashboardMutation,
   useOwnerPropertiesMutation,
   useOwnerAllTenantListMutation,
+  useOwnerInvitationMutation,
 } = authApi;
