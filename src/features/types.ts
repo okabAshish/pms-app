@@ -406,7 +406,7 @@ export interface OwnerDashboardResponseData {
 
 // Owner Property List
 
-export interface OwnerPropertyListParams {
+export interface ListParams {
   limit: number;
   page: number;
 }
@@ -545,6 +545,8 @@ interface OwnerPropertyImage {
   ];
 }
 
+interface OwnerPropertyImages extends Array<OwnerPropertyImage> {}
+
 export interface OwnerPropertyData {
   id: number;
   owner_id: number;
@@ -629,7 +631,160 @@ export interface OwnerPropertyData {
   };
   property_available_for?: any;
   property_in_running_contract: OwnerPropertRunningContracts;
-  property_images: OwnerPropertyImage;
+  property_images: OwnerPropertyImages;
 }
 
 export interface OwnerPropertyListData extends Array<OwnerPropertyData> {}
+
+// Owner Tenant List
+
+export interface OwnerTenantListResponseData {
+  success: boolean;
+  data: OwnerTenantListDataWithList;
+  message: string;
+}
+
+export interface OwnerTenantListDataWithList {
+  data: OwnerTenantListData;
+  meta: {
+    from: number;
+    to: number;
+    total: number;
+    count: number;
+    per_page: string;
+    current_page: number;
+    last_page: number;
+  };
+  links: {
+    first_page_url?: string;
+    last_page_url?: string;
+    next_page_url?: string;
+    prev_page_url?: string;
+  };
+}
+
+export interface OwnerTenantListData extends Array<OwnerTenantData> {}
+
+interface OwnerTenantReferenceData {
+  id: number;
+  tenant_id: number;
+  previous_property_owner_name?: string;
+  previous_property_owner_phone_no?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface OwnerTenantReferences extends Array<OwnerTenantReferenceData> {}
+
+export interface OwnerTenantData {
+  id: number;
+  user_id: number;
+  title_id: number;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  email?: string;
+  phone?: string;
+  address1?: string;
+  address2?: string;
+  city_id?: number;
+  state_id?: number;
+  zip?: string;
+  account_type?: number;
+  nationality?: number;
+  national_id?: any;
+  passport_number?: any;
+  passport_expiry?: any;
+  visa_number?: any;
+  visa_expiry?: any;
+  profile_photo?: any;
+  company_type_id?: any;
+  company_name?: any;
+  contact_person?: any;
+  contact_person_position_in_company?: any;
+  contact_number?: any;
+  contact_number_region_code?: string;
+  company_website?: any;
+  company_tin_ein_number?: any;
+  property_id?: any;
+  occupation?: any;
+  region_code?: string;
+  annual_income?: string;
+  is_employed?: number;
+  tenant_company_name?: any;
+  tenant_company_ph_number?: any;
+  tenant_company_address_one?: any;
+  tenant_company_address_two?: any;
+  tenant_company_state_id?: any;
+  tenant_company_city_id?: any;
+  tenant_job_title?: any;
+  tenant_source_of_income?: string;
+  is_previously_rented?: number;
+  reason_of_leaving_previous_property?: any;
+  created_at: string;
+  updated_at: string;
+  user_data: {
+    id: number;
+    name?: any;
+    email?: string;
+    role_id: number;
+  };
+  title_name: {
+    id: number;
+    name: string;
+    description: string;
+    status: number;
+    created_at?: any;
+    updated_at?: any;
+  };
+  company_type?: any;
+  country_name: {
+    id: number;
+    name: string;
+    iso3: string;
+    code: string;
+    numeric_code: string;
+    phonecode: string;
+    capital: string;
+    currency: string;
+    currency_name: string;
+    currency_symbol: string;
+    tld: string;
+    native: string;
+    region: string;
+    subregion: string;
+    timezones: string;
+    latitude: string;
+    longitude: string;
+    emoji: string;
+    emojiU: string;
+  };
+  state_name: {
+    id: number;
+    name: string;
+    country_id: number;
+    country_code: string;
+    country_name: string;
+    state_code: string;
+    type: string;
+    latitude: string;
+    longitude: string;
+  };
+  city_name: {
+    id: number;
+    name: string;
+    state_id: number;
+    state_code: string;
+    state_name: string;
+    country_id: number;
+    country_code: string;
+    country_name: string;
+    latitude: string;
+    longitude: string;
+    wikiDataId: string;
+  };
+  tenant_occupant_data: Array<[]>;
+  tenant_reference_data: OwnerTenantReferences;
+  company_city_name?: any;
+  company_state_name?: any;
+}

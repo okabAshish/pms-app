@@ -37,6 +37,7 @@ const SliderComponent = (props: Props) => {
       icon: require('../../assets/images/icons/user.svg'),
       onPress: () => {
         setActive('Tenant');
+        navigation.dispatch(CommonActions.navigate({name: 'Tenant'}));
       },
     },
     {
@@ -45,6 +46,7 @@ const SliderComponent = (props: Props) => {
       icon: require('../../assets/images/icons/documenttext.svg'),
       onPress: () => {
         setActive('Contract');
+        navigation.dispatch(CommonActions.navigate({name: 'Contracts'}));
       },
     },
     {

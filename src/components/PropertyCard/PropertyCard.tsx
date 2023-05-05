@@ -1,6 +1,6 @@
 import {faEdit, faEye} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 
 interface Props {
@@ -19,7 +19,7 @@ const defaultProps: Props = {
 };
 
 const PropertyCard = (props: Props) => {
-  //   console.log(props.building_name);
+  const [imgeUrl, setimgeUrl] = useState(props?.imageUrl);
   return (
     <TouchableOpacity
       style={{
@@ -34,7 +34,9 @@ const PropertyCard = (props: Props) => {
           <View style={{marginRight: 10}}>
             <Image
               source={{
-                uri: props?.imageUrl,
+                uri: imgeUrl
+                  ? imgeUrl
+                  : 'https://images.unsplash.com/photo-1554435493-93422e8220c8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=872&q=80',
               }}
               style={{
                 width: 130,
@@ -42,6 +44,11 @@ const PropertyCard = (props: Props) => {
                 borderRadius: 9,
                 resizeMode: 'cover',
               }}
+              onError={() =>
+                setimgeUrl(
+                  'https://images.unsplash.com/photo-1554435493-93422e8220c8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=872&q=80',
+                )
+              }
             />
           </View>
           <View style={{flex: 1}}>

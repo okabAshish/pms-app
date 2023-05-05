@@ -91,7 +91,7 @@ const PropertyScreen = (props: Props) => {
               building_name={item?.property_name}
               key={index + item?.id}
               rented={item?.rented === 1 ? true : false}
-              imageUrl={item?.property_images?.photo_url}
+              imageUrl={item?.property_images[0]?.photo_url}
             />
           )}
         />

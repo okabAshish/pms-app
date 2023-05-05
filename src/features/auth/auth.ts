@@ -2,10 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {
   Auth,
+  ListParams,
   LoginBody,
   OwnerDashboardResponseData,
   OwnerPropertListResponseData,
-  OwnerPropertyListParams,
+  OwnerTenantListResponseData,
   TenantDashboardResponseData,
 } from '../types';
 
@@ -51,12 +52,23 @@ export const authApi = createApi({
         },
       }),
     }),
-    ownerProperties: builder.mutation<
-      OwnerPropertListResponseData,
-      OwnerPropertyListParams
+    ownerProperties: builder.mutation<OwnerPropertListResponseData, ListParams>(
+      {
+        query: req => ({
+          url: `owner/property-list?limit=${req.limit}&page=${req.page}`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        }),
+      },
+    ),
+    ownerAllTenantList: builder.mutation<
+      OwnerTenantListResponseData,
+      ListParams
     >({
       query: req => ({
-        url: `owner/property-list?limit=${req.limit}&page=${req.page}`,
+        url: `owner/tenant-list?limit=${req.limit}&page=${req.page}`,
         method: 'GET',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -73,4 +85,5 @@ export const {
   useOwnerDashboardMutation,
   useTenantDashboardMutation,
   useOwnerPropertiesMutation,
+  useOwnerAllTenantListMutation,
 } = authApi;

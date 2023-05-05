@@ -10,6 +10,8 @@ import DashBoardNavBar from './components/DashBoardNavBar/DashBoardNavBar';
 import LoadingModal from './components/LoadingModal/LoadingModal';
 import {setLoggedIn, setToken, setUser} from './features/auth/authProfile';
 import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
+import OwnerContractsScreen from './screens/OwnerContractsScreen/OwnerContractsScreen';
+import OwnerTenantScreen from './screens/OwnerTenantScreen/OwnerTenantScreen';
 import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import SliderComponent from './screens/SliderComponent/SliderComponent';
@@ -25,6 +27,8 @@ const drawerStyles = {
 
 const Navigator = (props: Props) => {
   const dispatch = useDispatch();
+  const routeNameRef = React.createRef();
+  const navigationRef = React.useRef();
 
   const drawer = useRef<Drawer>(null);
   const {isLoggedIn: logIn} = useSelector(state => state.auth);
@@ -62,7 +66,7 @@ const Navigator = (props: Props) => {
     return <LoadingModal />;
   }
 
-  console.log(isLoggedIn);
+  // console.log(isLoggedIn, routeNameRef, navigationRef);
 
   return (
     <NavigationContainer>
@@ -82,6 +86,8 @@ const Navigator = (props: Props) => {
               component={isLoggedIn ? DashboardScreen : SignUpScreen}
             />
             <Stack.Screen name="Property" component={PropertyScreen} />
+            <Stack.Screen name="Tenant" component={OwnerTenantScreen} />
+            <Stack.Screen name="Contracts" component={OwnerContractsScreen} />
           </Stack.Navigator>
         </>
       </Drawer>

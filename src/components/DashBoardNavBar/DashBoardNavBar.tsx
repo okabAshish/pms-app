@@ -1,7 +1,7 @@
 import {faBars, faBell, faSearch} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import {useNavigation, useNavigationState} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -11,6 +11,13 @@ interface Props {
 
 const DashBoardNavBar = (props: Props) => {
   const navigation = useNavigation();
+
+  const [routeName, setRouteName] = useState('Dashboard');
+
+  const routes = useNavigationState(state => state?.routes);
+  const currentRoute = routes && routes[routes?.length - 1]?.name;
+
+  // console.log(navigation.dispatch(CommonActions.));
 
   const data = [
     [
@@ -22,7 +29,12 @@ const DashBoardNavBar = (props: Props) => {
         },
       },
       {icon: null, avatar: true, onPress: () => {}},
-      {icon: null, avatar: false, text: 'Dashboard', disabled: true},
+      {
+        icon: null,
+        avatar: false,
+        text: currentRoute ? currentRoute : 'Dashboard',
+        disabled: true,
+      },
     ],
     [
       {icon: faSearch, onPress: () => {}, right: true},
