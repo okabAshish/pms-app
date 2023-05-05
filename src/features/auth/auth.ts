@@ -7,6 +7,8 @@ import {
   OwnerPropertListResponseData,
   OwnerPropertyListParams,
   TenantDashboardResponseData,
+  OwnerInvitationListResponseData,
+  OwnerInvitationListParams
 } from '../types';
 
 // Define a service using a base URL and expected endpoints
@@ -71,6 +73,18 @@ export const authApi = createApi({
         },
       }),
     }),
+    ownerInvitation: builder.mutation<
+      OwnerInvitationListResponseData,
+      OwnerInvitationListParams
+    >({
+      query: req => ({
+        url: `owner/invitation-list?limit=${req.limit}&page=${req.page}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -81,4 +95,5 @@ export const {
   useOwnerDashboardMutation,
   useTenantDashboardMutation,
   useOwnerPropertiesMutation,
+  useOwnerInvitationMutation,
 } = authApi;
