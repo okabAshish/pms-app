@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
+import AddFloatingButton from '../../components/AddFloatingButton/AddFloatingButton';
 import OwnerTenantsCard from '../../components/OwnerTenantsCard/OwnerTenantsCard';
 import {useOwnerAllTenantListMutation} from '../../features/auth/auth';
 import {OwnerTenantListData} from '../../features/types';
@@ -97,6 +98,7 @@ const OwnerTenantScreen = (props: Props) => {
             />
           )}
         />
+        <AddFloatingButton />
       </View>
     </View>
   );

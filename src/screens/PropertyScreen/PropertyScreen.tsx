@@ -1,5 +1,7 @@
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
+import AddFloatingButton from '../../components/AddFloatingButton/AddFloatingButton';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
 import {useOwnerPropertiesMutation} from '../../features/auth/auth';
 import {OwnerPropertyListData} from '../../features/types';
@@ -7,6 +9,8 @@ import {OwnerPropertyListData} from '../../features/types';
 type Props = {};
 
 const PropertyScreen = (props: Props) => {
+  const navigation = useNavigation();
+
   const [propertyList, setPropertyList] = useState<OwnerPropertyListData>([]);
   const [page, setPage] = useState(1);
   const [
@@ -94,6 +98,11 @@ const PropertyScreen = (props: Props) => {
               imageUrl={item?.property_images[0]?.photo_url}
             />
           )}
+        />
+        <AddFloatingButton
+          onPress={() =>
+            navigation.dispatch(CommonActions.navigate({name: 'AddProperty'}))
+          }
         />
       </View>
     </View>

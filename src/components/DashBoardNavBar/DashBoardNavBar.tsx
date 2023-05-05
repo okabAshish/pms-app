@@ -17,7 +17,7 @@ const DashBoardNavBar = (props: Props) => {
   const routes = useNavigationState(state => state?.routes);
   const currentRoute = routes && routes[routes?.length - 1]?.name;
 
-  // console.log(navigation.dispatch(CommonActions.));
+  // console.log(routes[routes?.length - 1]);
 
   const data = [
     [

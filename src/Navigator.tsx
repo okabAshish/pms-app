@@ -9,6 +9,7 @@ import {DrawerLayoutAndroid as Drawer} from 'react-native';
 import DashBoardNavBar from './components/DashBoardNavBar/DashBoardNavBar';
 import LoadingModal from './components/LoadingModal/LoadingModal';
 import {setLoggedIn, setToken, setUser} from './features/auth/authProfile';
+import AddPropertyScreen from './screens/AddPropertyScreen/AddPropertyScreen';
 import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import OwnerContractsScreen from './screens/OwnerContractsScreen/OwnerContractsScreen';
 import OwnerTenantScreen from './screens/OwnerTenantScreen/OwnerTenantScreen';
@@ -68,6 +69,20 @@ const Navigator = (props: Props) => {
 
   // console.log(isLoggedIn, routeNameRef, navigationRef);
 
+  const DashBoardMenus = () => {
+    return (
+      <>
+        <Stack.Navigator screenOptions={{headerShown: true}}>
+          <Stack.Screen
+            name="AddProperty"
+            component={AddPropertyScreen}
+            options={{title: 'Add Property'}}
+          />
+        </Stack.Navigator>
+      </>
+    );
+  };
+
   return (
     <NavigationContainer>
       <Drawer
@@ -77,6 +92,7 @@ const Navigator = (props: Props) => {
         <>
           <DashBoardNavBar openDrawer={() => drawer.current?.openDrawer()} />
           <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen name="ADD" component={DashBoardMenus} />
             <Stack.Screen
               name="SignUp"
               component={isLoggedIn ? DashboardScreen : SignUpScreen}
