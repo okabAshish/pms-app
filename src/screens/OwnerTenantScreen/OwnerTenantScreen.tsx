@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, View} from 'react-native';
+import {ActivityIndicator, FlatList, View} from 'react-native';
 import OwnerTenantsCard from '../../components/OwnerTenantsCard/OwnerTenantsCard';
 import {useOwnerAllTenantListMutation} from '../../features/auth/auth';
 import {OwnerTenantListData} from '../../features/types';
@@ -33,7 +33,8 @@ const OwnerTenantScreen = (props: Props) => {
         .unwrap()
         .then(res => {
           if (res.success) {
-            setTenantList(res?.data?.data);
+            let arr: OwnerTenantListData = [...tenantList, ...res?.data?.data];
+            setTenantList(arr);
           }
         });
     } catch (err) {
@@ -45,12 +46,33 @@ const OwnerTenantScreen = (props: Props) => {
     allTenants();
   }, []);
 
+  const renderFooter = () => {
+    return (
+      // Footer View with Loader
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(255,255,255,0.65)',
+        }}>
+        <ActivityIndicator color="black" style={{margin: 15}} />
+      </View>
+    );
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={{paddingHorizontal: 20}}>
         <FlatList
           data={tenantList}
           keyExtractor={({item, index}) => (item?.id + index).toString()}
+          showsVerticalScrollIndicator={false}
+          onEndReachedThreshold={0.5}
+          onEndReached={() => {
+            reGetTenants();
+          }}
+          ListFooterComponent={renderFooter}
           renderItem={({item, index}) => (
             <OwnerTenantsCard
               tenant_id={'TNT_0000000' + item?.id}

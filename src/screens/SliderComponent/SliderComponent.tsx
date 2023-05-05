@@ -1,4 +1,8 @@
-import {faSearch} from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronDown,
+  faChevronRight,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions, useNavigation} from '@react-navigation/native';
@@ -11,11 +15,14 @@ const SliderComponent = (props: Props) => {
   const navigation = useNavigation();
 
   const [active, setActive] = useState('Dashboard');
+  const [subMenu, setSubMenu] = useState(false);
 
   const menu = [
     {
       name: 'Dashboard',
       slug: 'Dashboard',
+      show: true,
+      type: 'Menu',
       icon: require('../../assets/images/icons/category.svg'),
       onPress: () => {
         setActive('Dashboard');
@@ -25,6 +32,8 @@ const SliderComponent = (props: Props) => {
     {
       name: 'Property',
       slug: 'Property',
+      type: 'Menu',
+      show: true,
       icon: require('../../assets/images/icons/flats.svg'),
       onPress: () => {
         setActive('Property');
@@ -34,15 +43,39 @@ const SliderComponent = (props: Props) => {
     {
       name: 'Tenant',
       slug: 'Tenant',
+      type: 'Menu',
       icon: require('../../assets/images/icons/user.svg'),
+      extraAttow: faChevronRight,
+      show: true,
       onPress: () => {
-        setActive('Tenant');
+        setSubMenu(!subMenu);
+      },
+    },
+
+    {
+      name: 'Tenant List',
+      slug: 'Tenant-List',
+      type: 'Sub-Menu',
+      show: subMenu,
+      onPress: () => {
+        setActive('Tenant-List');
         navigation.dispatch(CommonActions.navigate({name: 'Tenant'}));
       },
     },
     {
+      name: 'Invitation List',
+      slug: 'Invitation-List',
+      type: 'Sub-Menu',
+      show: subMenu,
+      onPress: () => {
+        setActive('Invitation-List');
+      },
+    },
+    {
       name: 'Contract',
+      type: 'Menu',
       slug: 'Contract',
+      show: true,
       icon: require('../../assets/images/icons/documenttext.svg'),
       onPress: () => {
         setActive('Contract');
@@ -51,7 +84,9 @@ const SliderComponent = (props: Props) => {
     },
     {
       name: 'Maintenance Request',
+      type: 'Menu',
       slug: 'Maintenance-Request',
+      show: true,
       icon: require('../../assets/images/icons/linkcircle.svg'),
       onPress: () => {
         setActive('Maintenance-Request');
@@ -59,7 +94,9 @@ const SliderComponent = (props: Props) => {
     },
     {
       name: 'Bills',
+      type: 'Menu',
       slug: 'Bills',
+      show: true,
       icon: require('../../assets/images/icons/bill.svg'),
       onPress: () => {
         setActive('Bills');
@@ -111,31 +148,44 @@ const SliderComponent = (props: Props) => {
 
       <View style={{flex: 1, justifyContent: 'space-between'}}>
         <View>
-          {menu.map((item, index) => (
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-                borderRadius: 3,
-                borderWidth: 1,
-                marginTop: 10,
-                borderColor: active === item.slug ? '#fff' : '#31344A',
-                alignItems: 'center',
-              }}
-              key={index + item.slug}
-              onPress={item.onPress}>
-              <Image source={item.icon} style={{width: 10, height: 10}} />
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 14,
-                  fontWeight: 500,
-                }}>
-                {item.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          {menu.map((item, index) => {
+            if (item?.show) {
+              return (
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    paddingHorizontal: 10,
+                    paddingVertical: 5,
+                    borderRadius: 3,
+                    borderWidth: 1,
+                    marginTop: 10,
+                    borderColor: active === item.slug ? '#fff' : '#31344A',
+                    alignItems: 'center',
+                  }}
+                  key={index + item.slug}
+                  onPress={item.onPress}>
+                  <Image source={item.icon} style={{width: 10, height: 10}} />
+                  <Text
+                    style={{
+                      color: '#fff',
+                      fontSize: 14,
+                      fontWeight: 500,
+                      marginLeft: item?.type === 'Sub-Menu' ? 15 : 0,
+                    }}>
+                    {item.name}
+                  </Text>
+                  {item?.extraAttow && (
+                    <FontAwesomeIcon
+                      icon={!subMenu ? faChevronRight : faChevronDown}
+                      size={10}
+                      style={{marginLeft: 8, alignSelf: 'center'}}
+                      color="#fff"
+                    />
+                  )}
+                </TouchableOpacity>
+              );
+            }
+          })}
         </View>
 
         <View style={{justifyContent: 'flex-end'}}>
