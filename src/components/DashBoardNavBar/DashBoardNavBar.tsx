@@ -15,6 +15,8 @@ const DashBoardNavBar = (props: Props) => {
   const [routeName, setRouteName] = useState('Dashboard');
 
   const routes = useNavigationState(state => state?.routes);
+  const {pageName} = useSelector(state => state?.page);
+
   const currentRoute = routes && routes[routes?.length - 1]?.name;
 
   // console.log(routes[routes?.length - 1]);
@@ -43,7 +45,7 @@ const DashBoardNavBar = (props: Props) => {
   ];
   const {user} = useSelector(state => state.auth);
 
-  console.log(user?.first_name?.split('')[0] + user?.last_name?.split('')[0]);
+  console.log('>>>>>', pageName);
 
   return (
     <View
@@ -140,7 +142,7 @@ const DashBoardNavBar = (props: Props) => {
                     fontFamily: 'Poppins-Medium',
                     color: '#00ABE4',
                   }}>
-                  {i.text}
+                  {pageName}
                 </Text>
               )}
             </TouchableOpacity>

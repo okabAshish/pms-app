@@ -1,4 +1,4 @@
-import {CommonActions, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
 import AddFloatingButton from '../../components/AddFloatingButton/AddFloatingButton';
@@ -100,9 +100,7 @@ const PropertyScreen = (props: Props) => {
           )}
         />
         <AddFloatingButton
-          onPress={() =>
-            navigation.dispatch(CommonActions.navigate({name: 'AddProperty'}))
-          }
+          onPress={() => navigation.navigate('ADD', {screen: 'AddProperty'})}
         />
       </View>
     </View>

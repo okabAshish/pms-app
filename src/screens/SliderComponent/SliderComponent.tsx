@@ -8,11 +8,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {setPageName} from '../../features/pageName/pageName';
 
 type Props = {};
 
 const SliderComponent = (props: Props) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [active, setActive] = useState('Dashboard');
   const [subMenu, setSubMenu] = useState(false);
@@ -25,6 +28,7 @@ const SliderComponent = (props: Props) => {
       type: 'Menu',
       icon: require('../../assets/images/icons/category.svg'),
       onPress: () => {
+        dispatch(setPageName('Dashboard'));
         setActive('Dashboard');
         navigation.dispatch(CommonActions.navigate({name: 'Dashboard'}));
       },
@@ -36,6 +40,8 @@ const SliderComponent = (props: Props) => {
       show: true,
       icon: require('../../assets/images/icons/flats.svg'),
       onPress: () => {
+        dispatch(setPageName('Property'));
+
         setActive('Property');
         navigation.dispatch(CommonActions.navigate({name: 'Property'}));
       },
@@ -58,6 +64,8 @@ const SliderComponent = (props: Props) => {
       type: 'Sub-Menu',
       show: subMenu,
       onPress: () => {
+        dispatch(setPageName('Tenant List'));
+
         setActive('Tenant-List');
         navigation.dispatch(CommonActions.navigate({name: 'Tenant'}));
       },
@@ -68,6 +76,8 @@ const SliderComponent = (props: Props) => {
       type: 'Sub-Menu',
       show: subMenu,
       onPress: () => {
+        dispatch(setPageName('Invitation List'));
+
         setActive('Invitation-List');
       },
     },
@@ -76,6 +86,8 @@ const SliderComponent = (props: Props) => {
       slug: 'Invitation',
       icon: require('../../assets/images/icons/user.svg'),
       onPress: () => {
+        dispatch(setPageName('Invitation'));
+
         setActive('Invitation');
         navigation.dispatch(CommonActions.navigate({name: 'Invitation'}));
       },
@@ -87,6 +99,8 @@ const SliderComponent = (props: Props) => {
       show: true,
       icon: require('../../assets/images/icons/documenttext.svg'),
       onPress: () => {
+        dispatch(setPageName('Contract'));
+
         setActive('Contract');
         navigation.dispatch(CommonActions.navigate({name: 'Contracts'}));
       },
@@ -98,6 +112,8 @@ const SliderComponent = (props: Props) => {
       show: true,
       icon: require('../../assets/images/icons/linkcircle.svg'),
       onPress: () => {
+        dispatch(setPageName('Maintenance Request'));
+
         setActive('Maintenance-Request');
       },
     },
@@ -108,6 +124,8 @@ const SliderComponent = (props: Props) => {
       show: true,
       icon: require('../../assets/images/icons/bill.svg'),
       onPress: () => {
+        dispatch(setPageName('Bills'));
+
         setActive('Bills');
       },
     },

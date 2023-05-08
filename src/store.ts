@@ -6,10 +6,12 @@ import {setupListeners} from '@reduxjs/toolkit/dist/query';
 import {RootState} from '@reduxjs/toolkit/dist/query/core/apiState';
 import {authApi} from './features/auth/auth';
 import authProfile from './features/auth/authProfile';
+import pageName from './features/pageName/pageName';
 
 export const store = configureStore({
   reducer: {
     auth: authProfile,
+    page: pageName,
     [authApi.reducerPath]: authApi.reducer,
   },
   middleware: getDefaultMiddleware =>

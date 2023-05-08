@@ -71,19 +71,52 @@ const Navigator = (props: Props) => {
 
   // console.log(isLoggedIn, routeNameRef, navigationRef);
 
-  const DashBoardMenus = () => {
+  const AddMenus = () => {
     return (
       <>
-        <Stack.Navigator screenOptions={{headerShown: true}}>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: true,
+          }}>
           <Stack.Screen
             name="AddProperty"
             component={AddPropertyScreen}
-            options={{title: 'Add Property'}}
+            options={{
+              title: 'Add Property',
+              headerStyle: {backgroundColor: '#45485F'},
+              headerTitleStyle: {
+                color: '#fff',
+              },
+              headerShadowVisible: false,
+            }}
           />
         </Stack.Navigator>
       </>
     );
   };
+
+  const DashboardMenus = () => {
+    return (
+      <>
+        <DashBoardNavBar openDrawer={() => drawer.current?.openDrawer()} />
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen
+            name="SignUp"
+            component={isLoggedIn ? DashboardScreen : SignUpScreen}
+          />
+          <Stack.Screen
+            name="Dashboard"
+            component={isLoggedIn ? DashboardScreen : SignUpScreen}
+          />
+          <Stack.Screen name="Property" component={PropertyScreen} />
+          <Stack.Screen name="Tenant" component={OwnerTenantScreen} />
+          <Stack.Screen name="Contracts" component={OwnerContractsScreen} />
+          <Stack.Screen name="Invitation" component={InvitationScreen} />
+        </Stack.Navigator>
+      </>
+    );
+  };
+
   console.log('is log', isLoggedIn);
 
   return (
@@ -93,21 +126,9 @@ const Navigator = (props: Props) => {
         drawerWidth={300}
         renderNavigationView={() => <SliderComponent />}>
         <>
-          <DashBoardNavBar openDrawer={() => drawer.current?.openDrawer()} />
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="ADD" component={DashBoardMenus} />
-            <Stack.Screen
-              name="SignUp"
-              component={isLoggedIn ? DashboardScreen : SignUpScreen}
-            />
-            <Stack.Screen
-              name="Dashboard"
-              component={isLoggedIn ? DashboardScreen : SignUpScreen}
-            />
-            <Stack.Screen name="Property" component={PropertyScreen} />
-            <Stack.Screen name="Tenant" component={OwnerTenantScreen} />
-            <Stack.Screen name="Contracts" component={OwnerContractsScreen} />
-            <Stack.Screen name="Invitation" component={InvitationScreen} />
+            <Stack.Screen name="Main" component={DashboardMenus} />
+            <Stack.Screen name="ADD" component={AddMenus} />
           </Stack.Navigator>
         </>
       </Drawer>
