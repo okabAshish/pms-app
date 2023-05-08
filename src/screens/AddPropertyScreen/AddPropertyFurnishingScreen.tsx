@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import CheckBox from '../../components/CheckBox/CheckBox';
 import RadioButton from '../../components/RadioButton/RadioButton';
 
 type Props = {};
@@ -16,6 +17,9 @@ type Props = {};
 const AddPropertyFurnishingScreen = (props: Props) => {
   const navigation = useNavigation();
   const [value, setValue] = useState(null);
+  const [FurnishedDetails, setFurnishedDetails] = useState([]);
+
+  console.log(FurnishedDetails);
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -61,7 +65,20 @@ const AddPropertyFurnishingScreen = (props: Props) => {
         <RadioButton
           labels={['Not Furnished', 'Fully Furnished Previous']}
           containerStyles={{marginVertical: 32}}
+          onChange={v => {
+            console.log(v);
+            setValue(v);
+          }}
+          value={value}
         />
+
+        {value === 1 && (
+          <CheckBox
+            labels={[{slug: 'Box', title: 'Box', icon: 'fas fa-bed'}]}
+            value={FurnishedDetails}
+            onChange={v => setFurnishedDetails(v)}
+          />
+        )}
 
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
           <View

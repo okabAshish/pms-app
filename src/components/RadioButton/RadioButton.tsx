@@ -5,15 +5,17 @@ type Props = {
   labels: Array<string>;
   containerStyles?: ViewStyle;
   onChange: (v: number) => void;
+  value?: number;
 };
 
 const defaultProps: Props = {
   labels: ['Not Furnished', 'Fully Furnished'],
   onChange: number => {},
+  value: 3,
 };
 
 const RadioButton = (props: Props) => {
-  const [checked, setChecked] = useState('');
+  const [checked, setChecked] = useState(props.labels[props.value]);
 
   return (
     <View style={{...props.containerStyles}}>
@@ -48,7 +50,15 @@ const RadioButton = (props: Props) => {
             }}>
             {/* {checked === item && <FontAwesomeIcon icon={faCheck} />} */}
           </TouchableOpacity>
-          <Text>{item}</Text>
+          <Text
+            style={{
+              fontFamily: 'Poppins-Regular',
+              color: '#000',
+              marginLeft: 10,
+              fontSize: 14,
+            }}>
+            {item}
+          </Text>
         </View>
       ))}
     </View>
