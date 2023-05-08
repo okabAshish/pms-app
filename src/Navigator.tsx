@@ -111,7 +111,7 @@ const Navigator = (props: Props) => {
           <Stack.Screen name="Property" component={PropertyScreen} />
           <Stack.Screen name="Tenant" component={OwnerTenantScreen} />
           <Stack.Screen name="Contracts" component={OwnerContractsScreen} />
-          <Stack.Screen name="Invitation" component={InvitationScreen} />
+          <Stack.Screen name="Invitation-List" component={InvitationScreen} />
         </Stack.Navigator>
       </>
     );

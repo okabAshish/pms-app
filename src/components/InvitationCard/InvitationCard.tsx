@@ -1,16 +1,17 @@
 import {faEdit, faEye, faCopy, faSync} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Network from '../../config'
 import { DrawerNavigationConfig } from '@react-navigation/drawer/lib/typescript/src/types';
+import { useGetResendInvitationMutation } from "../../features/auth/owner";
 
 interface Props {
     invitation_id: number;
-    email: string;
-    phone: string;
-    building_name: string;
+    email?: string;
+    phone?: string;
+    building_name?: string;
     is_registered: boolean;
     url_key: string;
 }
@@ -25,7 +26,29 @@ const defaultProps: Props = {
 };
 
 const InvitationCard = (props: Props) => {
-  //   console.log(props.building_name);
+    const [regLink, setRegLink] = useState(Network.inviteUrl+props.url_key);
+    const [getResendInvitation] = useGetResendInvitationMutation();
+
+    const resendInvitation = async () => {
+        try {
+            await getResendInvitation({ id:props.invitation_id })
+                .unwrap()
+                .then(res => {
+                    console.log(res)
+                if (res.success) {
+                    console.log(res.data.url)
+                }
+                });
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+    const copyRegLink = () => {
+        console.log(regLink);
+        Clipboard.setString(regLink);
+    }
+
     return (
     <TouchableOpacity
         style={{
@@ -121,37 +144,38 @@ const InvitationCard = (props: Props) => {
                     </Text>
                     </View>
                 </View>
-                
-                <View style={{flex: 2}}>
-
-                    <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                    <TouchableOpacity onPress={() => Clipboard.setString(Network.inviteUrl+props.url_key)}
-                        style={{
-                            backgroundColor: 'rgb(196,187,249)',
-                            padding: 4,
-                            borderRadius: 3,
-                            marginRight: 8,
-                        }}>
-                        <FontAwesomeIcon
-                            icon={faCopy}
-                            color="rgb(159,101,255)"
-                            size={12}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            backgroundColor: 'rgb(254,220,176)',
-                            padding: 4,
-                            borderRadius: 3,
-                        }}>
-                        <FontAwesomeIcon 
-                            icon={faSync} 
-                            color="#fcb761" 
-                            size={12} 
-                        />
-                    </TouchableOpacity>
+                { !props.is_registered ?
+                    <View style={{flex: 2}}>
+                        
+                        <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                        <TouchableOpacity onPress={() => copyRegLink()}
+                            style={{
+                                backgroundColor: 'rgb(196,187,249)',
+                                padding: 4,
+                                borderRadius: 3,
+                                marginRight: 8,
+                            }}>
+                            <FontAwesomeIcon
+                                icon={faCopy}
+                                color="rgb(159,101,255)"
+                                size={12}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => resendInvitation()}
+                            style={{
+                                backgroundColor: 'rgb(254,220,176)',
+                                padding: 4,
+                                borderRadius: 3,
+                            }}>
+                            <FontAwesomeIcon 
+                                icon={faSync} 
+                                color="#fcb761" 
+                                size={12} 
+                            />
+                        </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
+                : undefined } 
             </View>
             </View>
         </View>
