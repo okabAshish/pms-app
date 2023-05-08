@@ -4,6 +4,7 @@ import {Text, TouchableOpacity, View, ViewStyle} from 'react-native';
 type Props = {
   labels: Array<string>;
   containerStyles?: ViewStyle;
+  buttonContainerStyle?: ViewStyle;
   onChange: (v: number) => void;
   value?: number;
 };
@@ -25,6 +26,7 @@ const RadioButton = (props: Props) => {
             flexDirection: 'row',
             alignItems: 'center',
             marginVertical: 4,
+            ...props.buttonContainerStyle,
           }}>
           <TouchableOpacity
             style={{

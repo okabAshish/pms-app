@@ -1,7 +1,7 @@
 import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,17 +9,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import CheckBox from '../../components/CheckBox/CheckBox';
 import RadioButton from '../../components/RadioButton/RadioButton';
 
 type Props = {};
 
-const AddPropertyFurnishingScreen = (props: Props) => {
+const AddPropertyAddionalDetailsScreen = (props: Props) => {
   const navigation = useNavigation();
-  const [value, setValue] = useState(null);
-  const [FurnishedDetails, setFurnishedDetails] = useState([]);
-
-  console.log(FurnishedDetails);
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -50,7 +45,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
                 fontFamily: 'Poppins-SemiBold',
                 fontSize: 21,
               }}>
-              3
+              5
             </Text>
           </View>
           <Text
@@ -59,36 +54,32 @@ const AddPropertyFurnishingScreen = (props: Props) => {
               fontFamily: 'Poppins-Medium',
               fontSize: 18,
             }}>
-            Furnishing
+            Parking / Balcony
           </Text>
         </View>
-        <RadioButton
-          labels={['Not Furnished', 'Fully Furnished Previous']}
-          containerStyles={{marginVertical: 32}}
-          onChange={v => {
-            console.log(v);
-            setValue(v);
-          }}
-          value={value}
-        />
 
-        {value === 1 && (
-          <>
-            <Text
-              style={{
-                fontFamily: 'Poppins-Regular',
-                fontSize: 14,
-                color: '#000',
-              }}>
-              Property Will Be Furnished With:
-            </Text>
-            <CheckBox
-              labels={[{slug: 'Box', title: 'Box', icon: 'fas fa-bed'}]}
-              value={FurnishedDetails}
-              onChange={v => setFurnishedDetails(v)}
-            />
-          </>
-        )}
+        <View style={{marginVertical: 15}}>
+          <Text
+            style={{color: '#000', fontFamily: 'Poppins-Medium', fontSize: 16}}>
+            Is Balcony Available:
+          </Text>
+          <RadioButton
+            labels={['Yes', 'No']}
+            containerStyles={{marginTop: 8, flexDirection: 'row'}}
+            buttonContainerStyle={{marginHorizontal: 5}}
+          />
+        </View>
+        <View style={{marginVertical: 10}}>
+          <Text
+            style={{color: '#000', fontFamily: 'Poppins-Medium', fontSize: 16}}>
+            Is Parking Available:
+          </Text>
+          <RadioButton
+            labels={['Yes', 'No']}
+            containerStyles={{marginTop: 8, flexDirection: 'row'}}
+            buttonContainerStyle={{marginHorizontal: 5}}
+          />
+        </View>
 
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
           <View
@@ -129,7 +120,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddProperty-4')}>
+              onPress={() => navigation.navigate('AddProperty-5')}>
               <Text
                 style={{
                   fontSize: 16,
@@ -149,4 +140,4 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   );
 };
 
-export default AddPropertyFurnishingScreen;
+export default AddPropertyAddionalDetailsScreen;

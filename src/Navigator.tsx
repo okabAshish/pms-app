@@ -16,6 +16,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import DashBoardNavBar from './components/DashBoardNavBar/DashBoardNavBar';
 import LoadingModal from './components/LoadingModal/LoadingModal';
 import {setLoggedIn, setToken, setUser} from './features/auth/authProfile';
+import AddPropertyAddionalDetailsScreen from './screens/AddPropertyScreen/AddPropertyAddionalDetailsScreen';
+import AddPropertyAmenitiesScreen from './screens/AddPropertyScreen/AddPropertyAmenitiesScreen';
 import AddPropertyDetailsScreen from './screens/AddPropertyScreen/AddPropertyDetailsScreen';
 import AddPropertyFurnishingScreen from './screens/AddPropertyScreen/AddPropertyFurnishingScreen';
 import AddPropertyScreen from './screens/AddPropertyScreen/AddPropertyScreen';
@@ -144,6 +146,20 @@ const Navigator = (props: Props) => {
           <Stack.Screen
             name="AddProperty-3"
             component={AddPropertyFurnishingScreen}
+            options={() => ({
+              title: 'Add Property',
+            })}
+          />
+          <Stack.Screen
+            name="AddProperty-4"
+            component={AddPropertyAmenitiesScreen}
+            options={() => ({
+              title: 'Add Property',
+            })}
+          />
+          <Stack.Screen
+            name="AddProperty-5"
+            component={AddPropertyAddionalDetailsScreen}
             options={() => ({
               title: 'Add Property',
             })}

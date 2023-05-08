@@ -10,17 +10,13 @@ import {
   View,
 } from 'react-native';
 import CheckBox from '../../components/CheckBox/CheckBox';
-import RadioButton from '../../components/RadioButton/RadioButton';
 
 type Props = {};
 
-const AddPropertyFurnishingScreen = (props: Props) => {
+const AddPropertyAmenitiesScreen = (props: Props) => {
   const navigation = useNavigation();
-  const [value, setValue] = useState(null);
+
   const [FurnishedDetails, setFurnishedDetails] = useState([]);
-
-  console.log(FurnishedDetails);
-
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
       <ScrollView
@@ -50,7 +46,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
                 fontFamily: 'Poppins-SemiBold',
                 fontSize: 21,
               }}>
-              3
+              4
             </Text>
           </View>
           <Text
@@ -59,36 +55,23 @@ const AddPropertyFurnishingScreen = (props: Props) => {
               fontFamily: 'Poppins-Medium',
               fontSize: 18,
             }}>
-            Furnishing
+            Amenities (Optional)
           </Text>
         </View>
-        <RadioButton
-          labels={['Not Furnished', 'Fully Furnished Previous']}
-          containerStyles={{marginVertical: 32}}
-          onChange={v => {
-            console.log(v);
-            setValue(v);
-          }}
-          value={value}
-        />
 
-        {value === 1 && (
-          <>
-            <Text
-              style={{
-                fontFamily: 'Poppins-Regular',
-                fontSize: 14,
-                color: '#000',
-              }}>
-              Property Will Be Furnished With:
-            </Text>
-            <CheckBox
-              labels={[{slug: 'Box', title: 'Box', icon: 'fas fa-bed'}]}
-              value={FurnishedDetails}
-              onChange={v => setFurnishedDetails(v)}
-            />
-          </>
-        )}
+        <View style={{marginVertical: 20}}>
+          <CheckBox
+            labels={[
+              {
+                slug: 'Swimming Pool',
+                title: 'Swimming Pool',
+                icon: 'fas fa-swimmer',
+              },
+            ]}
+            value={FurnishedDetails}
+            onChange={v => setFurnishedDetails(v)}
+          />
+        </View>
 
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
           <View
@@ -129,7 +112,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddProperty-4')}>
+              onPress={() => navigation.navigate('AddProperty-5')}>
               <Text
                 style={{
                   fontSize: 16,
@@ -149,4 +132,4 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   );
 };
 
-export default AddPropertyFurnishingScreen;
+export default AddPropertyAmenitiesScreen;
