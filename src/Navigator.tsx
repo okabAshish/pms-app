@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -15,6 +16,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import DashBoardNavBar from './components/DashBoardNavBar/DashBoardNavBar';
 import LoadingModal from './components/LoadingModal/LoadingModal';
 import {setLoggedIn, setToken, setUser} from './features/auth/authProfile';
+import AddPropertyDetailsScreen from './screens/AddPropertyScreen/AddPropertyDetailsScreen';
+import AddPropertyFurnishingScreen from './screens/AddPropertyScreen/AddPropertyFurnishingScreen';
 import AddPropertyScreen from './screens/AddPropertyScreen/AddPropertyScreen';
 import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import InvitationScreen from './screens/InvitationScreen/InvitationScreen';
@@ -82,100 +85,67 @@ const Navigator = (props: Props) => {
     return (
       <>
         <Stack.Navigator
-          screenOptions={{
+          screenOptions={({navigation}) => ({
             headerShown: true,
-          }}>
-          <Stack.Screen
-            name="AddProperty"
-            component={AddPropertyScreen}
-            options={({navigation}) => ({
-              title: 'Add Property',
-              headerStyle: {backgroundColor: '#45485F'},
-              headerTitleStyle: {
-                color: '#fff',
-              },
-              headerTitleAlign: 'center',
+            headerStyle: {backgroundColor: '#45485F'},
+            headerTitleStyle: {
+              color: '#fff',
+            },
+            headerTitleAlign: 'center',
 
-              headerShadowVisible: false,
-              headerLeft: ({canGoBack}) => {
-                console.log('.......', navigation);
-                return (
-                  <TouchableOpacity
+            headerShadowVisible: false,
+            headerLeft: ({canGoBack}) => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: 'rgba(255,255,255,0.5)',
+                    height: 38,
+                    width: 38,
+                    borderRadius: 9999,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginRight: 20,
+                  }}
+                  onPress={() => {
+                    if (canGoBack) {
+                      navigation.goBack();
+                    }
+                  }}>
+                  <View
                     style={{
-                      backgroundColor: 'rgba(255,255,255,0.5)',
-                      height: 38,
-                      width: 38,
+                      backgroundColor: '#fff',
+                      height: 28,
+                      width: 28,
                       borderRadius: 9999,
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginRight: 20,
-                    }}
-                    onPress={() => {
-                      if (canGoBack) {
-                        navigation.goBack();
-                      }
                     }}>
-                    <View
-                      style={{
-                        backgroundColor: '#fff',
-                        height: 28,
-                        width: 28,
-                        borderRadius: 9999,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <FontAwesomeIcon icon={faChevronLeft} size={14} />
-                    </View>
-                  </TouchableOpacity>
-                );
-              },
+                    <FontAwesomeIcon icon={faChevronLeft} size={14} />
+                  </View>
+                </TouchableOpacity>
+              );
+            },
+          })}>
+          <Stack.Screen
+            name="AddProperty"
+            component={AddPropertyScreen}
+            options={() => ({
+              title: 'Add Property',
             })}
           />
 
           <Stack.Screen
             name="AddProperty-2"
-            component={AddPropertyScreen}
-            options={({navigation}) => ({
+            component={AddPropertyDetailsScreen}
+            options={() => ({
               title: 'Add Property',
-              headerStyle: {backgroundColor: '#45485F'},
-              headerTitleStyle: {
-                color: '#fff',
-              },
-              headerTitleAlign: 'center',
-
-              headerShadowVisible: false,
-              headerLeft: ({canGoBack}) => {
-                console.log('.......', navigation);
-                return (
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.5)',
-                      height: 38,
-                      width: 38,
-                      borderRadius: 9999,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginRight: 20,
-                    }}
-                    onPress={() => {
-                      if (canGoBack) {
-                        navigation.goBack();
-                      }
-                    }}>
-                    <View
-                      style={{
-                        backgroundColor: '#fff',
-                        height: 28,
-                        width: 28,
-                        borderRadius: 9999,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <FontAwesomeIcon icon={faChevronLeft} size={14} />
-                    </View>
-                  </TouchableOpacity>
-                );
-              },
+            })}
+          />
+          <Stack.Screen
+            name="AddProperty-3"
+            component={AddPropertyFurnishingScreen}
+            options={() => ({
+              title: 'Add Property',
             })}
           />
         </Stack.Navigator>

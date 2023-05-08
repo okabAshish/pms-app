@@ -2,18 +2,6 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View, ViewStyle} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 
-type Props = {
-  label?: string;
-  onChange: (v: string) => void;
-  containerStyles?: ViewStyle;
-  dropDownHeight: number;
-};
-
-const defaultProps: Props = {
-  label: 'Property Title (Nick Name)',
-  dropDownHeight: 200,
-};
-
 const data = [
   {label: 'Item 1', value: '1'},
   {label: 'Item 2', value: '2'},
@@ -24,6 +12,27 @@ const data = [
   {label: 'Item 7', value: '7'},
   {label: 'Item 8', value: '8'},
 ];
+
+type DropDownDataObj = {
+  id?: string | number;
+  label: string;
+  value: string;
+};
+
+type Props = {
+  label?: string;
+  onChange: (v: string) => void;
+  containerStyles?: ViewStyle;
+  dropDownHeight: number;
+  datas: Array<DropDownDataObj>;
+};
+
+const defaultProps: Props = {
+  label: 'Property Title (Nick Name)',
+  dropDownHeight: 200,
+  onChange: () => {},
+  datas: data,
+};
 
 const DropDown = (props: Props) => {
   const [value, setValue] = useState(null);
@@ -36,7 +45,7 @@ const DropDown = (props: Props) => {
           style={styles.dropdown}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
-          data={data}
+          data={props.datas}
           maxHeight={props.dropDownHeight}
           labelField="label"
           valueField="value"
@@ -48,7 +57,7 @@ const DropDown = (props: Props) => {
           onChange={item => {
             setValue(item.value);
             setIsFocus(false);
-            props.onChange(item?.value);
+            props?.onChange(item?.value);
           }}
         />
       </View>

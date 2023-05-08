@@ -1,46 +1,37 @@
-import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
+import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {
-  Dimensions,
-  StatusBar,
+  SafeAreaView,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import DropDown from '../../components/DropDown/DropDown';
-import Input from '../../components/Input/Input';
-
-const DEVICE_HEIGHT = Dimensions.get('window').height;
+import CheckBox from '../../components/CheckBox/CheckBox';
+import RadioButton from '../../components/RadioButton/RadioButton';
 
 type Props = {};
 
-const AddPropertyScreen = (props: Props) => {
+const AddPropertyFurnishingScreen = (props: Props) => {
   const navigation = useNavigation();
+  const [value, setValue] = useState(null);
+  const [FurnishedDetails, setFurnishedDetails] = useState([]);
 
-  let [property, setProperty] = useState({
-    title: '',
-    type: '',
-    size: 0,
-    year: 0,
-    amount: 0.0,
-    duration: '',
-  });
+  console.log(FurnishedDetails);
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
-      <StatusBar backgroundColor={'#45485F'} barStyle="light-content" />
-
-      <KeyboardAwareScrollView
+      <ScrollView
         style={{
           backgroundColor: '#fff',
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           paddingVertical: 30,
           paddingHorizontal: 20,
+          //   flex: 2,
+          minHeight: '100%',
         }}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View
@@ -59,7 +50,7 @@ const AddPropertyScreen = (props: Props) => {
                 fontFamily: 'Poppins-SemiBold',
                 fontSize: 21,
               }}>
-              1
+              3
             </Text>
           </View>
           <Text
@@ -68,71 +59,27 @@ const AddPropertyScreen = (props: Props) => {
               fontFamily: 'Poppins-Medium',
               fontSize: 18,
             }}>
-            Property
+            Furnishing
           </Text>
         </View>
+        <RadioButton
+          labels={['Not Furnished', 'Fully Furnished Previous']}
+          containerStyles={{marginVertical: 32}}
+          onChange={v => {
+            console.log(v);
+            setValue(v);
+          }}
+          value={value}
+        />
 
-        <KeyboardAwareScrollView style={{marginTop: 20}}>
-          <Input
-            switchButton={false}
-            onChange={e =>
-              setProperty({...property, title: e.nativeEvent.text})
-            }
-            placehoder="Enter a nick name of the property"
-            label="Property Title (Nick Name)"
+        {value === 1 && (
+          <CheckBox
+            labels={[{slug: 'Box', title: 'Box', icon: 'fas fa-bed'}]}
+            value={FurnishedDetails}
+            onChange={v => setFurnishedDetails(v)}
           />
-          <DropDown
-            label="Property Type"
-            value={property.type}
-            onChange={value => {
-              console.log(value);
-              setProperty({...property, type: value});
-            }}
-          />
-          <Input
-            switchButtonData={['Sq ft.', 'Meter']}
-            switchButton={true}
-            onChange={e =>
-              setProperty({...property, size: Number(e.nativeEvent.text)})
-            }
-            placehoder="Enter Property Size"
-            label="Property Size"
-            keyboardType="number-pad"
-          />
-          <Input
-            switchButton={false}
-            onChange={e =>
-              setProperty({...property, year: Number(e.nativeEvent.text)})
-            }
-            placehoder="Enter Property Year"
-            label="Property Built Year"
-          />
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Input
-              switchButton={false}
-              onChange={e =>
-                setProperty({...property, amount: Number(e.nativeEvent.text)})
-              }
-              placehoder="Enter HOA Fee Amount"
-              label="HOA Fee"
-              containerStyles={{flex: 2, marginRight: 20}}
-            />
-            <DropDown
-              label="Fee Duration"
-              value={property.type}
-              onChange={value => {
-                console.log(value);
-                setProperty({...property, duration: value});
-              }}
-              containerStyles={{flex: 1}}
-              dropDownHeight={100}
-              datas={[
-                {id: 1, label: 'Monthly', value: 'monthly'},
-                {id: 2, label: 'Yearly', value: 'yearly'},
-              ]}
-            />
-          </View>
-        </KeyboardAwareScrollView>
+        )}
+
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
           <View
             style={{
@@ -140,7 +87,7 @@ const AddPropertyScreen = (props: Props) => {
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={{
                 marginHorizontal: 10,
                 paddingHorizontal: 10,
@@ -161,7 +108,7 @@ const AddPropertyScreen = (props: Props) => {
                 }}>
                 Previous
               </Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
             <TouchableOpacity
               style={{
                 marginHorizontal: 10,
@@ -187,9 +134,9 @@ const AddPropertyScreen = (props: Props) => {
             </TouchableOpacity>
           </View>
         </View>
-      </KeyboardAwareScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default AddPropertyScreen;
+export default AddPropertyFurnishingScreen;
