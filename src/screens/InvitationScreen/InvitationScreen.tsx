@@ -23,6 +23,8 @@ const InvitationScreen = (props: Props) => {
       await getAllOwnerInvitation({limit: 5, page: 1})
         .unwrap()
         .then(res => {
+          console.log(res);
+          
           if (res.success) {
             setInvitationList(res?.data?.data);
           }
@@ -90,7 +92,7 @@ const InvitationScreen = (props: Props) => {
               email={item?.email}
               phone={item?.phone}
               building_name={item?.invited_property_data?.property_name}
-              key={index + item?.id}
+              key={index + 1}
               is_registered={item?.already_registered === 1 ? true : false}
               url_key={item?.url_key}
             />

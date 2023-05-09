@@ -5,6 +5,7 @@ import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 
 interface Props {
+  contract_id: number;
   tenant_name: string;
   contract_number: string;
   total_monthly_rent: string;
@@ -12,12 +13,14 @@ interface Props {
   start_date: string;
   last_date: string;
   status: string;
+  status_id: number;
   action: string;
-  vacant: boolean;
+  vacant: number;
   created_at: string;
 }
 
 const defaultProps: Props = {
+  contract_id: 0,
   tenant_name: 'N/A',
   contract_number: 'N/A',
   contract_type: 'Residental',
@@ -26,9 +29,13 @@ const defaultProps: Props = {
   last_date: '21-03-2024',
   created_at: '21-03-2021',
   status: 'Occupied',
+  status_id: 1,
   action: 'sadad',
-  vacant: true,
+  vacant: 1,
 };
+
+// const statusTextColor = ['','#e35b43','#d748ce','#20C997','#fff'];
+// const statusBackgroundColor = ['','rgb(248,176,176)','rgb(246,192,241)','rgba(32, 201, 151, 0.15)','rgb(246, 59, 17)'];
 
 const OwnerContractCard = (props: Props) => {
   return (
@@ -76,7 +83,7 @@ const OwnerContractCard = (props: Props) => {
                     : props.tenant_name}
                 </Text>
               </View>
-              {props.vacant && (
+              {props.vacant==1 && (
                 <View
                   style={{
                     paddingHorizontal: 6,
@@ -214,8 +221,8 @@ const OwnerContractCard = (props: Props) => {
                   flex: 1,
                   flexWrap: 'wrap',
                 }}>
-                {dayjs().format(props.start_date)} to{' '}
-                {dayjs().format(props.last_date)}
+                {dayjs(props.start_date).format('DD-MM-YYYY')} to{' '}
+                {dayjs(props.last_date).format('DD-MM-YYYY')}
               </Text>
             </View>
 
@@ -309,7 +316,7 @@ const OwnerContractCard = (props: Props) => {
                   }}>
                   Created At{' '}
                   <Text style={{fontFamily: 'Poppins-SemiBold'}}>
-                    21st March, 2023
+                   { props.created_at }
                   </Text>
                 </Text>
               </View>

@@ -1,7 +1,8 @@
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import { $CombinedState } from '@reduxjs/toolkit';
+import React, {useState, useEffect} from 'react';
 import {
   Dimensions,
   StatusBar,
@@ -13,6 +14,9 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
+import {useGetPropertyTypeMutation} from '../../features/auth/owner';
+import {PropertyTypeListData} from '../../features/ownerTypes';
+
 
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
@@ -20,6 +24,7 @@ type Props = {};
 
 const AddPropertyScreen = (props: Props) => {
   const navigation = useNavigation();
+  const [propertyTypeList, setPropertyTypeList] = useState([]);
 
   let [property, setProperty] = useState({
     title: '',
@@ -29,6 +34,39 @@ const AddPropertyScreen = (props: Props) => {
     amount: 0.0,
     duration: '',
   });
+
+  const [getPropertyType] = useGetPropertyTypeMutation();
+
+  const propertyType = async () => {
+    try {
+      await getPropertyType({})
+        .unwrap()
+        .then(res => {
+          console.log(res);
+          
+          if (res.success) {
+            //setPropertyTypeList(res?.data);
+            const proertyTypeList:PropertyTypeListData  = res?.data;
+            const propertyDropdownData:any = [];
+           for (let i = 0; i < proertyTypeList.length; i++) {
+            propertyDropdownData[i] ={
+              label:proertyTypeList[i].name,id:proertyTypeList[i].id,value:proertyTypeList[i].name
+            }
+            setPropertyTypeList(propertyDropdownData)
+           }
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+  console.log(propertyTypeList)
+
+  useEffect(() => {
+    propertyType();
+  }, []);
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -83,7 +121,8 @@ const AddPropertyScreen = (props: Props) => {
           />
           <DropDown
             label="Property Type"
-            value={property.type}
+           
+            datas={propertyTypeList}
             onChange={value => {
               console.log(value);
               setProperty({...property, type: value});

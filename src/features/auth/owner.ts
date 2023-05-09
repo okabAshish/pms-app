@@ -1,6 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-import {resendInvitationParam, resendInvitationResponseData} from '../ownerTypes';
+import {
+    resendInvitationParam, 
+    resendInvitationResponseData, 
+    PropertyTypeResponseData, 
+    OwnerContractListParam, 
+    OwnerContractListResponseData,
+    AddPropertyInputData,
+    AddPropertyResponseData
+} from '../ownerTypes';
 
 // Define a service using a base URL and expected endpoints
 export const ownerApi = createApi({
@@ -25,10 +33,46 @@ export const ownerApi = createApi({
                 },
             }),
         }),
+        //Start Add property
+        getPropertyType: builder.mutation<PropertyTypeResponseData, {}>({
+            query: req => ({
+                url: 'property-type-list',
+                method: 'GET',
+                headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                },
+            }),
+        }),
+        addProperty: builder.mutation<AddPropertyResponseData, AddPropertyInputData>({
+            query: req => ({
+                url: 'owner/add-property',
+                method: 'POST',
+                headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                },
+            }),
+        }),
+        //End Add property
+        //Start Owner contract
+        getOwnerContractList: builder.mutation<OwnerContractListResponseData, OwnerContractListParam>({
+            query: req => ({
+                url: `owner/contract-list?limit=${req.limit}&page=${req.page}`,
+                method: 'GET',
+                headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                },
+            }),
+        }),
+        //End Owner contract
     }),
 });
+
+
+
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-    useGetResendInvitationMutation
+    useGetResendInvitationMutation,
+    useGetPropertyTypeMutation,
+    useGetOwnerContractListMutation,
 } = ownerApi;
