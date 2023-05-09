@@ -77,7 +77,7 @@ const SliderComponent = (props: Props) => {
       show: subMenu,
       onPress: () => {
         dispatch(setPageName('Invitation List'));
-
+        navigation.dispatch(CommonActions.navigate({name: 'Invitation-List'}));
         setActive('Invitation-List');
       },
     },
