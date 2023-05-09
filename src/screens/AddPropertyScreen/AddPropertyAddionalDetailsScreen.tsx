@@ -120,7 +120,7 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddProperty-5')}>
+              onPress={() => navigation.navigate('AddProperty-6')}>
               <Text
                 style={{
                   fontSize: 16,

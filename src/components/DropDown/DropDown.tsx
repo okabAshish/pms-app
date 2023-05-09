@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, ViewStyle} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 
@@ -25,6 +25,7 @@ type Props = {
   containerStyles?: ViewStyle;
   dropDownHeight: number;
   datas: Array<DropDownDataObj>;
+  value?: any;
 };
 
 const defaultProps: Props = {
@@ -35,8 +36,13 @@ const defaultProps: Props = {
 };
 
 const DropDown = (props: Props) => {
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(props.value);
   const [isFocus, setIsFocus] = useState(false);
+
+  useEffect(() => {
+    setValue(props.value);
+  }, [props.value]);
+
   return (
     <View style={{marginVertical: 10, flex: 1, ...props.containerStyles}}>
       <Text style={{color: '#45485F', marginBottom: 10}}>{props.label}</Text>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   KeyboardTypeOptions,
   NativeSyntheticEvent,
@@ -23,6 +23,7 @@ type Props = {
   autoComplete: TextInputAndroidProps['autoComplete'];
   autoCorrect: boolean;
   containerStyles?: ViewStyle;
+  value?: any;
 };
 
 const defaultProps: Props = {
@@ -39,6 +40,12 @@ const defaultProps: Props = {
 
 const Input = (props: Props) => {
   const [modeButton, setModeButton] = useState(0);
+  const [value, setValue] = useState(props.value);
+
+  useEffect(() => {
+    setValue(props.value);
+  }, [props.value]);
+
   return (
     <View style={{marginVertical: 10, ...props.containerStyles}}>
       <View
@@ -118,6 +125,7 @@ const Input = (props: Props) => {
         autoCapitalize={props.autoCapitalize}
         autoComplete={props.autoComplete}
         autoCorrect={props.autoCorrect}
+        value={value}
       />
     </View>
   );
