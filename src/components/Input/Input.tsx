@@ -24,6 +24,9 @@ type Props = {
   autoCorrect: boolean;
   containerStyles?: ViewStyle;
   value?: any;
+  switchModeType?: string;
+  setSwitchModeType?: (v: string) => void;
+  disabled: boolean;
 };
 
 const defaultProps: Props = {
@@ -36,6 +39,7 @@ const defaultProps: Props = {
   autoCapitalize: false,
   autoComplete: 'off',
   autoCorrect: false,
+  disabled: false,
 };
 
 const Input = (props: Props) => {
@@ -78,7 +82,10 @@ const Input = (props: Props) => {
                 borderRadius: 9999,
                 marginRight: 2,
               }}
-              onPress={() => setModeButton(0)}>
+              onPress={() => {
+                setModeButton(0);
+                props.setSwitchModeType(props.switchButtonData[0] as string);
+              }}>
               <Text
                 style={{
                   color: '#fff',
@@ -95,7 +102,10 @@ const Input = (props: Props) => {
                 paddingHorizontal: 12,
                 borderRadius: 9999,
               }}
-              onPress={() => setModeButton(1)}>
+              onPress={() => {
+                setModeButton(1);
+                props.setSwitchModeType(props.switchButtonData[1] as string);
+              }}>
               <Text
                 style={{
                   color: '#fff',
@@ -126,6 +136,7 @@ const Input = (props: Props) => {
         autoComplete={props.autoComplete}
         autoCorrect={props.autoCorrect}
         value={value}
+        editable={!props.disabled}
       />
     </View>
   );

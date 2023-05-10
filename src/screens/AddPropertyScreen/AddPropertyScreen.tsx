@@ -17,6 +17,7 @@ import Input from '../../components/Input/Input';
 import CustomAlertModal from '../../container/CustomAlertModal/CustomAlertModal';
 import {useGetPropertyTypeMutation} from '../../features/auth/owner';
 import {setError} from '../../features/error/error';
+import {setAddPropertyOne} from '../../features/owner/ownerSlice';
 import {PropertyTypeListData} from '../../features/ownerTypes';
 
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -26,6 +27,8 @@ type Props = {};
 const AddPropertyScreen = (props: Props) => {
   const navigation = useNavigation();
   const error = useSelector(state => state.error);
+  const owner = useSelector(state => state.owner);
+
   const dispatch = useDispatch();
 
   console.log(error);
@@ -36,12 +39,15 @@ const AddPropertyScreen = (props: Props) => {
     title: '',
     type: '',
     size: 0,
+    sizeType: '',
     year: 0,
     amount: 0.0,
     duration: '',
   });
 
   const [getPropertyType] = useGetPropertyTypeMutation();
+
+  console.log(owner);
 
   const propertyType = async () => {
     try {
@@ -78,6 +84,29 @@ const AddPropertyScreen = (props: Props) => {
   useEffect(() => {
     propertyType();
   }, []);
+
+  const nextScreen = () => {
+    if (
+      Object.values(property).every(
+        x => x === null || x === '' || x === undefined || x === 0,
+      )
+    ) {
+      console.log('Error');
+    } else {
+      dispatch(
+        setAddPropertyOne({
+          property_name: property.title,
+          property_type_id: property.type,
+          property_size: String(property.size),
+          property_size_type: property.sizeType,
+          property_built_year: String(property.year),
+          hoa_fee: String(property.amount),
+          hoa_fee_type: property.duration,
+        }),
+      );
+      navigation.navigate('AddProperty-2');
+    }
+  };
 
   if (error?.error) {
     return <CustomAlertModal />;
@@ -145,6 +174,7 @@ const AddPropertyScreen = (props: Props) => {
           <Input
             switchButtonData={['Sq ft.', 'Meter']}
             switchButton={true}
+            setSwitchModeType={val => setProperty({...property, sizeType: val})}
             onChange={e =>
               setProperty({...property, size: Number(e.nativeEvent.text)})
             }
@@ -225,7 +255,7 @@ const AddPropertyScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddProperty-2')}>
+              onPress={() => nextScreen()}>
               <Text
                 style={{
                   fontSize: 16,

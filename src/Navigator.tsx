@@ -16,6 +16,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import DashBoardNavBar from './components/DashBoardNavBar/DashBoardNavBar';
 import LoadingModal from './components/LoadingModal/LoadingModal';
 import {setLoggedIn, setToken, setUser} from './features/auth/authProfile';
+import AddNewContractDetailsScreen from './screens/AddNewContractScreen/AddNewContractDetailsScreen';
+import AddNewContractScreen from './screens/AddNewContractScreen/AddNewContractScreen';
+import AddNewContractTenantScreen from './screens/AddNewContractScreen/AddNewContractTenantScreen';
 import AddPropertyAddionalDetailsScreen from './screens/AddPropertyScreen/AddPropertyAddionalDetailsScreen';
 import AddPropertyAddressDetailsScreen from './screens/AddPropertyScreen/AddPropertyAddressDetailsScreen';
 import AddPropertyAmenitiesScreen from './screens/AddPropertyScreen/AddPropertyAmenitiesScreen';
@@ -25,6 +28,7 @@ import AddPropertyImages from './screens/AddPropertyScreen/AddPropertyImages';
 import AddPropertyScreen from './screens/AddPropertyScreen/AddPropertyScreen';
 import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import InvitationScreen from './screens/InvitationScreen/InvitationScreen';
+import InviteTenantScreen from './screens/InviteTenantScreen/InviteTenantScreen';
 import OwnerContractsScreen from './screens/OwnerContractsScreen/OwnerContractsScreen';
 import OwnerTenantScreen from './screens/OwnerTenantScreen/OwnerTenantScreen';
 import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
@@ -178,6 +182,36 @@ const Navigator = (props: Props) => {
             component={AddPropertyImages}
             options={() => ({
               title: 'Add Property',
+            })}
+          />
+          <Stack.Screen
+            name="InviteTenant"
+            component={InviteTenantScreen}
+            options={() => ({
+              title: 'Invite Tenant',
+            })}
+          />
+
+          <Stack.Screen
+            name="AddContract-1"
+            component={AddNewContractScreen}
+            options={() => ({
+              title: 'Add Contract',
+            })}
+          />
+
+          <Stack.Screen
+            name="AddContract-2"
+            component={AddNewContractTenantScreen}
+            options={() => ({
+              title: 'Add Contract',
+            })}
+          />
+          <Stack.Screen
+            name="AddContract-3"
+            component={AddNewContractDetailsScreen}
+            options={() => ({
+              title: 'Add Contract',
             })}
           />
         </Stack.Navigator>

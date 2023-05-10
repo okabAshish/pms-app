@@ -26,6 +26,7 @@ type Props = {
   dropDownHeight: number;
   datas: Array<DropDownDataObj>;
   value?: any;
+  search?: boolean;
 };
 
 const defaultProps: Props = {
@@ -33,6 +34,7 @@ const defaultProps: Props = {
   dropDownHeight: 200,
   onChange: () => {},
   datas: data,
+  search: false,
 };
 
 const DropDown = (props: Props) => {
@@ -51,7 +53,9 @@ const DropDown = (props: Props) => {
           style={styles.dropdown}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
           data={props.datas}
+          search={props.search}
           maxHeight={props.dropDownHeight}
           labelField="label"
           valueField="value"
@@ -100,10 +104,17 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 14,
+    fontFamily: 'Poppins-Regular',
   },
   selectedTextStyle: {
     fontSize: 14,
+    fontFamily: 'Poppins-Regular',
     paddingHorizontal: 10,
     color: '#000',
+  },
+  inputSearchStyle: {
+    borderRadius: 5,
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
   },
 });

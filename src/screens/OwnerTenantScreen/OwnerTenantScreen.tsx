@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
 import AddFloatingButton from '../../components/AddFloatingButton/AddFloatingButton';
@@ -8,6 +9,8 @@ import {OwnerTenantListData} from '../../features/types';
 type Props = {};
 
 const OwnerTenantScreen = (props: Props) => {
+  const navigation = useNavigation();
+
   const [tenantList, setTenantList] = useState<OwnerTenantListData>([]);
   const [page, setPage] = useState(1);
 
@@ -98,7 +101,9 @@ const OwnerTenantScreen = (props: Props) => {
             />
           )}
         />
-        <AddFloatingButton />
+        <AddFloatingButton
+          onPress={() => navigation.navigate('ADD', {screen: 'InviteTenant'})}
+        />
       </View>
     </View>
   );
