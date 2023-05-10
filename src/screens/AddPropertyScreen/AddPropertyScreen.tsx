@@ -25,6 +25,12 @@ type Props = {};
 const AddPropertyScreen = (props: Props) => {
   const navigation = useNavigation();
   const [propertyTypeList, setPropertyTypeList] = useState([]);
+  const [title, setTitle] = useState('');
+  const [type, setType] = useState('');
+  const [size, setSize] = useState('');
+  const [builtYear, setBuiltYear] = useState('');
+  const [hoeFee, setHoeFee] = useState('');
+  const [feeDuration, setFeeDuration] = useState('');
 
   let [property, setProperty] = useState({
     title: '',
@@ -45,15 +51,14 @@ const AddPropertyScreen = (props: Props) => {
           console.log(res);
           
           if (res.success) {
-            //setPropertyTypeList(res?.data);
             const proertyTypeList:PropertyTypeListData  = res?.data;
             const propertyDropdownData:any = [];
-           for (let i = 0; i < proertyTypeList.length; i++) {
-            propertyDropdownData[i] ={
-              label:proertyTypeList[i].name,id:proertyTypeList[i].id,value:proertyTypeList[i].name
+            for (let i = 0; i < proertyTypeList.length; i++) {
+              propertyDropdownData[i] ={
+                label:proertyTypeList[i].name,id:proertyTypeList[i].id,value:proertyTypeList[i].name
+              }
+              setPropertyTypeList(propertyDropdownData)
             }
-            setPropertyTypeList(propertyDropdownData)
-           }
           }
         });
     } catch (err) {
@@ -61,12 +66,15 @@ const AddPropertyScreen = (props: Props) => {
     }
   };
 
-
-  console.log(propertyTypeList)
-
   useEffect(() => {
     propertyType();
   }, []);
+
+  const validateField = () => {
+    const validatedData = {title:title, type:type, size:size, builtYear:builtYear, hoeFee:hoeFee, feeDuration:feeDuration}
+    console.log(validatedData);
+  }
+
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -114,25 +122,24 @@ const AddPropertyScreen = (props: Props) => {
           <Input
             switchButton={false}
             onChange={e =>
-              setProperty({...property, title: e.nativeEvent.text})
+              setTitle(e.nativeEvent.text)
             }
             placehoder="Enter a nick name of the property"
             label="Property Title (Nick Name)"
+
           />
           <DropDown
-            label="Property Type"
-           
+            label="Property Type"           
             datas={propertyTypeList}
             onChange={value => {
-              console.log(value);
-              setProperty({...property, type: value});
+              setType(value);
             }}
           />
           <Input
             switchButtonData={['Sq ft.', 'Meter']}
             switchButton={true}
             onChange={e =>
-              setProperty({...property, size: Number(e.nativeEvent.text)})
+              setSize(e.nativeEvent.text)
             }
             placehoder="Enter Property Size"
             label="Property Size"
@@ -141,7 +148,7 @@ const AddPropertyScreen = (props: Props) => {
           <Input
             switchButton={false}
             onChange={e =>
-              setProperty({...property, year: Number(e.nativeEvent.text)})
+              setBuiltYear(e.nativeEvent.text)
             }
             placehoder="Enter Property Year"
             label="Property Built Year"
@@ -150,7 +157,7 @@ const AddPropertyScreen = (props: Props) => {
             <Input
               switchButton={false}
               onChange={e =>
-                setProperty({...property, amount: Number(e.nativeEvent.text)})
+                setHoeFee(e.nativeEvent.text)
               }
               placehoder="Enter HOA Fee Amount"
               label="HOA Fee"
@@ -160,8 +167,7 @@ const AddPropertyScreen = (props: Props) => {
               label="Fee Duration"
               value={property.type}
               onChange={value => {
-                console.log(value);
-                setProperty({...property, duration: value});
+                setFeeDuration(value);
               }}
               containerStyles={{flex: 1}}
               dropDownHeight={100}
@@ -211,7 +217,7 @@ const AddPropertyScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddProperty-2')}>
+              onPress={() => validateField()}>
               <Text
                 style={{
                   fontSize: 16,

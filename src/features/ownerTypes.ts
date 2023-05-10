@@ -138,7 +138,7 @@ export interface OwnerContract{
         updated_at?: string
     },
     contract_status_name: {
-        id: 4,
+        id: number,
         name?: string,
         created_at?: string,
         updated_at?: string
@@ -147,7 +147,20 @@ export interface OwnerContract{
 }
 
 export interface AddPropertyInputData {
-    
+    property_name: string;
+    property_type_id: string;
+    property_size: string;
+    property_size_type: string;
+    property_built_year: string;
+    hoa_fee: string;
+    hoa_fee_type: string;
+    no_of_bedrooms: string;
+    no_of_bathroom: string;
+    furnishing_type_id: string;
+    property_furnishing_detail: string;
+    property_amenities: string;
+    balcony_terrace: string;
+    parking_available: string;
 }
 
 export interface AddPropertyResponseData {
