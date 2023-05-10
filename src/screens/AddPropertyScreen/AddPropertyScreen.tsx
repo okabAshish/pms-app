@@ -1,8 +1,7 @@
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import { $CombinedState } from '@reduxjs/toolkit';
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   StatusBar,
@@ -12,11 +11,13 @@ import {
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useDispatch, useSelector} from 'react-redux';
 import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
+import CustomAlertModal from '../../container/CustomAlertModal/CustomAlertModal';
 import {useGetPropertyTypeMutation} from '../../features/auth/owner';
+import {setError} from '../../features/error/error';
 import {PropertyTypeListData} from '../../features/ownerTypes';
-
 
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
@@ -24,6 +25,11 @@ type Props = {};
 
 const AddPropertyScreen = (props: Props) => {
   const navigation = useNavigation();
+  const error = useSelector(state => state.error);
+  const dispatch = useDispatch();
+
+  console.log(error);
+
   const [propertyTypeList, setPropertyTypeList] = useState([]);
 
   let [property, setProperty] = useState({
@@ -42,31 +48,40 @@ const AddPropertyScreen = (props: Props) => {
       await getPropertyType({})
         .unwrap()
         .then(res => {
-          console.log(res);
-          
+          // console.log(res);
+
           if (res.success) {
             //setPropertyTypeList(res?.data);
-            const proertyTypeList:PropertyTypeListData  = res?.data;
-            const propertyDropdownData:any = [];
-           for (let i = 0; i < proertyTypeList.length; i++) {
-            propertyDropdownData[i] ={
-              label:proertyTypeList[i].name,id:proertyTypeList[i].id,value:proertyTypeList[i].name
+            const proertyTypeList: PropertyTypeListData = res?.data;
+            const propertyDropdownData: any = [];
+            for (let i = 0; i < proertyTypeList.length; i++) {
+              propertyDropdownData[i] = {
+                label: proertyTypeList[i].name,
+                id: proertyTypeList[i].id,
+                value: proertyTypeList[i].name,
+              };
+              setPropertyTypeList(propertyDropdownData);
             }
-            setPropertyTypeList(propertyDropdownData)
-           }
           }
         });
     } catch (err) {
+      dispatch(setError({error: true, message: err}));
+      setTimeout(() => {
+        dispatch(setError({error: false, message: ''}));
+      }, 350);
       console.log(err);
     }
   };
 
-
-  console.log(propertyTypeList)
+  // console.log(propertyTypeList);
 
   useEffect(() => {
     propertyType();
   }, []);
+
+  if (error?.error) {
+    return <CustomAlertModal />;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -121,7 +136,6 @@ const AddPropertyScreen = (props: Props) => {
           />
           <DropDown
             label="Property Type"
-           
             datas={propertyTypeList}
             onChange={value => {
               console.log(value);
