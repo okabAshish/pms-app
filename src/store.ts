@@ -8,6 +8,7 @@ import {authApi} from './features/auth/auth';
 import authProfile from './features/auth/authProfile';
 import {ownerApi} from './features/auth/owner';
 import error from './features/error/error';
+import owner from './features/owner/ownerSlice';
 import pageName from './features/pageName/pageName';
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     auth: authProfile,
     page: pageName,
     error: error,
+    owner: owner,
     [authApi.reducerPath]: authApi.reducer,
     [ownerApi.reducerPath]: ownerApi.reducer,
   },

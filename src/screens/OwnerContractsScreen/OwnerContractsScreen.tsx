@@ -1,15 +1,18 @@
+import {useNavigation} from '@react-navigation/native';
+import dayjs from 'dayjs';
 import React, {useEffect, useState} from 'react';
-import {View, ActivityIndicator, FlatList} from 'react-native';
+import {ActivityIndicator, FlatList, View} from 'react-native';
+import AddFloatingButton from '../../components/AddFloatingButton/AddFloatingButton';
 import OwnerContractCard from '../../components/OwnerContractCard/OwnerContractCard';
 import {useGetOwnerContractListMutation} from '../../features/auth/owner';
 import {OwnerContractList} from '../../features/ownerTypes';
-import dayjs from 'dayjs';
 //import relativeTime from 'dayjs/plugin/relativeTime';
 
 //dayjs.extend(relativeTime);
 type Props = {};
 
 const OwnerContractsScreen = (props: Props) => {
+  const navigation = useNavigation();
   const [contractList, setContractList] = useState<OwnerContractList>([]);
   const [page, setPage] = useState(1);
   const [getOwnerContractList] = useGetOwnerContractListMutation();
@@ -20,7 +23,7 @@ const OwnerContractsScreen = (props: Props) => {
         .unwrap()
         .then(res => {
           console.log(res);
-          
+
           if (res.success) {
             setContractList(res?.data?.data);
           }
@@ -39,10 +42,7 @@ const OwnerContractsScreen = (props: Props) => {
         .then(res => {
           if (res.success) {
             console.log(res);
-            let arr: OwnerContractList = [
-              ...contractList,
-              ...res?.data?.data,
-            ];
+            let arr: OwnerContractList = [...contractList, ...res?.data?.data];
             setContractList(arr);
           }
         });
@@ -73,7 +73,7 @@ const OwnerContractsScreen = (props: Props) => {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={{paddingHorizontal: 20}}>
-      <FlatList
+        <FlatList
           data={contractList}
           keyExtractor={(item, index) => index.toString()}
           ListFooterComponent={renderFooter}
@@ -83,21 +83,31 @@ const OwnerContractsScreen = (props: Props) => {
             reGetContract();
           }}
           renderItem={({item, index}) => (
-          <OwnerContractCard 
-              contract_id= {item?.id}
-              tenant_name= {item?.contract_tenant_data?.title +' '+item?.contract_tenant_data?.first_name+' '+item?.contract_tenant_data?.last_name}
-              contract_number= {item?.contract_number}
-              contract_type= {item?.contract_type_name?.name}
-              total_monthly_rent= {item?.total_monthly_amt}
-              start_date= {item?.start_date}
-              last_date= {item?.end_date}
-              created_at= {dayjs(item.created_at).format('D MMM, YYYY h:mm A')}
-              status= {item?.contract_status_name?.name}
-              status_id= {item?.contract_status_name?.id}
-              action= {item?.contract_tenant_data?.first_name}
-              vacant= {item?.mark_as_vacant}
+            <OwnerContractCard
+              contract_id={item?.id}
+              tenant_name={
+                item?.contract_tenant_data?.title +
+                ' ' +
+                item?.contract_tenant_data?.first_name +
+                ' ' +
+                item?.contract_tenant_data?.last_name
+              }
+              contract_number={item?.contract_number}
+              contract_type={item?.contract_type_name?.name}
+              total_monthly_rent={item?.total_monthly_amt}
+              start_date={item?.start_date}
+              last_date={item?.end_date}
+              created_at={dayjs(item.created_at).format('D MMM, YYYY h:mm A')}
+              status={item?.contract_status_name?.name}
+              status_id={item?.contract_status_name?.id}
+              action={item?.contract_tenant_data?.first_name}
+              vacant={item?.mark_as_vacant}
             />
           )}
+        />
+        <AddFloatingButton
+          backgroundColor="#45485F"
+          onPress={() => navigation.navigate('ADD', {screen: 'AddContract-1'})}
         />
       </View>
     </View>

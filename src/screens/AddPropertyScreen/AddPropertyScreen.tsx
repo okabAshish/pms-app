@@ -17,6 +17,7 @@ import Input from '../../components/Input/Input';
 import CustomAlertModal from '../../container/CustomAlertModal/CustomAlertModal';
 import {useGetPropertyTypeMutation} from '../../features/auth/owner';
 import {setError} from '../../features/error/error';
+import {setAddPropertyOne} from '../../features/owner/ownerSlice';
 import {PropertyTypeListData} from '../../features/ownerTypes';
 
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -25,29 +26,34 @@ type Props = {};
 
 const AddPropertyScreen = (props: Props) => {
   const navigation = useNavigation();
-  //const error = useSelector(state => state.error);
+  const error = useSelector(state => state.error);
+  const owner = useSelector(state => state.owner);
+
   const dispatch = useDispatch();
 
   //console.log(error);
 
   const [propertyTypeList, setPropertyTypeList] = useState([]);
-  const [title, setTitle] = useState('');
-  const [type, setType] = useState('');
-  const [size, setSize] = useState('');
-  const [builtYear, setBuiltYear] = useState('');
-  const [hoeFee, setHoeFee] = useState('');
-  const [feeDuration, setFeeDuration] = useState('');
+  // const [title, setTitle] = useState('');
+  // const [type, setType] = useState('');
+  // const [size, setSize] = useState('');
+  // const [builtYear, setBuiltYear] = useState('');
+  // const [hoeFee, setHoeFee] = useState('');
+  // const [feeDuration, setFeeDuration] = useState('');
 
   let [property, setProperty] = useState({
     title: '',
     type: '',
-    size: 0,
-    year: 0,
-    amount: 0.0,
+    size: '0',
+    sizeType: '',
+    year: '0',
+    amount: '0.0',
     duration: '',
   });
 
   const [getPropertyType] = useGetPropertyTypeMutation();
+
+  console.log(owner);
 
   const propertyType = async () => {
     try {
@@ -83,9 +89,32 @@ const AddPropertyScreen = (props: Props) => {
     propertyType();
   }, []);
 
-  const validateField = () => {
-    const validatedData = {title:title, type:type, size:size, builtYear:builtYear, hoeFee:hoeFee, feeDuration:feeDuration}
-    console.log(validatedData);
+  const nextScreen = () => {
+    if (
+      Object.values(property).every(
+        x => x === null || x === '' || x === undefined || x === 0,
+      )
+    ) {
+      console.log('Error');
+    } else {
+      
+      dispatch(
+        setAddPropertyOne({
+          property_name: property.title,
+          property_type_id: property.type,
+          property_size: String(property.size),
+          property_size_type: property.sizeType,
+          property_built_year: String(property.year),
+          hoa_fee: String(property.amount),
+          hoa_fee_type: property.duration,
+        }),
+      );
+      navigation.navigate('AddProperty-2');
+    }
+  };
+
+  if (error?.error) {
+    return <CustomAlertModal />;
   }
 
 
@@ -135,7 +164,7 @@ const AddPropertyScreen = (props: Props) => {
           <Input
             switchButton={false}
             onChange={e =>
-              setTitle(e.nativeEvent.text)
+              setProperty({...property, title: e.nativeEvent.text})
             }
             placehoder="Enter a nick name of the property"
             label="Property Title (Nick Name)"
@@ -144,15 +173,16 @@ const AddPropertyScreen = (props: Props) => {
           <DropDown
             label="Property Type"
             datas={propertyTypeList}
-            onChange={value => {
-              setType(value);
+            onChange={val => {
+              setProperty({...property, type: val})
             }}
           />
           <Input
             switchButtonData={['Sq ft.', 'Meter']}
             switchButton={true}
+            setSwitchModeType={val => setProperty({...property, sizeType: val})}
             onChange={e =>
-              setSize(e.nativeEvent.text)
+              setProperty({...property, size: e.nativeEvent.text})
             }
             placehoder="Enter Property Size"
             label="Property Size"
@@ -161,7 +191,7 @@ const AddPropertyScreen = (props: Props) => {
           <Input
             switchButton={false}
             onChange={e =>
-              setBuiltYear(e.nativeEvent.text)
+              setProperty({...property, year: e.nativeEvent.text})
             }
             placehoder="Enter Property Year"
             label="Property Built Year"
@@ -170,7 +200,7 @@ const AddPropertyScreen = (props: Props) => {
             <Input
               switchButton={false}
               onChange={e =>
-                setHoeFee(e.nativeEvent.text)
+                setProperty({...property, amount: e.nativeEvent.text})
               }
               placehoder="Enter HOA Fee Amount"
               label="HOA Fee"
@@ -179,8 +209,8 @@ const AddPropertyScreen = (props: Props) => {
             <DropDown
               label="Fee Duration"
               value={property.type}
-              onChange={value => {
-                setFeeDuration(value);
+              onChange={val => {
+                setProperty({...property, duration: val})
               }}
               containerStyles={{flex: 1}}
               dropDownHeight={100}
@@ -230,7 +260,7 @@ const AddPropertyScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => validateField()}>
+              onPress={() => nextScreen()}>
               <Text
                 style={{
                   fontSize: 16,
