@@ -8,6 +8,8 @@ import {
   PropertyTypeResponseData,
   resendInvitationParam,
   resendInvitationResponseData,
+  FurnishingTypeResponseData,
+  FurnishingListResponseData
 } from '../ownerTypes';
 
 // Define a service using a base URL and expected endpoints
@@ -38,8 +40,26 @@ export const ownerApi = createApi({
     }),
     //Start Add property
     getPropertyType: builder.mutation<PropertyTypeResponseData, {}>({
-      query: req => ({
+      query: () => ({
         url: 'property-type-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    getFurnishingType: builder.mutation<FurnishingTypeResponseData, {}>({
+      query: () => ({
+        url: 'furnishing-type-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    getFurnishingList: builder.mutation<FurnishingListResponseData, {}>({
+      query: () => ({
+        url: 'furnishing-list',
         method: 'GET',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -82,4 +102,6 @@ export const {
   useGetResendInvitationMutation,
   useGetPropertyTypeMutation,
   useGetOwnerContractListMutation,
+  useGetFurnishingTypeMutation,
+  useGetFurnishingListMutation,
 } = ownerApi;
