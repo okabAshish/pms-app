@@ -6,7 +6,7 @@ interface ErrorData {
 }
 
 const error = createSlice({
-  name: 'page',
+  name: 'error',
   initialState: {
     error: false as ErrorData['error'],
     message: '' as ErrorData['message'],

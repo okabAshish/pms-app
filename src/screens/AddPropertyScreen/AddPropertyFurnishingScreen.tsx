@@ -1,7 +1,7 @@
 import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,15 +11,99 @@ import {
 } from 'react-native';
 import CheckBox from '../../components/CheckBox/CheckBox';
 import RadioButton from '../../components/RadioButton/RadioButton';
+import {useGetFurnishingTypeMutation, useGetFurnishingListMutation} from '../../features/auth/owner';
+import {FurnishingTypeList, FurnishingListData} from '../../features/ownerTypes';
+import {useDispatch, useSelector} from 'react-redux';
+import {setError} from '../../features/error/error';
 
 type Props = {};
 
 const AddPropertyFurnishingScreen = (props: Props) => {
   const navigation = useNavigation();
-  const [value, setValue] = useState(null);
-  const [FurnishedDetails, setFurnishedDetails] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const error = useSelector(state => state?.error);
+  const owner = useSelector(state => state?.owner);
 
-  console.log(FurnishedDetails);
+  const [typeValue, setTypeValue] = useState(null);
+  const [furnisingValue, setFurnisingValue] = useState(null);
+  const [furnishedType, setFurnishedType] = useState([]);
+  const [furnishedList, setFurnishedList] = useState([]);
+  const [furnishedDetails, setFurnishedDetails] = useState({
+    furnishing_type_id: '',
+    property_furnishing_detail: '',
+  });
+
+  //console.log(furnishedDetails);
+  const [getFurnishingType] = useGetFurnishingTypeMutation();
+  const [getFurnishingList] = useGetFurnishingListMutation();
+  const dispatch = useDispatch();
+
+  const furnishingTypeData = async () => {
+    setLoading(true)
+    try {
+      await getFurnishingType({})
+        .unwrap()
+        .then(res => {
+          //console.log(res,"FURNISHING TYPE RES");
+
+          if (res.success) {
+            const furnishingTypeList: FurnishingTypeList = res?.data;
+            const furnishingData: any = [];
+            for (let i = 0; i < furnishingTypeList.length; i++) {
+              furnishingData[i] = furnishingTypeList[i].name;
+            }
+            setFurnishedType(furnishingData);
+            
+            furnishingListFunction();
+          }
+        });
+    } catch (err) {
+      dispatch(setError({error: true, message: err}));
+      setTimeout(() => {
+        dispatch(setError({error: false, message: ''}));
+      }, 350);
+      console.log(err,"EERRRR");
+    }
+    setLoading(false)
+  }
+
+  const furnishingListFunction = async () => {
+    console.log(1);
+    setLoading(true)
+    try {
+      await getFurnishingList({})
+        .unwrap()
+        .then(res => {
+          console.log(res,"FURNISHING List");
+          console.log(res?.data);
+          if (res.success) {
+            
+            const FurnishingListData: FurnishingListData = res?.data;
+            const furnishingCheckboxData: any = [];
+            for (let i = 0; i < FurnishingListData.length; i++) {
+              furnishingCheckboxData[i] = {
+                slug: FurnishingListData[i].furnish_name,
+                title: FurnishingListData[i].furnish_name,
+                icon: FurnishingListData[i].icon,
+              };
+            }
+            setFurnishedList(furnishingCheckboxData);
+            console.log(furnishingCheckboxData)
+          }
+        });
+    } catch (err) {
+      dispatch(setError({error: true, message: err}));
+      setTimeout(() => {
+        dispatch(setError({error: false, message: ''}));
+      }, 350);
+      console.log(err,"EERRRR");
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    furnishingTypeData();
+  }, []);
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -62,18 +146,20 @@ const AddPropertyFurnishingScreen = (props: Props) => {
             Furnishing
           </Text>
         </View>
+
         <RadioButton
-          labels={['Not Furnished', 'Fully Furnished Previous']}
+          labels={furnishedType}
           containerStyles={{marginVertical: 32}}
           onChange={v => {
             console.log(v);
-            setValue(v);
+            setTypeValue(v);
           }}
-          value={value}
+          value={typeValue}
         />
 
-        {value === 1 && (
+        {typeValue === 1 && (
           <>
+
             <Text
               style={{
                 fontFamily: 'Poppins-Regular',
@@ -82,10 +168,11 @@ const AddPropertyFurnishingScreen = (props: Props) => {
               }}>
               Property Will Be Furnished With:
             </Text>
+
             <CheckBox
-              labels={[{slug: 'Box', title: 'Box', icon: 'fas fa-bed'}]}
-              value={FurnishedDetails}
-              onChange={v => setFurnishedDetails(v)}
+              labels={furnishedList}
+              value={furnisingValue}
+              onChange={v => setFurnisingValue(furnisingValue)}
             />
           </>
         )}

@@ -15,6 +15,10 @@ const owner = createSlice({
     property_built_year: '',
     hoa_fee: '',
     hoa_fee_type: '',
+    no_of_bedrooms: '',
+    no_of_bathroom: '',
+    furnishing_type_id: '',
+    property_furnishing_detail: '',
   } as AddPropertyInputData,
   reducers: {
     setAddPropertyOne: (state, action: PayloadAction<AddPropertyInputData>) => {
@@ -26,9 +30,17 @@ const owner = createSlice({
       state.hoa_fee = action.payload.hoa_fee;
       state.hoa_fee_type = action.payload.hoa_fee_type;
     },
+    setAddPropertyTwo: (state, action: PayloadAction<AddPropertyInputData>) => {
+      state.no_of_bedrooms = action.payload.no_of_bedrooms;
+      state.no_of_bathroom = action.payload.no_of_bathroom;
+    },
+    setAddPropertyThree: (state, action: PayloadAction<AddPropertyInputData>) => {
+      state.furnishing_type_id = action.payload.furnishing_type_id;
+      state.property_furnishing_detail = action.payload.property_furnishing_detail;
+    },
   },
 });
 
-export const {setAddPropertyOne} = owner.actions;
+export const {setAddPropertyOne, setAddPropertyTwo, setAddPropertyThree} = owner.actions;
 
 export default owner.reducer;

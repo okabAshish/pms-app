@@ -138,7 +138,7 @@ export interface OwnerContract {
     updated_at?: string;
   };
   contract_status_name: {
-    id: 4;
+    id: number;
     name?: string;
     created_at?: string;
     updated_at?: string;
@@ -165,6 +165,34 @@ export interface AddPropertyInputData {
 
 export interface AddPropertyResponseData {}
 
+
+export interface FurnishingTypeResponseData {
+  success: boolean;
+  data: FurnishingTypeList;
+  message: string;
+}
+
+export interface FurnishingTypeList extends Array<FurnishingType> {}
+
+export interface FurnishingType {
+  id: number;
+  name: string;
+}
+
+export interface FurnishingListResponseData {
+  success: boolean;
+  data: FurnishingListData;
+  message: string;
+}
+
+export interface FurnishingListData extends Array<FurnishingList> {}
+
+export interface FurnishingList {
+  id: number;
+  furnish_name: string;
+  icon: string;
+}
+=======
 export interface OwnerPropertyData {
   id: number;
   owner_id: number;
@@ -290,3 +318,4 @@ export interface OwnerPropertyDetailsData {
 export interface OwnerPropertyDetailsRequest {
   param: number;
 }
+

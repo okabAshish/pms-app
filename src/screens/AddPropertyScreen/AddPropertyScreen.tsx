@@ -26,22 +26,30 @@ type Props = {};
 
 const AddPropertyScreen = (props: Props) => {
   const navigation = useNavigation();
-  const error = useSelector(state => state.error);
-  const owner = useSelector(state => state.owner);
+  const error = useSelector(state => state?.error);
+  const owner = useSelector(state => state?.owner);
 
   const dispatch = useDispatch();
 
-  console.log(error);
+  //console.log(error);
 
   const [propertyTypeList, setPropertyTypeList] = useState([]);
+
+  const [loading,setLoading]=useState(false)
+  // const [title, setTitle] = useState('');
+  // const [type, setType] = useState('');
+  // const [size, setSize] = useState('');
+  // const [builtYear, setBuiltYear] = useState('');
+  // const [hoeFee, setHoeFee] = useState('');
+  // const [feeDuration, setFeeDuration] = useState('');
 
   let [property, setProperty] = useState({
     title: '',
     type: '',
-    size: 0,
-    sizeType: '',
-    year: 0,
-    amount: 0.0,
+    size: '',
+    sizeType: 'Sq ft.',
+    year: '',
+    amount: '',
     duration: '',
   });
 
@@ -50,11 +58,12 @@ const AddPropertyScreen = (props: Props) => {
   console.log(owner);
 
   const propertyType = async () => {
+    setLoading(true)
     try {
       await getPropertyType({})
         .unwrap()
         .then(res => {
-          // console.log(res);
+          console.log(res,"PROPERTY TYPE RES");
 
           if (res.success) {
             //setPropertyTypeList(res?.data);
@@ -66,8 +75,8 @@ const AddPropertyScreen = (props: Props) => {
                 id: proertyTypeList[i].id,
                 value: proertyTypeList[i].name,
               };
-              setPropertyTypeList(propertyDropdownData);
             }
+            setPropertyTypeList(propertyDropdownData);
           }
         });
     } catch (err) {
@@ -75,42 +84,57 @@ const AddPropertyScreen = (props: Props) => {
       setTimeout(() => {
         dispatch(setError({error: false, message: ''}));
       }, 350);
-      console.log(err);
+      console.log(err,"EERRRR");
     }
-  };
+    setLoading(false)
 
-  // console.log(propertyTypeList);
+  };
 
   useEffect(() => {
     propertyType();
   }, []);
 
+  console.log(property);
+
+
   const nextScreen = () => {
-    if (
-      Object.values(property).every(
-        x => x === null || x === '' || x === undefined || x === 0,
-      )
-    ) {
-      console.log('Error');
-    } else {
+  try {
+
+    for (const key in property) {
+      
+        if (
+          property[key] === null || property[key] === '' || property[key] === undefined 
+        ){
+          throw Error.name=`${key} is empty`
+        }
+      
+    }
+    
+      console.log('success');
       dispatch(
         setAddPropertyOne({
-          property_name: property.title,
-          property_type_id: property.type,
+          property_name: String(property.title),
+          property_type_id: String(property.type),
           property_size: String(property.size),
-          property_size_type: property.sizeType,
+          property_size_type: String(property.sizeType),
           property_built_year: String(property.year),
           hoa_fee: String(property.amount),
-          hoa_fee_type: property.duration,
+          hoa_fee_type: String(property.duration),
         }),
       );
       navigation.navigate('AddProperty-2');
-    }
+  } catch (err) {
+    console.log(err)
+  }
+    
   };
 
   if (error?.error) {
-    return <CustomAlertModal />;
+    return <CustomAlertModal  />;
   }
+
+  if(loading) {<><Text>Loading</Text></>}
+
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -162,13 +186,13 @@ const AddPropertyScreen = (props: Props) => {
             }
             placehoder="Enter a nick name of the property"
             label="Property Title (Nick Name)"
+
           />
           <DropDown
             label="Property Type"
             datas={propertyTypeList}
-            onChange={value => {
-              console.log(value);
-              setProperty({...property, type: value});
+            onChange={val => {
+              setProperty({...property, type: val})
             }}
           />
           <Input
@@ -176,7 +200,7 @@ const AddPropertyScreen = (props: Props) => {
             switchButton={true}
             setSwitchModeType={val => setProperty({...property, sizeType: val})}
             onChange={e =>
-              setProperty({...property, size: Number(e.nativeEvent.text)})
+              setProperty({...property, size: e.nativeEvent.text})
             }
             placehoder="Enter Property Size"
             label="Property Size"
@@ -185,7 +209,7 @@ const AddPropertyScreen = (props: Props) => {
           <Input
             switchButton={false}
             onChange={e =>
-              setProperty({...property, year: Number(e.nativeEvent.text)})
+              setProperty({...property, year: e.nativeEvent.text})
             }
             placehoder="Enter Property Year"
             label="Property Built Year"
@@ -194,7 +218,7 @@ const AddPropertyScreen = (props: Props) => {
             <Input
               switchButton={false}
               onChange={e =>
-                setProperty({...property, amount: Number(e.nativeEvent.text)})
+                setProperty({...property, amount: e.nativeEvent.text})
               }
               placehoder="Enter HOA Fee Amount"
               label="HOA Fee"
@@ -203,9 +227,8 @@ const AddPropertyScreen = (props: Props) => {
             <DropDown
               label="Fee Duration"
               value={property.type}
-              onChange={value => {
-                console.log(value);
-                setProperty({...property, duration: value});
+              onChange={val => {
+                setProperty({...property, duration: val})
               }}
               containerStyles={{flex: 1}}
               dropDownHeight={100}
@@ -223,28 +246,6 @@ const AddPropertyScreen = (props: Props) => {
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            {/* <TouchableOpacity
-              style={{
-                marginHorizontal: 10,
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-                backgroundColor: '#45485F',
-                borderRadius: 3,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <FontAwesomeIcon icon={faChevronLeft} size={12} color="#fff" />
-              <Text
-                style={{
-                  fontSize: 16,
-                  height: 24,
-                  fontFamily: 'Poppins-Medium',
-                  marginLeft: 5,
-                  color: '#fff',
-                }}>
-                Previous
-              </Text>
-            </TouchableOpacity> */}
             <TouchableOpacity
               style={{
                 marginHorizontal: 10,
@@ -255,7 +256,8 @@ const AddPropertyScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => nextScreen()}>
+              onPress={() => nextScreen()}
+              >
               <Text
                 style={{
                   fontSize: 16,
