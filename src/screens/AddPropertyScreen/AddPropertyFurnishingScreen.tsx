@@ -1,7 +1,7 @@
 import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,12 +9,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import CheckBox from '../../components/CheckBox/CheckBox';
 import RadioButton from '../../components/RadioButton/RadioButton';
-import {useGetFurnishingTypeMutation, useGetFurnishingListMutation} from '../../features/auth/owner';
-import {FurnishingTypeList, FurnishingListData} from '../../features/ownerTypes';
-import {useDispatch, useSelector} from 'react-redux';
+import {
+  useGetFurnishingListMutation,
+  useGetFurnishingTypeMutation,
+} from '../../features/auth/owner';
 import {setError} from '../../features/error/error';
+import {setAddPropertyThree} from '../../features/owner/ownerSlice';
+import {
+  FurnishingListData,
+  FurnishingTypeList,
+} from '../../features/ownerTypes';
 
 type Props = {};
 
@@ -24,13 +31,13 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   const error = useSelector(state => state?.error);
   const owner = useSelector(state => state?.owner);
 
-  const [typeValue, setTypeValue] = useState(null);
-  const [furnisingValue, setFurnisingValue] = useState(null);
+  const [typeValue, setTypeValue] = useState(0);
+  const [furnisingValue, setFurnisingValue] = useState([]);
   const [furnishedType, setFurnishedType] = useState([]);
   const [furnishedList, setFurnishedList] = useState([]);
   const [furnishedDetails, setFurnishedDetails] = useState({
     furnishing_type_id: '',
-    property_furnishing_detail: '',
+    property_furnishing_detail: [],
   });
 
   //console.log(furnishedDetails);
@@ -39,7 +46,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   const dispatch = useDispatch();
 
   const furnishingTypeData = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       await getFurnishingType({})
         .unwrap()
@@ -53,7 +60,6 @@ const AddPropertyFurnishingScreen = (props: Props) => {
               furnishingData[i] = furnishingTypeList[i].name;
             }
             setFurnishedType(furnishingData);
-            
             furnishingListFunction();
           }
         });
@@ -62,22 +68,20 @@ const AddPropertyFurnishingScreen = (props: Props) => {
       setTimeout(() => {
         dispatch(setError({error: false, message: ''}));
       }, 350);
-      console.log(err,"EERRRR");
+      console.log(err, 'EERRRR');
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   const furnishingListFunction = async () => {
-    console.log(1);
-    setLoading(true)
+    setLoading(true);
     try {
       await getFurnishingList({})
         .unwrap()
         .then(res => {
-          console.log(res,"FURNISHING List");
+          console.log(res, 'FURNISHING List');
           console.log(res?.data);
           if (res.success) {
-            
             const FurnishingListData: FurnishingListData = res?.data;
             const furnishingCheckboxData: any = [];
             for (let i = 0; i < FurnishingListData.length; i++) {
@@ -88,7 +92,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
               };
             }
             setFurnishedList(furnishingCheckboxData);
-            console.log(furnishingCheckboxData)
+            console.log(furnishingCheckboxData);
           }
         });
     } catch (err) {
@@ -96,10 +100,26 @@ const AddPropertyFurnishingScreen = (props: Props) => {
       setTimeout(() => {
         dispatch(setError({error: false, message: ''}));
       }, 350);
-      console.log(err,"EERRRR");
+      console.log(err, 'EERRRR');
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
+
+  // console.log(furnisingValue);
+
+  const selectedFurnishType = v => {
+    setTypeValue(v);
+    setFurnishedDetails({...furnishedDetails, furnishing_type_id: String(v)});
+  };
+
+  const page3 = () => {
+    dispatch(
+      setAddPropertyThree({
+        furnishing_type_id: furnishedDetails.furnishing_type_id,
+        property_furnishing_detail: furnishedDetails.property_furnishing_detail,
+      }),
+    );
+  };
 
   useEffect(() => {
     furnishingTypeData();
@@ -151,15 +171,13 @@ const AddPropertyFurnishingScreen = (props: Props) => {
           labels={furnishedType}
           containerStyles={{marginVertical: 32}}
           onChange={v => {
-            console.log(v);
-            setTypeValue(v);
+            selectedFurnishType(v);
           }}
           value={typeValue}
         />
 
         {typeValue === 1 && (
           <>
-
             <Text
               style={{
                 fontFamily: 'Poppins-Regular',
@@ -171,8 +189,15 @@ const AddPropertyFurnishingScreen = (props: Props) => {
 
             <CheckBox
               labels={furnishedList}
-              value={furnisingValue}
-              onChange={v => setFurnisingValue(furnisingValue)}
+              // value={furnisingValue}
+              onChange={v => {
+                // console.log(v);
+                setFurnisingValue(v);
+                setFurnishedDetails({
+                  ...furnishedDetails,
+                  property_furnishing_detail: v,
+                });
+              }}
             />
           </>
         )}
@@ -216,7 +241,12 @@ const AddPropertyFurnishingScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddProperty-4')}>
+              onPress={() => {
+                if (furnishedDetails.furnishing_type_id) {
+                  page3();
+                  navigation.navigate('AddProperty-4');
+                }
+              }}>
               <Text
                 style={{
                   fontSize: 16,

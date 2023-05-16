@@ -1,7 +1,8 @@
 import * as Icon from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useState} from 'react';
-import {Text, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {Text, View, ViewStyle} from 'react-native';
+import CheckBoxButton from './CheckBoxButton';
 
 type LabelData = {
   slug: string;
@@ -23,7 +24,9 @@ const defaultProps: Props = {
 };
 
 const CheckBox = (props: Props) => {
-  const [checked, setChecked] = useState([...props.value]);
+  const [checked, setChecked] = useState([]);
+
+  console.log(props.labels, 'CheckBox');
 
   const createIcon = (icon: string) => {
     let a = `${icon?.split(' ')[1].split('-')[1]}`;
@@ -36,7 +39,7 @@ const CheckBox = (props: Props) => {
   return (
     <View style={{...props.containerStyles}}>
       {props.labels.map((item, index) => {
-        console.log(checked.includes(item?.slug));
+        // console.log(checked.includes(item?.slug));
 
         return (
           <View
@@ -44,43 +47,27 @@ const CheckBox = (props: Props) => {
               flexDirection: 'row',
               alignItems: 'center',
               marginVertical: 4,
-            }}>
-            <TouchableOpacity
-              style={{
-                padding: 4,
-                height: 24,
-                width: 24,
-                backgroundColor: checked.includes(item.slug)
-                  ? '#0EB9F2'
-                  : '#f5f5f5',
-                elevation: 2,
-                borderWidth: 0.5,
-                borderColor: '#f3f3f3',
-                borderRadius: 2,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: 5,
-              }}
-              onPress={() => {
+            }}
+            key={item.slug + index.toString()}>
+            <CheckBoxButton
+              value={item.slug}
+              onChange={(v: string) => {
                 let a = checked;
-                if (checked.find(v => v === item.slug)) {
-                  console.log('first');
-                  const index = a.indexOf(item.slug);
-                  if (index > -1) {
+                if (a.includes(v)) {
+                  const i = a.indexOf(v);
+                  if (i > -1) {
                     // only splice array when item is found
-                    a.splice(index, 1); // 2nd parameter means remove one item only
+                    a.splice(i, 1); // 2nd parameter means remove one item only
                   }
                   setChecked(a);
                   props.onChange(a);
                 } else {
-                  a = [...a, item.slug];
+                  a = [...a, v];
                   setChecked(a);
                   props.onChange(a);
                 }
-              }}>
-              {/* {checked === item && <FontAwesomeIcon icon={faCheck} />} */}
-            </TouchableOpacity>
+              }}
+            />
 
             {item?.icon && (
               <FontAwesomeIcon

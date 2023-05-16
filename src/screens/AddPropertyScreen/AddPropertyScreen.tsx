@@ -35,7 +35,7 @@ const AddPropertyScreen = (props: Props) => {
 
   const [propertyTypeList, setPropertyTypeList] = useState([]);
 
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
   // const [title, setTitle] = useState('');
   // const [type, setType] = useState('');
   // const [size, setSize] = useState('');
@@ -58,12 +58,12 @@ const AddPropertyScreen = (props: Props) => {
   console.log(owner);
 
   const propertyType = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       await getPropertyType({})
         .unwrap()
         .then(res => {
-          console.log(res,"PROPERTY TYPE RES");
+          console.log(res, 'PROPERTY TYPE RES');
 
           if (res.success) {
             //setPropertyTypeList(res?.data);
@@ -84,10 +84,9 @@ const AddPropertyScreen = (props: Props) => {
       setTimeout(() => {
         dispatch(setError({error: false, message: ''}));
       }, 350);
-      console.log(err,"EERRRR");
+      console.log(err, 'EERRRR');
     }
-    setLoading(false)
-
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -96,20 +95,17 @@ const AddPropertyScreen = (props: Props) => {
 
   console.log(property);
 
-
   const nextScreen = () => {
-  try {
-
-    for (const key in property) {
-      
+    try {
+      for (const key in property) {
         if (
-          property[key] === null || property[key] === '' || property[key] === undefined 
-        ){
-          throw Error.name=`${key} is empty`
+          property[key] === null ||
+          property[key] === '' ||
+          property[key] === undefined
+        ) {
+          throw (Error.name = `${key} is empty`);
         }
-      
-    }
-    
+      }
       console.log('success');
       dispatch(
         setAddPropertyOne({
@@ -123,18 +119,20 @@ const AddPropertyScreen = (props: Props) => {
         }),
       );
       navigation.navigate('AddProperty-2');
-  } catch (err) {
-    console.log(err)
-  }
-    
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   if (error?.error) {
-    return <CustomAlertModal  />;
+    return <CustomAlertModal />;
   }
 
-  if(loading) {<><Text>Loading</Text></>}
-
+  if (loading) {
+    <>
+      <Text>Loading</Text>
+    </>;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -186,31 +184,26 @@ const AddPropertyScreen = (props: Props) => {
             }
             placehoder="Enter a nick name of the property"
             label="Property Title (Nick Name)"
-
           />
           <DropDown
             label="Property Type"
             datas={propertyTypeList}
             onChange={val => {
-              setProperty({...property, type: val})
+              setProperty({...property, type: val});
             }}
           />
           <Input
             switchButtonData={['Sq ft.', 'Meter']}
             switchButton={true}
             setSwitchModeType={val => setProperty({...property, sizeType: val})}
-            onChange={e =>
-              setProperty({...property, size: e.nativeEvent.text})
-            }
+            onChange={e => setProperty({...property, size: e.nativeEvent.text})}
             placehoder="Enter Property Size"
             label="Property Size"
             keyboardType="number-pad"
           />
           <Input
             switchButton={false}
-            onChange={e =>
-              setProperty({...property, year: e.nativeEvent.text})
-            }
+            onChange={e => setProperty({...property, year: e.nativeEvent.text})}
             placehoder="Enter Property Year"
             label="Property Built Year"
           />
@@ -228,7 +221,7 @@ const AddPropertyScreen = (props: Props) => {
               label="Fee Duration"
               value={property.type}
               onChange={val => {
-                setProperty({...property, duration: val})
+                setProperty({...property, duration: val});
               }}
               containerStyles={{flex: 1}}
               dropDownHeight={100}
@@ -256,8 +249,7 @@ const AddPropertyScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => nextScreen()}
-              >
+              onPress={() => nextScreen()}>
               <Text
                 style={{
                   fontSize: 16,

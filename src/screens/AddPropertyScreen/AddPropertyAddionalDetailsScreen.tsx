@@ -1,7 +1,7 @@
 import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,11 +9,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useDispatch} from 'react-redux';
+import Input from '../../components/Input/Input';
 import RadioButton from '../../components/RadioButton/RadioButton';
+import {setAddPropertyFive} from '../../features/owner/ownerSlice';
 
 type Props = {};
 
 const AddPropertyAddionalDetailsScreen = (props: Props) => {
+  const dispatch = useDispatch();
+
+  const [balconyAvaliablity, setBalconyAvaliablity] = useState(false);
+  const [parkingAvaliablity, setParkingAvaliablity] = useState(false);
+  const [parking, setParking] = useState({
+    no_of_parking: 0,
+    parking_type: '',
+  });
   const navigation = useNavigation();
 
   return (
@@ -67,6 +78,14 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
             labels={['Yes', 'No']}
             containerStyles={{marginTop: 8, flexDirection: 'row'}}
             buttonContainerStyle={{marginHorizontal: 5}}
+            onChange={v => {
+              if (v === 0) {
+                setBalconyAvaliablity(true);
+              } else {
+                setBalconyAvaliablity(false);
+              }
+            }}
+            value={balconyAvaliablity ? 0 : 1}
           />
         </View>
         <View style={{marginVertical: 10}}>
@@ -78,8 +97,41 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
             labels={['Yes', 'No']}
             containerStyles={{marginTop: 8, flexDirection: 'row'}}
             buttonContainerStyle={{marginHorizontal: 5}}
+            onChange={v => {
+              if (v === 0) {
+                setParkingAvaliablity(true);
+              } else {
+                setParkingAvaliablity(false);
+              }
+            }}
+            value={parkingAvaliablity ? 0 : 1}
           />
         </View>
+
+        {parkingAvaliablity && (
+          <View style={{marginVertical: 10}}>
+            <Input
+              label="No of Parking"
+              placehoder="Enter No of Parking"
+              onChange={e =>
+                setParking({
+                  ...parking,
+                  no_of_parking: Number(e.nativeEvent.text),
+                })
+              }
+            />
+            <Input
+              label="Parking Type"
+              placehoder="Enter Parking Type"
+              onChange={e =>
+                setParking({
+                  ...parking,
+                  parking_type: e.nativeEvent.text,
+                })
+              }
+            />
+          </View>
+        )}
 
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
           <View
@@ -120,7 +172,17 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddProperty-6')}>
+              onPress={() => {
+                dispatch(
+                  setAddPropertyFive({
+                    parking_available: parkingAvaliablity,
+                    balcony_terrace: balconyAvaliablity,
+                    no_of_parking: parking.no_of_parking,
+                    parking_type: parking.parking_type,
+                  }),
+                );
+                navigation.navigate('AddProperty-6');
+              }}>
               <Text
                 style={{
                   fontSize: 16,

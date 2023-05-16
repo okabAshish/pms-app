@@ -1,7 +1,7 @@
 import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,14 +9,52 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useDispatch} from 'react-redux';
 import CheckBox from '../../components/CheckBox/CheckBox';
+import {useGetOwnerPropertyAmenitiesListMutation} from '../../features/auth/owner';
+import {setAddPropertyFour} from '../../features/owner/ownerSlice';
 
 type Props = {};
 
 const AddPropertyAmenitiesScreen = (props: Props) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const [FurnishedDetails, setFurnishedDetails] = useState([]);
+  const [AmenitiesList, setAmenitiesList] = useState([]);
+
+  const [getOwnerPropertyAmenitiesList] =
+    useGetOwnerPropertyAmenitiesListMutation();
+
+  const getAmenities = async () => {
+    try {
+      await getOwnerPropertyAmenitiesList({})
+        .unwrap()
+        .then(res => {
+          if (res.success) {
+            console.log(res.data);
+            let a = [];
+            for (let i = 0; i < res.data.length; i++) {
+              a.push({
+                slug: res.data[i].name,
+                title: res.data[i].name,
+                icon: res.data[i].icon,
+              });
+            }
+            setAmenitiesList(a);
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getAmenities();
+  }, []);
+
+  console.log(FurnishedDetails);
+
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
       <ScrollView
@@ -61,13 +99,7 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
 
         <View style={{marginVertical: 20}}>
           <CheckBox
-            labels={[
-              {
-                slug: 'Swimming Pool',
-                title: 'Swimming Pool',
-                icon: 'fas fa-swimmer',
-              },
-            ]}
+            labels={AmenitiesList}
             value={FurnishedDetails}
             onChange={v => setFurnishedDetails(v)}
           />
@@ -112,7 +144,12 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddProperty-5')}>
+              onPress={() => {
+                dispatch(
+                  setAddPropertyFour({property_amenities: FurnishedDetails}),
+                );
+                navigation.navigate('AddProperty-5');
+              }}>
               <Text
                 style={{
                   fontSize: 16,

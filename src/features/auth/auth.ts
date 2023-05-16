@@ -2,6 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {
   Auth,
+  CityOfStateListParams,
+  CityOfStateListResponseData,
+  CountryListResponseData,
+  ImageCategoryListResponseData,
   ListParams,
   LoginBody,
   OwnerDashboardResponseData,
@@ -9,6 +13,8 @@ import {
   OwnerInvitationListResponseData,
   OwnerPropertListResponseData,
   OwnerTenantListResponseData,
+  StateOfCountryListParams,
+  StateOfCountryListResponseData,
   TenantDashboardResponseData,
 } from '../types';
 
@@ -99,6 +105,48 @@ export const authApi = createApi({
         },
       }),
     }),
+    getAllCountries: builder.mutation<CountryListResponseData, {}>({
+      query: req => ({
+        url: 'country-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    getStateOfCountry: builder.mutation<
+      StateOfCountryListResponseData,
+      StateOfCountryListParams
+    >({
+      query: req => ({
+        url: `state-list/${req.param}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    getCityOfState: builder.mutation<
+      CityOfStateListResponseData,
+      CityOfStateListParams
+    >({
+      query: req => ({
+        url: `city-list/${req.param}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    getImageCategoryList: builder.mutation<ImageCategoryListResponseData, {}>({
+      query: req => ({
+        url: 'image-category-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -111,4 +159,8 @@ export const {
   useOwnerPropertiesMutation,
   useOwnerAllTenantListMutation,
   useOwnerInvitationMutation,
+  useGetAllCountriesMutation,
+  useGetStateOfCountryMutation,
+  useGetCityOfStateMutation,
+  useGetImageCategoryListMutation,
 } = authApi;

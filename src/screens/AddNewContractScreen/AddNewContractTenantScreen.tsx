@@ -175,7 +175,7 @@ const AddNewContractTenantScreen = (props: Props) => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                if (value.length > 0) {
+                if (selectedTenant) {
                   navigation.navigate('AddContract-3');
                 }
               }}>

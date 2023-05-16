@@ -1,18 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {
-  AddPropertyInputData,
   AddPropertyResponseData,
+  FurnishingListResponseData,
+  FurnishingTypeResponseData,
   OwnerContractListParam,
   OwnerContractListResponseData,
+  OwnerPropertyAmenitiesResponseData,
   OwnerPropertyDetailsRequest,
   OwnerPropertyDetailsResponseData,
   OwnerPropertyListResponseData,
   PropertyTypeResponseData,
   resendInvitationParam,
   resendInvitationResponseData,
-  FurnishingTypeResponseData,
-  FurnishingListResponseData
 } from '../ownerTypes';
 
 // Define a service using a base URL and expected endpoints
@@ -69,15 +69,13 @@ export const ownerApi = createApi({
         },
       }),
     }),
-    addProperty: builder.mutation<
-      AddPropertyResponseData,
-      AddPropertyInputData
-    >({
+    addProperty: builder.mutation<AddPropertyResponseData, {body: any}>({
       query: req => ({
         url: 'owner/add-property',
         method: 'POST',
+        body: req.body,
         headers: {
-          'Content-type': 'application/json; charset=UTF-8',
+          'Content-Type': 'multipart/form-data;',
         },
       }),
     }),
@@ -118,6 +116,18 @@ export const ownerApi = createApi({
         },
       }),
     }),
+    getOwnerPropertyAmenitiesList: builder.mutation<
+      OwnerPropertyAmenitiesResponseData,
+      {}
+    >({
+      query: req => ({
+        url: 'amenities-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -135,4 +145,5 @@ export const {
   useGetOwnerPropertyListMutation,
   useGetOwnerPropertyDetailsMutation,
 
+  useGetOwnerPropertyAmenitiesListMutation,
 } = ownerApi;

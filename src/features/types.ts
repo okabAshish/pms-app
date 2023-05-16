@@ -938,3 +938,80 @@ export interface OwnerInvitationData {
 }
 
 export interface OwnerInvitationListData extends Array<OwnerInvitationData> {}
+
+// Country List
+export interface CountryListResponseData {
+  success: boolean;
+  data: CountryList;
+  message: string;
+}
+
+export interface CountryListData {
+  id: number;
+  name: string;
+  phonecode: string;
+  code: string;
+  currency_symbol: string;
+}
+
+export interface CountryList extends Array<CountryListData> {}
+
+// State List
+
+export interface StateOfCountryListResponseData {
+  success: boolean;
+  data: StateOfCountryList;
+  message: string;
+}
+
+export interface StateOfCountryListData {
+  id: number;
+  name: string;
+  state_code: string;
+  country_code: string;
+  country_id: number;
+}
+
+export interface StateOfCountryList extends Array<StateOfCountryListData> {}
+
+export interface StateOfCountryListParams {
+  param: string;
+}
+
+// City List
+
+export interface CityOfStateListResponseData {
+  success: boolean;
+  data: CityOfStateList;
+  message: string;
+}
+
+export interface CityOfStateListData {
+  id: number;
+  name: string;
+  state_id: number;
+  country_id: number;
+  country_code: string;
+}
+
+export interface CityOfStateList extends Array<CityOfStateListData> {}
+
+export interface CityOfStateListParams {
+  param: string;
+}
+
+// Image Category List
+
+export interface ImageCategoryListResponseData {
+  success: boolean;
+  data: ImageCategoryList;
+  message: string;
+}
+
+export interface ImageCategoryListData {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface ImageCategoryList extends Array<ImageCategoryListData> {}

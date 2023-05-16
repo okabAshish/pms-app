@@ -157,14 +157,22 @@ export interface AddPropertyInputData {
   no_of_bedrooms: string;
   no_of_bathroom: string;
   furnishing_type_id: string;
-  property_furnishing_detail: string;
+  property_furnishing_detail: any;
   property_amenities: string;
-  balcony_terrace: string;
-  parking_available: string;
+  balcony_terrace: boolean;
+  parking_available: boolean;
+  no_of_parking: number;
+  parking_type: string;
+  country_id: number;
+  state_id: number;
+  city_id: number;
+  zip: string;
+  address_one: string;
+  address_two: string;
+  image_count: number;
 }
 
 export interface AddPropertyResponseData {}
-
 
 export interface FurnishingTypeResponseData {
   success: boolean;
@@ -192,7 +200,7 @@ export interface FurnishingList {
   furnish_name: string;
   icon: string;
 }
-=======
+
 export interface OwnerPropertyData {
   id: number;
   owner_id: number;
@@ -319,3 +327,20 @@ export interface OwnerPropertyDetailsRequest {
   param: number;
 }
 
+// Amenities List
+
+export interface OwnerPropertyAmenitiesData {
+  id: number;
+  name: string;
+  icon: string;
+  description: string;
+}
+
+export interface OwnerPropertyAmenitiesList
+  extends Array<OwnerPropertyAmenitiesData> {}
+
+export interface OwnerPropertyAmenitiesResponseData {
+  success: boolean;
+  data: OwnerPropertyAmenitiesList;
+  message: string;
+}

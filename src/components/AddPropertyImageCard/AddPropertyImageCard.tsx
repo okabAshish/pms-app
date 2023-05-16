@@ -2,14 +2,15 @@ import {faX} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {Asset} from '../UploadImage/UploadImage';
 
 type Props = {
-  imagesDatas: Array<object>;
-  imageUrl: string;
+  imageUrl: Asset;
   imageType: string;
   imageCaption: string;
   item: object;
-  setImageDatas: (a: Array<object>) => void;
+
+  onRemoved: (item: any) => void;
 };
 
 const AddPropertyImageCard = (props: Props) => {
@@ -21,7 +22,7 @@ const AddPropertyImageCard = (props: Props) => {
         marginHorizontal: 10,
       }}>
       <Image
-        source={{uri: props.imageUrl}}
+        source={{uri: props.imageUrl.uri}}
         style={{width: 100, height: 100, borderRadius: 5}}
       />
       <Text
@@ -59,17 +60,7 @@ const AddPropertyImageCard = (props: Props) => {
           borderColor: '#f3f3f3',
         }}
         onPress={() => {
-          console.log('pressed', props.imagesDatas);
-          let a = props.imagesDatas;
-
-          const i = a.indexOf(props.item);
-          console.log(i);
-          if (i > -1) {
-            // only splice array when item is found
-            a.splice(i, 1); // 2nd parameter means remove one item only
-          }
-
-          props.setImageDatas(a);
+          props.onRemoved(props.item);
         }}>
         <FontAwesomeIcon icon={faX} size={14} />
       </TouchableOpacity>
