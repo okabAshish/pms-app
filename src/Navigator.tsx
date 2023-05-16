@@ -17,8 +17,10 @@ import DashBoardNavBar from './components/DashBoardNavBar/DashBoardNavBar';
 import LoadingModal from './components/LoadingModal/LoadingModal';
 import {setLoggedIn, setToken, setUser} from './features/auth/authProfile';
 import AddNewContractDetailsScreen from './screens/AddNewContractScreen/AddNewContractDetailsScreen';
+import AddNewContractDetailsSlabScreen from './screens/AddNewContractScreen/AddNewContractDetailsSlabScreen';
 import AddNewContractScreen from './screens/AddNewContractScreen/AddNewContractScreen';
 import AddNewContractTenantScreen from './screens/AddNewContractScreen/AddNewContractTenantScreen';
+import AddNewContractTermsCondition from './screens/AddNewContractScreen/AddNewContractTermsCondition';
 import AddPropertyAddionalDetailsScreen from './screens/AddPropertyScreen/AddPropertyAddionalDetailsScreen';
 import AddPropertyAddressDetailsScreen from './screens/AddPropertyScreen/AddPropertyAddressDetailsScreen';
 import AddPropertyAmenitiesScreen from './screens/AddPropertyScreen/AddPropertyAmenitiesScreen';
@@ -210,6 +212,20 @@ const Navigator = (props: Props) => {
           <Stack.Screen
             name="AddContract-3"
             component={AddNewContractDetailsScreen}
+            options={() => ({
+              title: 'Add Contract',
+            })}
+          />
+          <Stack.Screen
+            name="AddContract-4"
+            component={AddNewContractDetailsSlabScreen}
+            options={() => ({
+              title: 'Add Contract',
+            })}
+          />
+          <Stack.Screen
+            name="AddContract-5"
+            component={AddNewContractTermsCondition}
             options={() => ({
               title: 'Add Contract',
             })}

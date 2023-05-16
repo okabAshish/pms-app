@@ -7,6 +7,8 @@ import {RootState} from '@reduxjs/toolkit/dist/query/core/apiState';
 import {authApi} from './features/auth/auth';
 import authProfile from './features/auth/authProfile';
 import {ownerApi} from './features/auth/owner';
+import {contractApi} from './features/contract/contract';
+import contract from './features/contract/contractSlice';
 import error from './features/error/error';
 import owner from './features/owner/ownerSlice';
 import pageName from './features/pageName/pageName';
@@ -17,13 +19,16 @@ export const store = configureStore({
     page: pageName,
     error: error,
     owner: owner,
+    contract: contract,
     [authApi.reducerPath]: authApi.reducer,
+    [contractApi.reducerPath]: contractApi.reducer,
     [ownerApi.reducerPath]: ownerApi.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({serializableCheck: false}).concat(
       authApi.middleware,
       ownerApi.middleware,
+      contractApi.middleware,
     ),
 });
 
@@ -33,3 +38,5 @@ export const useReduxSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 setupListeners(store.dispatch);
 export default store;
+
+export type RootState = ReturnType<typeof store.getState>;
