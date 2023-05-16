@@ -1,7 +1,7 @@
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -10,13 +10,73 @@ import {
   View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useSelector} from 'react-redux';
 import DropDown from '../../components/DropDown/DropDown';
 import OwnerTenantsCard from '../../components/OwnerTenantsCard/OwnerTenantsCard';
+import {useGetOwnerTenantListMutation} from '../../features/contract/contract';
+import {ContractTenantList} from '../../features/contract/contractTypes';
+import {OwnerTenantData} from '../../features/types';
+import {RootState} from '../../store';
 
 type Props = {};
 
 const AddNewContractTenantScreen = (props: Props) => {
   const navigation = useNavigation();
+  const contract = useSelector<RootState>(state => state.contract);
+
+  const [tenantList, setTenantList] = useState([]);
+  const [responseTenantList, setResponseTenantList] =
+    useState<ContractTenantList>([]);
+
+  const [selectedTenant, setSelectedTenant] = useState<OwnerTenantData>();
+  const [value, setValue] = useState('');
+
+  const [getOwnerTenantList] = useGetOwnerTenantListMutation();
+
+  // console.log(contract?.property_id);
+  const getTenants = async () => {
+    try {
+      await getOwnerTenantList({
+        property_id: contract?.property_id ? contract?.property_id : 0,
+      })
+        .unwrap()
+        .then(res => {
+          if (res.success) {
+            setResponseTenantList(res.data);
+            let a = [];
+
+            for (let i = 0; i < res.data.length; i++) {
+              a.push({
+                id: res.data[i].id,
+                label:
+                  res.data[i].first_name +
+                  ' ' +
+                  res.data[i].middle_name +
+                  ' ' +
+                  res.data[i].last_name,
+                value: res.data[i].id,
+              });
+            }
+
+            setTenantList(a);
+            // setPage(page + 1);
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const checkSelectedValue = v => {
+    let select: OwnerTenantData = responseTenantList.find(val => val.id === v);
+
+    setSelectedTenant(select);
+  };
+
+  useEffect(() => {
+    getTenants();
+  }, [contract?.property_id]);
+
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
       <StatusBar backgroundColor={'#45485F'} barStyle="light-content" />
@@ -62,14 +122,40 @@ const AddNewContractTenantScreen = (props: Props) => {
         <KeyboardAwareScrollView style={{marginTop: 20}}>
           <DropDown
             label="Search Tenant"
-            // datas={propertyTypeList}
+            datas={tenantList}
             search
-            onChange={value => {
-              console.log(value);
-              //   setProperty({...property, type: value});
+            onChange={v => {
+              // console.log(v);
+              setValue(v);
+              checkSelectedValue(v);
+              // setProperty({...property, type: value});
             }}
           />
-          <OwnerTenantsCard />
+          <OwnerTenantsCard
+            tenant_id={
+              'TNT_0000000' + (selectedTenant?.id ? selectedTenant?.id : 0)
+            }
+            tenant_type={
+              selectedTenant?.account_type === 1
+                ? 'Individual'
+                : selectedTenant?.account_type === 2
+                ? 'Company'
+                : selectedTenant?.account_type === 3
+                ? 'Multi Occupant'
+                : 'Individual'
+            }
+            name={
+              selectedTenant?.first_name
+                ? selectedTenant?.first_name
+                : '' + ' ' + selectedTenant?.middle_name
+                ? selectedTenant?.middle_name
+                : '' + ' ' + selectedTenant?.last_name
+                ? selectedTenant?.last_name
+                : ''
+            }
+            email={selectedTenant?.email}
+            phone={selectedTenant?.phone}
+          />
         </KeyboardAwareScrollView>
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
           <View
@@ -88,7 +174,11 @@ const AddNewContractTenantScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddContract-3')}>
+              onPress={() => {
+                if (value.length > 0) {
+                  navigation.navigate('AddContract-3');
+                }
+              }}>
               <Text
                 style={{
                   fontSize: 16,

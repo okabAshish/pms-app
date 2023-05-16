@@ -5,6 +5,9 @@ import {
   AddPropertyResponseData,
   OwnerContractListParam,
   OwnerContractListResponseData,
+  OwnerPropertyDetailsRequest,
+  OwnerPropertyDetailsResponseData,
+  OwnerPropertyListResponseData,
   PropertyTypeResponseData,
   resendInvitationParam,
   resendInvitationResponseData,
@@ -73,6 +76,28 @@ export const ownerApi = createApi({
       }),
     }),
     //End Owner contract
+    getOwnerPropertyList: builder.mutation<OwnerPropertyListResponseData, {}>({
+      query: req => ({
+        url: 'owner/contract-property-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+
+    getOwnerPropertyDetails: builder.mutation<
+      OwnerPropertyDetailsResponseData,
+      OwnerPropertyDetailsRequest
+    >({
+      query: req => ({
+        url: `property-detail/${req.param}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -82,4 +107,7 @@ export const {
   useGetResendInvitationMutation,
   useGetPropertyTypeMutation,
   useGetOwnerContractListMutation,
+  useAddPropertyMutation,
+  useGetOwnerPropertyListMutation,
+  useGetOwnerPropertyDetailsMutation,
 } = ownerApi;

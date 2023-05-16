@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Text, TouchableOpacity, View, ViewStyle} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Text, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
 
 type Props = {
   labels: Array<string>;
@@ -7,16 +7,41 @@ type Props = {
   buttonContainerStyle?: ViewStyle;
   onChange: (v: number) => void;
   value?: number;
+  textStyle?: TextStyle;
+  buttonSize?: number;
+  checkBoxStyles?: ViewStyle;
+  borderColor?: string;
 };
 
 const defaultProps: Props = {
   labels: ['Not Furnished', 'Fully Furnished'],
   onChange: number => {},
   value: 3,
+  textStyle: {
+    fontFamily: 'Poppins-Regular',
+    color: '#000',
+    marginLeft: 10,
+    fontSize: 14,
+  },
+  buttonSize: 24,
+  borderColor: '#f5f5f5',
+  checkBoxStyles: {
+    padding: 4,
+    elevation: 2,
+    borderWidth: 1,
+    borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 5,
+  },
 };
 
 const RadioButton = (props: Props) => {
   const [checked, setChecked] = useState(props.labels[props.value]);
+
+  useEffect(() => {
+    setChecked(props.labels[props.value]);
+  }, [props.value]);
 
   return (
     <View style={{...props.containerStyles}}>
@@ -30,21 +55,16 @@ const RadioButton = (props: Props) => {
           }}>
           <TouchableOpacity
             style={{
-              padding: 4,
-              height: 24,
-              width: 24,
+              height: props.buttonSize,
+              width: props.buttonSize,
               backgroundColor: checked === item ? '#0EB9F2' : '#f5f5f5',
-              elevation: 2,
-              borderWidth: 0.5,
-              borderColor: '#f3f3f3',
-              borderRadius: 2,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginRight: 5,
+              borderColor: props.borderColor,
+              ...props.checkBoxStyles,
             }}
             onPress={() => {
               if (checked === item) {
                 setChecked('');
+                props.onChange('');
               } else {
                 setChecked(item);
                 props.onChange(index);
@@ -54,10 +74,7 @@ const RadioButton = (props: Props) => {
           </TouchableOpacity>
           <Text
             style={{
-              fontFamily: 'Poppins-Regular',
-              color: '#000',
-              marginLeft: 10,
-              fontSize: 14,
+              ...props.textStyle,
             }}>
             {item}
           </Text>

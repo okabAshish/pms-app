@@ -6,6 +6,7 @@ import {
   TextInput,
   TextInputAndroidProps,
   TextInputChangeEventData,
+  TextInputProps,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -27,6 +28,8 @@ type Props = {
   switchModeType?: string;
   setSwitchModeType?: (v: string) => void;
   disabled: boolean;
+  inputProps?: TextInputProps;
+  inputStyles?: ViewStyle;
 };
 
 const defaultProps: Props = {
@@ -40,6 +43,14 @@ const defaultProps: Props = {
   autoComplete: 'off',
   autoCorrect: false,
   disabled: false,
+  inputStyles: {
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 4,
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
+  },
 };
 
 const Input = (props: Props) => {
@@ -122,12 +133,7 @@ const Input = (props: Props) => {
       <TextInput
         onChange={props.onChange}
         style={{
-          paddingHorizontal: 20,
-          paddingVertical: 5,
-          backgroundColor: '#f5f5f5',
-          borderRadius: 4,
-          fontSize: 12,
-          fontFamily: 'Poppins-Regular',
+          ...props.inputStyles,
         }}
         placeholder={props.placehoder}
         placeholderTextColor={'rgba(0,0,0,0.3)'}
@@ -137,6 +143,7 @@ const Input = (props: Props) => {
         autoCorrect={props.autoCorrect}
         value={value}
         editable={!props.disabled}
+        {...props.inputProps}
       />
     </View>
   );

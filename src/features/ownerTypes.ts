@@ -164,3 +164,129 @@ export interface AddPropertyInputData {
 }
 
 export interface AddPropertyResponseData {}
+
+export interface OwnerPropertyData {
+  id: number;
+  owner_id: number;
+  property_name: string;
+}
+
+export interface OwnerPropertyList extends Array<OwnerPropertyData> {}
+
+export interface OwnerPropertyListResponseData {
+  success: boolean;
+  data: OwnerPropertyList;
+  message: string;
+}
+
+// Owner Properties Detail Data
+
+export interface OwnerPropertyDetailsResponseData {
+  success: boolean;
+  data: OwnerPropertyDetailsData;
+  message: string;
+}
+
+export interface OwnerPropertyDetailsDataFurnishingDetail {
+  id: number;
+  property_id: number;
+  furnishing_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OwnerPropertyDetailsDataFurnishingDetails
+  extends Array<OwnerPropertyDetailsDataFurnishingDetail> {}
+
+export interface OwnerPropertyDetailsData_PropertyAmenitie {
+  id: number;
+  property_id: number;
+  amenity_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OwnerPropertyDetailsData_PropertyAmenities
+  extends Array<OwnerPropertyDetailsData_PropertyAmenitie> {}
+
+export interface OwnerPropertyDetailsData_PropertyImage_MediaData {
+  id: number;
+  model_id: number;
+  uuid: string;
+  collection_name: string;
+  name: string;
+  file_name: string;
+  mime_type: string;
+  disk: string;
+  conversions_disk: string;
+  size: number;
+  order_column: number;
+  created_at: string;
+  updated_at: string;
+  original_url: string;
+  preview_url: string;
+}
+
+export interface OwnerPropertyDetailsData_PropertyImage_Medias
+  extends Array<OwnerPropertyDetailsData_PropertyImage_MediaData> {}
+
+export interface OwnerPropertyDetailsData_PropertyImage {
+  id: number;
+  property_id: number;
+  image_cat_id: number;
+  image_caption?: any;
+  image: string;
+  created_at: string;
+  updated_at: string;
+  photo_url: string;
+  image_category: {
+    id: number;
+    name: string;
+    description?: any;
+    created_at: string;
+    updated_at: string;
+  };
+  media: OwnerPropertyDetailsData_PropertyImage_Medias;
+}
+
+export interface OwnerPropertyDetailsData_PropertyImages
+  extends Array<OwnerPropertyDetailsData_PropertyImage> {}
+export interface OwnerPropertyDetailsData {
+  id: number;
+  property_type_id: number;
+  property_type_name: string;
+  property_name: string;
+  property_size: number;
+  property_size_type: number;
+  property_built_year: string;
+  hoa_fee: string;
+  hoa_fee_type: string;
+  no_of_bedrooms: number;
+  no_of_bathroom: number;
+  furnishing_type_id: number;
+  furnishing_type_name: string;
+  furnishing_details: OwnerPropertyDetailsDataFurnishingDetails;
+  parking_type_id: number;
+  parking_type_name: string;
+  no_of_parking: number;
+  parking_available: number;
+  balcony_terrace: number;
+  city_id: number;
+  city_name: string;
+  state_id: number;
+  state_name: string;
+  country_id: number;
+  country_name: string;
+  zip: string;
+  address_one: string;
+  address_two: string;
+  property_amenities: OwnerPropertyDetailsData_PropertyAmenities;
+  property_images: OwnerPropertyDetailsData_PropertyImages;
+  rented: number;
+}
+
+// Request For Owner Property Details
+
+export interface OwnerPropertyDetailsRequest {
+  param: number;
+}

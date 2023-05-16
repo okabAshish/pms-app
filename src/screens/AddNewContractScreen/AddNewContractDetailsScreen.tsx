@@ -28,6 +28,10 @@ const AddNewContractDetailsScreen = (props: Props) => {
   const [last_date, setLastDate] = useState(Date.now());
 
   const changeEndDate = () => {
+    if (!contractPeriod || !gracePeriod) {
+      console.log('Error');
+    }
+
     const end = dayjs(start_date).add(contractPeriod + gracePeriod, 'M');
     console.log(end, 'END');
     setLastDate(end);
@@ -180,7 +184,9 @@ const AddNewContractDetailsScreen = (props: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddContract-4')}>
+              onPress={() => {
+                navigation.navigate('AddContract-4');
+              }}>
               <Text
                 style={{
                   fontSize: 16,
