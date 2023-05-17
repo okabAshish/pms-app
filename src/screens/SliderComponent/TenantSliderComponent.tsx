@@ -33,6 +33,19 @@ import {
           navigation.dispatch(CommonActions.navigate({name: 'Dashboard'}));
         },
       },
+      {
+        name: 'Property Invitation',
+        slug: 'Property-Invitation',
+        show: true,
+        type: 'Menu',
+        icon: require('../../assets/images/icons/user.svg'),
+        onPress: () => {
+          dispatch(setPageName('Property Invitation'));
+  
+          setActive('Property-Invitation');
+          navigation.dispatch(CommonActions.navigate({name: 'Property-Invitation'}));
+        },
+      },
     //   {
     //     name: 'Property',
     //     slug: 'Property',

@@ -37,6 +37,7 @@ import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import SliderComponent from './screens/SliderComponent/SliderComponent';
 import TenantSliderComponent from './screens/SliderComponent/TenantSliderComponent';
+import PropertyInvitation from './screens/Tenant/TenantPropertyInvitation/TenantPropertyInvitation';
 
 type Props = {};
 
@@ -255,6 +256,7 @@ const Navigator = (props: Props) => {
           <Stack.Screen name="Tenant" component={OwnerTenantScreen} />
           <Stack.Screen name="Contracts" component={OwnerContractsScreen} />
           <Stack.Screen name="Invitation-List" component={InvitationScreen} />
+          <Stack.Screen name="Property-Invitation" component={PropertyInvitation} />
         </Stack.Navigator>
       </>
     );

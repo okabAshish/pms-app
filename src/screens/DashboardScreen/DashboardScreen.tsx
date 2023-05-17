@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import TenantDashboardReport from '../../components/Tenant/TenantDashboardReport/TenantDashboardReport';
 import TenantDashboardTransaction from '../../components/Tenant/TenantDashboardTransaction/TenantDashboardTransaction';
 import TenantDashboardTaskSummary from '../../components/Tenant/TenantDashboardTaskSummary/TenantDashboardTaskSummary';
-import TenantDashboardActivities from '../../components/Tenant/TenantDashboardActivities/TenantDashboardactivities';
+import TenantDashboardActivities from '../../components/Tenant/TenantDashboardActivities/TenantDashboardActivities';
 
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {
