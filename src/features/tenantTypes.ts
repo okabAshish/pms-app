@@ -318,14 +318,14 @@ export interface RentedPropertyListLimitData {
 
 export interface RentedPropertyList extends Array<RentedProperty>{}
 
-export interface RentedPropertyList {
+export interface RentedProperty {
     id: number;
     property_id?: number;
     owner_id?: number;
     tenant_id?: number;
     lawyer_id?: any;
     tenant_lawyer_id?: any;
-    contract_number?: string?
+    contract_number?: string;
     start_date?: string;
     end_date?: string;
     contract_period?: string;
