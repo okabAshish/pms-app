@@ -17,6 +17,7 @@ type Props = {};
 
 const AddNewContractTermsCondition = (props: Props) => {
   const [termTitles, setTermTitles] = useState<ContractTermList>([]);
+  const [selectedTermTitles, setSelectedTermTitles] = useState([]);
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -49,12 +50,32 @@ const AddNewContractTermsCondition = (props: Props) => {
   };
 
   const handleId = (v: number) => {
+    console.log(v, '<<<<VAL');
     setId(v);
   };
 
   const handleValue = (val: string) => {
     setTitleValue(val);
   };
+
+  const handleTermsTitle = val => {
+    let a = selectedTermTitles;
+    if (a.includes({title_id: val})) {
+      const i = a.indexOf({title_id: val});
+      if (i > -1) {
+        // only splice array when item is found
+        a.splice(i, 1); // 2nd parameter means remove one item only
+      }
+    } else {
+      a.push({title_id: val, term_data: []});
+    }
+    setSelectedTermTitles(a);
+  };
+
+  console.log(
+    selectedTermTitles,
+    selectedTermTitles.find(val => (val.title_id == 1 ? 'hello' : 'sada')),
+  );
 
   useEffect(() => {
     allTerms();
@@ -113,6 +134,7 @@ const AddNewContractTermsCondition = (props: Props) => {
         <KeyboardAwareScrollView style={{marginTop: 20}}>
           {termTitles.map((item, index) => (
             <AddContractTermsCard
+              item={item}
               key={index.toString()}
               terms={item?.terms}
               id={item?.id}
@@ -124,6 +146,10 @@ const AddNewContractTermsCondition = (props: Props) => {
               title_id={`${item?.id}`}
               handleSuccess={handleSuccess}
               handleId={handleId}
+              handleTerm={v => {
+                console.log(v, 'asdadas');
+                handleTermsTitle(v);
+              }}
             />
           ))}
 

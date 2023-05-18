@@ -160,13 +160,15 @@ const AddNewContractScreen = (props: Props) => {
               getPropertyDetails(Number(value));
             }}
           />
-          <PropertyCard
-            property_id={`PROP_00000000${
-              propertyDetails?.id ? propertyDetails?.id : 0
-            }`}
-            building_name={propertyDetails.property_name}
-            rented={propertyDetails?.rented === 1 ? true : false}
-          />
+          {propertyDetails.id && (
+            <PropertyCard
+              property_id={`PROP_00000000${
+                propertyDetails?.id ? propertyDetails?.id : 0
+              }`}
+              building_name={propertyDetails.property_name}
+              rented={propertyDetails?.rented === 1 ? true : false}
+            />
+          )}
         </KeyboardAwareScrollView>
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
           <View

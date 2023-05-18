@@ -10,6 +10,7 @@ import {
   ContractTermTitleDeleteParams,
   ContractTermTitleDeleteResponseData,
   ContractTermUpdateBody,
+  ContractTypeListResponseData,
 } from './contractTypes';
 
 // Define a service using a base URL and expected endpoints
@@ -26,6 +27,15 @@ export const contractApi = createApi({
     },
   }),
   endpoints: builder => ({
+    getContractTypeList: builder.mutation<ContractTypeListResponseData, {}>({
+      query: req => ({
+        url: 'owner/contract-type-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
     getTermsList: builder.mutation<ContractTermListResponseData, {}>({
       query: req => ({
         url: 'owner/contract-term-list',
@@ -137,4 +147,5 @@ export const {
   useEditTermMutation,
   useEditTermTitleMutation,
   useGetOwnerTenantListMutation,
+  useGetContractTypeListMutation,
 } = contractApi;

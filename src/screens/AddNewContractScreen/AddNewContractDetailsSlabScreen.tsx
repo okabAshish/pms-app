@@ -1,20 +1,26 @@
 import {faChevronRight, faX} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
+import dayjs from 'dayjs';
 import React, {useEffect, useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Alert, Text, TouchableOpacity, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DatePicketInput from '../../components/DatePicketInput/DatePicketInput';
 import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
 import RadioButton from '../../components/RadioButton/RadioButton';
-import {ContractState} from '../../features/contract/contractTypes';
+import {setContractSlabData} from '../../features/contract/contractSlice';
+import {
+  AddContractSlabList,
+  ContractState,
+} from '../../features/contract/contractTypes';
 import {RootState} from '../../store';
 
 type Props = {};
 
 const AddNewContractDetailsSlabScreen = (props: Props) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const contract_details: ContractState = useSelector<RootState>(
     state => state.contract,
@@ -23,13 +29,15 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
   const [switchModeTypeForLateFee, setSwitchModeTypeForLateFee] =
     useState('Percentage');
   const [parentRentalAmount, setParentRentalAmount] = useState(
-    contract_details.pending_rentail_amount,
+    contract_details.total_contract_amount,
   );
   const [securityDeposit, setSecurityDeposit] = useState(
     contract_details.security_deposit,
   );
   const [amount, setAmount] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(contract_details.start_date);
+
+  console.log(date, contract_details.start_date, 'DDDDD');
 
   const [slabs, setSlabs] = useState([]);
   const [fineType, setFineType] = useState('');
@@ -39,6 +47,29 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
 
   const [late_fee_amountFixed, setLateFeeAmountFixed] = useState(false);
   const [lateFeeGracePeriodFixed, setLateFeeGracePeriodFixed] = useState(false);
+
+  const confirmDeleteSlab = (id: number) => {
+    return Alert.alert(
+      'Are your sure?',
+      `Are you sure you want to delete Slabs`,
+      [
+        // The "Yes" button
+        {
+          text: 'Yes',
+          onPress: () => {
+            setSlabs([]);
+            setSecurityDeposit(contract_details.security_deposit);
+          },
+        },
+        // The "No" button
+        // Does nothing but dismiss the dialog when tapped
+        {
+          text: 'No',
+          onPress: () => {},
+        },
+      ],
+    );
+  };
 
   const addPaymentSlab = async () => {
     try {
@@ -83,7 +114,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
           setParentRentalAmount(String(total));
           setSecurityDeposit('');
           setAmount('');
-          setDate('');
+          setDate(contract_details.start_date);
         }
       }
     } catch (err) {
@@ -91,14 +122,53 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
     }
   };
 
+  const nextScreen1 = () => {
+    let b: AddContractSlabList = [];
+
+    if (fineType === '1') {
+      for (let i = 0; i < slabs.length; i++) {
+        b.push({
+          payment_date: slabs[i]?.date,
+          payment_amount: slabs[i]?.amount,
+          fine_amount: slabs[i]?.late_fee_amount,
+          grace_period: slabs[i]?.late_fee_grace_period,
+          is_deposite_included: slabs[i]?.security_deposit,
+        });
+      }
+    } else {
+      for (let i = 0; i < slabs.length; i++) {
+        b.push({
+          payment_date: slabs[i]?.date,
+          payment_amount: slabs[i]?.amount,
+          fine_amount: slabs[i]?.late_fee_amount,
+          grace_period: slabs[i]?.late_fee_grace_period,
+          is_deposite_included: slabs[i]?.securityDeposit,
+        });
+      }
+    }
+
+    console.log(b);
+
+    dispatch(
+      setContractSlabData({
+        late_fee_applicable: late_fee,
+        fine_type: fineType,
+        late_fee_amount: fineType === '0' ? late_fee_amount : '',
+        late_fee_grace_period: lateFeeGracePeriod,
+        payment_slab_data: JSON.stringify(b),
+      }),
+    );
+  };
+
   useEffect(() => {
     setAmount('');
-    setDate('');
+    setDate(contract_details.start_date);
+
     setLateFeeGracePeriod('');
     setLateFeeAmountFixed(false);
     setLateFeeAmount('');
     setLateFeeAmountFixed(false);
-  }, [fineType]);
+  }, [fineType, contract_details.start_date]);
 
   let lastSlab = slabs.slice(-1)[0];
 
@@ -137,6 +207,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
     if (Number(parentRentalAmount) > 0) {
       console.log('Error building');
     } else {
+      nextScreen1();
       navigation.navigate('AddContract-5');
     }
   };
@@ -206,7 +277,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
                                 color: '#000',
                                 marginHorizontal: 10,
                               }}>
-                              {item?.date}
+                              {dayjs(item?.date).format('DD/MM/YYYY')}
                             </Text>
                           </View>
                           <View
@@ -310,7 +381,12 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
             labels={['Late fee applicable?']}
             onChange={i => {
               console.log(i);
-              setLateFee(i);
+              if (slabs.length > 0) {
+                confirmDeleteSlab();
+                setLateFee(i);
+              } else {
+                setLateFee(i);
+              }
             }}
           />
 
@@ -382,6 +458,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
                 console.log(v);
                 setDate(v);
               }}
+              value={dayjs(date).format('DD/MM/YYYY')}
             />
             <View
               style={{

@@ -127,3 +127,59 @@ export interface ContractTenantListResponseData {
   data: ContractTenantList;
   message: string;
 }
+
+// Add Contract Types
+export interface AddContractBodyData {
+  property_id: number;
+  tenant_id: number;
+  contract_type_id: number;
+  contract_period: string;
+  grace_period: string;
+  start_date: string;
+  end_date: string;
+  notice_period: string;
+  security_deposit: string;
+  monthly_rent: string;
+  monthly_service_charge: string;
+  other_charge: string;
+  discount: string;
+  total_rental_amount: string;
+  total_contract_amount: string;
+  late_fee_applicable: string;
+  fine_type: string;
+  late_fee_amount: string;
+  late_fee_grace_period: string;
+  payment_slab_data: string;
+  title_term_data: string;
+}
+
+export interface AddContractSlabData {
+  payment_date: string;
+  payment_amount: string;
+  is_deposite_included: string;
+  fine_amount: string;
+  grace_period: string;
+}
+
+export interface AddContractSlabList extends Array<AddContractSlabData> {}
+
+export interface AddContractTermTitle {
+  title_id: string;
+  term_data: Array<string>;
+}
+
+export interface AddContractTermTitles extends Array<AddContractTermTitle> {}
+
+// Contract type List
+export interface ContractTypeListResponseData {
+  success: boolean;
+  message: string;
+  data: ContractTypeList;
+}
+
+export interface ContractTypeListData {
+  id: number;
+  name: string;
+}
+
+export interface ContractTypeList extends Array<ContractTypeListData> {}

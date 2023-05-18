@@ -116,7 +116,9 @@ const AddPropertyFurnishingScreen = (props: Props) => {
     dispatch(
       setAddPropertyThree({
         furnishing_type_id: furnishedDetails.furnishing_type_id,
-        property_furnishing_detail: furnishedDetails.property_furnishing_detail,
+        property_furnishing_detail: JSON.stringify(
+          furnishedDetails.property_furnishing_detail,
+        ),
       }),
     );
   };

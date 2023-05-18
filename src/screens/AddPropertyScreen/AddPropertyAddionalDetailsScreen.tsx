@@ -19,8 +19,8 @@ type Props = {};
 const AddPropertyAddionalDetailsScreen = (props: Props) => {
   const dispatch = useDispatch();
 
-  const [balconyAvaliablity, setBalconyAvaliablity] = useState(false);
-  const [parkingAvaliablity, setParkingAvaliablity] = useState(false);
+  const [balconyAvaliablity, setBalconyAvaliablity] = useState(0);
+  const [parkingAvaliablity, setParkingAvaliablity] = useState(0);
   const [parking, setParking] = useState({
     no_of_parking: 0,
     parking_type: '',
@@ -80,12 +80,12 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
             buttonContainerStyle={{marginHorizontal: 5}}
             onChange={v => {
               if (v === 0) {
-                setBalconyAvaliablity(true);
+                setBalconyAvaliablity(1);
               } else {
-                setBalconyAvaliablity(false);
+                setBalconyAvaliablity(0);
               }
             }}
-            value={balconyAvaliablity ? 0 : 1}
+            value={balconyAvaliablity === 1 ? 0 : 1}
           />
         </View>
         <View style={{marginVertical: 10}}>
@@ -99,16 +99,16 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
             buttonContainerStyle={{marginHorizontal: 5}}
             onChange={v => {
               if (v === 0) {
-                setParkingAvaliablity(true);
+                setParkingAvaliablity(1);
               } else {
-                setParkingAvaliablity(false);
+                setParkingAvaliablity(0);
               }
             }}
-            value={parkingAvaliablity ? 0 : 1}
+            value={parkingAvaliablity === 1 ? 0 : 1}
           />
         </View>
 
-        {parkingAvaliablity && (
+        {parkingAvaliablity === 1 && (
           <View style={{marginVertical: 10}}>
             <Input
               label="No of Parking"

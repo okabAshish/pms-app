@@ -150,7 +150,7 @@ export interface AddPropertyInputData {
   property_name: string;
   property_type_id: string;
   property_size: string;
-  property_size_type: string;
+  property_size_type: number;
   property_built_year: string;
   hoa_fee: string;
   hoa_fee_type: string;
@@ -159,8 +159,8 @@ export interface AddPropertyInputData {
   furnishing_type_id: string;
   property_furnishing_detail: any;
   property_amenities: string;
-  balcony_terrace: boolean;
-  parking_available: boolean;
+  balcony_terrace: number;
+  parking_available: number;
   no_of_parking: number;
   parking_type: string;
   country_id: number;

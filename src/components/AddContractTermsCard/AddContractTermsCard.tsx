@@ -2,13 +2,14 @@ import {faCheck, faEdit, faTrash, faX} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useEffect, useState} from 'react';
 import {Alert, Text, TouchableOpacity, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   useAddTermMutation,
   useDeleteTermMutation,
   useDeleteTermTitleMutation,
   useEditTermMutation,
 } from '../../features/contract/contract';
+import {setContractTermData} from '../../features/contract/contractSlice';
 import {
   ContractTermListSingleData,
   ContractTerms,
@@ -23,6 +24,9 @@ interface Props {
   handleValue?: (val: string) => void;
   handleModal?: (b: boolean) => void;
   handleId?: (v: number) => void;
+  handleTerm: (v: string) => void;
+  terms: any;
+  item: any;
 }
 
 let demoTerms = [
@@ -31,10 +35,13 @@ let demoTerms = [
 ];
 
 const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
+  const dispatch = useDispatch();
   const {user} = useSelector<RootState>(state => state.auth);
+  const contract = useSelector<RootState>(state => state.contract);
   const user_details = JSON.parse(user);
 
   const [Term, setTerm] = useState(false);
+
   const [showSubTerms, setShowSubTerms] = useState(false);
   const [showInputForNewTerm, setShowInputForNewTerm] = useState(false);
   const [newTerm, setNewTerm] = useState('');
@@ -148,13 +155,93 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
 
   // console.log(newTerms);
 
+  const handleTermCheck = () => {
+    // props.handleTerm(props.title_id);
+
+    let a = [];
+
+    for (let i = 0; i < props.terms.length; i++) {
+      a.push(props?.terms[i]?.id);
+    }
+
+    let t = [];
+    if (contract?.title_term_data) {
+      t = JSON.parse(contract?.title_term_data);
+    }
+
+    if (t.length > 0) {
+      const index = t.findIndex(obj => obj.title_id === props.title_id);
+
+      if (index !== -1) {
+        // Object is present, so remove it from the array
+        t.splice(index, 1);
+      } else {
+        // Object is not present, so add it to the array
+        t.push({title_id: props.title_id, terms_data: [...a]});
+      }
+    } else {
+      t.push({title_id: props.title_id, terms_data: [...a]});
+    }
+
+    console.log(t, 'LLLLL');
+
+    dispatch(
+      setContractTermData({
+        title_term_data: JSON.stringify(t),
+      }),
+    );
+  };
+
+  const handleSubTermCheck = term_id => {
+    // props.handleTerm(props.title_id);
+
+    let t = [];
+    if (contract?.title_term_data) {
+      t = JSON.parse(contract?.title_term_data);
+    }
+
+    if (t.length > 0) {
+      console.log('called');
+      // console.log(first)
+      const index = t.findIndex(obj => obj.title_id === props.title_id);
+
+      if (index !== -1) {
+        // Object is present, so remove it from the array
+
+        const i = t[index].terms_data.findIndex(ob => ob === term_id);
+
+        if (i !== -1) {
+          console.log('AA');
+          t[index].terms_data.splice(i, 1);
+        } else {
+          console.log('AB');
+
+          let a = [...t[index].terms_data, term_id];
+          t[index].terms_data = a;
+        }
+      } else {
+        console.log('AC');
+
+        t.push({term_id: props.title_id, terms_data: [term_id]});
+      }
+    } else {
+      t.push({term_id: props.title_id, terms_data: [term_id]});
+    }
+
+    console.log(t, '>>>>>>>T');
+    dispatch(setContractTermData({title_term_data: JSON.stringify(t)}));
+  };
+
   useEffect(() => {
     setnewTerms(props.terms);
   }, [showSubTermsData]);
 
   return (
     <TouchableOpacity
-      onLongPress={() => setTerm(!Term)}
+      onLongPress={() => {
+        setTerm(!Term);
+        handleTermCheck();
+      }}
       onPress={() => setShowSubTerms(!showSubTerms)}
       style={{
         backgroundColor: '#fff',
@@ -182,6 +269,7 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
             } else {
               setTerm(false);
             }
+            handleTermCheck();
           }}
           buttonSize={18}
           borderColor="#f5f5f5"
@@ -253,6 +341,9 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
                       flexDirection: 'column',
                     }}
                     containerStyles={{flex: 1}}
+                    onChange={e => {
+                      handleSubTermCheck(item.id);
+                    }}
                   />
                   {item.type === 1 &&
                     item?.created_by === user_details.user_id && (

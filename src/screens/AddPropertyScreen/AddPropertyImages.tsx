@@ -88,33 +88,39 @@ const AddPropertyImages = (props: Props) => {
 
   const handleSave = async () => {
     try {
-      const fd = new FormData();
+      if (imageDatas.length === 0) {
+        throw (Error.name = 'Add More Images');
+      } else {
+        const fd = new FormData();
 
-      for (const key in property) {
-        fd.append(key, property[key]);
+        for (const key in property) {
+          fd.append(key, property[key]);
+        }
+
+        fd.append('image_count', imageDatas.length);
+
+        for (let i = 0; i < imageDatas.length; i++) {
+          fd.append(`property_image_file_${i + 1}`, {
+            name: imageDatas[i].imageUrl.fileName,
+            type: imageDatas[i].imageUrl.type,
+            uri: imageDatas[i].imageUrl.uri,
+          });
+          fd.append(`image_category_id_${i + 1}`, imageDatas[i].imageType);
+          fd.append(`image_caption_${i + 1}`, imageDatas[i].imageCaption);
+        }
+
+        console.log(fd);
+
+        await addproperty({body: fd})
+          .unwrap()
+          .then((res: AddPropertyResponseData) => {
+            if (res?.success) {
+              console.log(res);
+            }
+          });
       }
-
-      for (let i = 0; i < imageDatas.length; i++) {
-        fd.append(`property_image_file_${i + 1}`, {
-          name: imageDatas[i].imageUrl.fileName,
-          type: imageDatas[i].imageUrl.type,
-          uri: imageDatas[i].imageUrl.uri,
-        });
-        fd.append(`image_category_id_${i + 1}`, imageDatas[i].imageType);
-        fd.append(`image_caption_${i + 1}`, imageDatas[i].imageCaption);
-      }
-
-      await addproperty({body: fd})
-        .unwrap()
-        .then((res: AddPropertyResponseData) => {
-          if (res?.success) {
-            console.log(res);
-          }
-        });
-
-      console.log(fd);
     } catch (err) {
-      console.log(err);
+      console.warn(err);
     }
   };
 
@@ -295,6 +301,7 @@ const AddPropertyImages = (props: Props) => {
               }}
               onPress={() => {
                 handleSave();
+                navigation.navigate('Property');
               }}>
               <Text
                 style={{

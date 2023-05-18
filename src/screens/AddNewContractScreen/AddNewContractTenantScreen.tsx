@@ -10,10 +10,11 @@ import {
   View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DropDown from '../../components/DropDown/DropDown';
 import OwnerTenantsCard from '../../components/OwnerTenantsCard/OwnerTenantsCard';
 import {useGetOwnerTenantListMutation} from '../../features/contract/contract';
+import {setTenantId} from '../../features/contract/contractSlice';
 import {ContractTenantList} from '../../features/contract/contractTypes';
 import {OwnerTenantData} from '../../features/types';
 import {RootState} from '../../store';
@@ -21,6 +22,8 @@ import {RootState} from '../../store';
 type Props = {};
 
 const AddNewContractTenantScreen = (props: Props) => {
+  const dispatch = useDispatch();
+
   const navigation = useNavigation();
   const contract = useSelector<RootState>(state => state.contract);
 
@@ -29,7 +32,9 @@ const AddNewContractTenantScreen = (props: Props) => {
     useState<ContractTenantList>([]);
 
   const [selectedTenant, setSelectedTenant] = useState<OwnerTenantData>();
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(
+    String(contract?.tenant_id === 0 ? '' : contract?.tenant_id),
+  );
 
   const [getOwnerTenantList] = useGetOwnerTenantListMutation();
 
@@ -131,31 +136,33 @@ const AddNewContractTenantScreen = (props: Props) => {
               // setProperty({...property, type: value});
             }}
           />
-          <OwnerTenantsCard
-            tenant_id={
-              'TNT_0000000' + (selectedTenant?.id ? selectedTenant?.id : 0)
-            }
-            tenant_type={
-              selectedTenant?.account_type === 1
-                ? 'Individual'
-                : selectedTenant?.account_type === 2
-                ? 'Company'
-                : selectedTenant?.account_type === 3
-                ? 'Multi Occupant'
-                : 'Individual'
-            }
-            name={
-              selectedTenant?.first_name
-                ? selectedTenant?.first_name
-                : '' + ' ' + selectedTenant?.middle_name
-                ? selectedTenant?.middle_name
-                : '' + ' ' + selectedTenant?.last_name
-                ? selectedTenant?.last_name
-                : ''
-            }
-            email={selectedTenant?.email}
-            phone={selectedTenant?.phone}
-          />
+          {selectedTenant?.id && (
+            <OwnerTenantsCard
+              tenant_id={
+                'TNT_0000000' + (selectedTenant?.id ? selectedTenant?.id : 0)
+              }
+              tenant_type={
+                selectedTenant?.account_type === 1
+                  ? 'Individual'
+                  : selectedTenant?.account_type === 2
+                  ? 'Company'
+                  : selectedTenant?.account_type === 3
+                  ? 'Multi Occupant'
+                  : 'Individual'
+              }
+              name={
+                selectedTenant?.first_name
+                  ? selectedTenant?.first_name
+                  : '' + ' ' + selectedTenant?.middle_name
+                  ? selectedTenant?.middle_name
+                  : '' + ' ' + selectedTenant?.last_name
+                  ? selectedTenant?.last_name
+                  : ''
+              }
+              email={selectedTenant?.email}
+              phone={selectedTenant?.phone}
+            />
+          )}
         </KeyboardAwareScrollView>
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
           <View
@@ -176,6 +183,7 @@ const AddNewContractTenantScreen = (props: Props) => {
               }}
               onPress={() => {
                 if (selectedTenant) {
+                  dispatch(setTenantId({tenant_id: Number(value)}));
                   navigation.navigate('AddContract-3');
                 }
               }}>

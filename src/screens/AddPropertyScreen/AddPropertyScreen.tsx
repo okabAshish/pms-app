@@ -24,6 +24,8 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 type Props = {};
 
+let arr = ['Sq ft.', 'Meter'];
+
 const AddPropertyScreen = (props: Props) => {
   const navigation = useNavigation();
   const error = useSelector(state => state?.error);
@@ -73,7 +75,7 @@ const AddPropertyScreen = (props: Props) => {
               propertyDropdownData[i] = {
                 label: proertyTypeList[i].name,
                 id: proertyTypeList[i].id,
-                value: proertyTypeList[i].name,
+                value: proertyTypeList[i].id,
               };
             }
             setPropertyTypeList(propertyDropdownData);
@@ -112,7 +114,7 @@ const AddPropertyScreen = (props: Props) => {
           property_name: String(property.title),
           property_type_id: String(property.type),
           property_size: String(property.size),
-          property_size_type: String(property.sizeType),
+          property_size_type: arr.indexOf(property.sizeType),
           property_built_year: String(property.year),
           hoa_fee: String(property.amount),
           hoa_fee_type: String(property.duration),
@@ -193,7 +195,7 @@ const AddPropertyScreen = (props: Props) => {
             }}
           />
           <Input
-            switchButtonData={['Sq ft.', 'Meter']}
+            switchButtonData={arr}
             switchButton={true}
             setSwitchModeType={val => setProperty({...property, sizeType: val})}
             onChange={e => setProperty({...property, size: e.nativeEvent.text})}

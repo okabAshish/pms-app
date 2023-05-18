@@ -1,6 +1,5 @@
 import {faCalendar} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import dayjs from 'dayjs';
 import React, {useEffect, useState} from 'react';
 import {
   KeyboardTypeOptions,
@@ -43,7 +42,7 @@ const defaultProps: Props = {
   autoComplete: 'off',
   autoCorrect: false,
   disabled: false,
-  value: Date.now(),
+  value: `${Date.now()}`,
 };
 
 const DatePicketInput = (props: Props) => {
@@ -61,8 +60,10 @@ const DatePicketInput = (props: Props) => {
     setDatePickerVisibility(false);
   };
 
+  console.log(props.value);
+
   const handleConfirm = date => {
-    console.warn('A date has been picked: ', date);
+    // console.warn('A date has been picked: ', date);
 
     if (date < Date.now()) {
       dispatch(
@@ -76,7 +77,7 @@ const DatePicketInput = (props: Props) => {
       }, 3000);
     } else {
       setSelectedDate(date);
-      props.onChange(dayjs(date).format('DD/MM/YYYY'));
+      props.onChange(date);
       hideDatePicker();
     }
   };
@@ -118,7 +119,7 @@ const DatePicketInput = (props: Props) => {
         disabled={props.disabled}
         onPress={() => setDatePickerVisibility(true)}>
         <Text style={{color: props.disabled ? '#rgba(0,0,0,0.6)' : '#000'}}>
-          {dayjs(selectedDate).format('DD/MM/YYYY')}
+          {props.value}
         </Text>
         <TouchableOpacity
           onPress={() => setDatePickerVisibility(true)}

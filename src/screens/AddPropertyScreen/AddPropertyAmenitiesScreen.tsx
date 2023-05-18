@@ -36,7 +36,7 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
             let a = [];
             for (let i = 0; i < res.data.length; i++) {
               a.push({
-                slug: res.data[i].name,
+                slug: res.data[i].id,
                 title: res.data[i].name,
                 icon: res.data[i].icon,
               });
@@ -146,7 +146,9 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
               }}
               onPress={() => {
                 dispatch(
-                  setAddPropertyFour({property_amenities: FurnishedDetails}),
+                  setAddPropertyFour({
+                    property_amenities: JSON.stringify(FurnishedDetails),
+                  }),
                 );
                 navigation.navigate('AddProperty-5');
               }}>
