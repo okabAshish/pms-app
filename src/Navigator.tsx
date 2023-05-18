@@ -36,6 +36,8 @@ import OwnerTenantScreen from './screens/OwnerTenantScreen/OwnerTenantScreen';
 import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import SliderComponent from './screens/SliderComponent/SliderComponent';
+import TenantSliderComponent from './screens/SliderComponent/TenantSliderComponent';
+import PropertyInvitation from './screens/Tenant/TenantPropertyInvitation/TenantPropertyInvitation';
 
 type Props = {};
 
@@ -58,6 +60,7 @@ const Navigator = (props: Props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(logIn);
   const [loading, setLoading] = useState(false);
   const [deaf, setdeaf] = useState(false);
+  const [userRole, setUserRole] = useState(2);
 
   const getData = async () => {
     setLoading(true);
@@ -69,7 +72,8 @@ const Navigator = (props: Props) => {
       if (token !== null) {
         // value previously stored
         let _user = await AsyncStorage.getItem('user');
-
+        const role_id = JSON.parse(_user).user_details.role_id;
+        setUserRole(role_id);
         //let user = JSON.parse(_user);
         dispatch(setUser(_user));
         dispatch(setToken(token));
@@ -252,6 +256,7 @@ const Navigator = (props: Props) => {
           <Stack.Screen name="Tenant" component={OwnerTenantScreen} />
           <Stack.Screen name="Contracts" component={OwnerContractsScreen} />
           <Stack.Screen name="Invitation-List" component={InvitationScreen} />
+          <Stack.Screen name="Property-Invitation" component={PropertyInvitation} />
         </Stack.Navigator>
       </>
     );
@@ -264,7 +269,7 @@ const Navigator = (props: Props) => {
       <Drawer
         ref={drawer}
         drawerWidth={300}
-        renderNavigationView={() => <SliderComponent />}>
+        renderNavigationView={() => userRole === 2 ? <SliderComponent /> : <TenantSliderComponent /> }>
         <>
           <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen name="Main" component={DashboardMenus} />
