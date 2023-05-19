@@ -114,12 +114,14 @@ const TextInput = (props: Props) => {
           paddingHorizontal: 10,
           paddingVertical: 5,
           fontSize: 14,
+          color: '#000',
         }}
         inputMode={props.inputMode}
         placeholder={props.placeholder}
         keyboardType={props.keyboardType}
         multiline={props.multiline}
         secureTextEntry={props.secureTextEntry}
+        placeholderTextColor={'rgba(0,0,0,0.35)'}
       />
       <Text style={{fontSize: 10, color: 'red', fontFamily: 'Poppins-Regular'}}>
         {props.error}

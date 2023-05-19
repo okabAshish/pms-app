@@ -54,6 +54,7 @@ const DropDown = (props: Props) => {
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
+          itemTextStyle={{color: '#000'}}
           data={props.datas}
           search={props.search}
           maxHeight={props.dropDownHeight}
@@ -89,6 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     borderRadius: 4,
     paddingHorizontal: 8,
+    // color: 'white',
   },
   icon: {
     marginRight: 5,
@@ -96,6 +98,7 @@ const styles = StyleSheet.create({
   label: {
     position: 'absolute',
     backgroundColor: '#f5f5f5',
+    // color: 'white',
     left: 22,
     top: 8,
     zIndex: 999,
@@ -105,6 +108,7 @@ const styles = StyleSheet.create({
   placeholderStyle: {
     fontSize: 14,
     fontFamily: 'Poppins-Regular',
+    color: 'rgba(0,0,0,0.4)',
   },
   selectedTextStyle: {
     fontSize: 14,

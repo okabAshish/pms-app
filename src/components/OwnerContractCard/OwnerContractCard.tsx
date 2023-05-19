@@ -51,7 +51,7 @@ const OwnerContractCard = (props: Props) => {
       onPress={() =>
         navigation.navigate('View', {
           screen: 'Contract-View',
-          id: props.contract_id,
+          params: {id: props.contract_id},
         })
       }>
       <View style={{}}>

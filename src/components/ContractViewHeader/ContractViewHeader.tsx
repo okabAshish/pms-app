@@ -1,10 +1,21 @@
 import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
+import dayjs from 'dayjs';
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 
-type Props = {};
+type Props = {
+  contract_number: string;
+  property_type: string;
+  created_at: string;
+};
+
+const defaultProps: Props = {
+  contract_number: '1232435354',
+  property_type: 'N/A',
+  created_at: '2023-04-12T12:42:16.000000Z',
+};
 
 const ContractViewHeader = (props: Props) => {
   const navigation = useNavigation();
@@ -80,7 +91,7 @@ const ContractViewHeader = (props: Props) => {
                 fontSize: 12,
                 letterSpacing: 0.5,
               }}>
-              123456789
+              {props.contract_number}
             </Text>
           </View>
           <View
@@ -110,7 +121,7 @@ const ContractViewHeader = (props: Props) => {
                 fontSize: 12,
                 letterSpacing: 0.5,
               }}>
-              Building
+              {props.property_type}
             </Text>
           </View>
         </View>
@@ -139,12 +150,14 @@ const ContractViewHeader = (props: Props) => {
               fontSize: 12,
               letterSpacing: 0.5,
             }}>
-            2023-07-03
+            {dayjs(props.created_at).format('YYYY-MM-DD')}
           </Text>
         </View>
       </View>
     </View>
   );
 };
+
+ContractViewHeader.defaultProps = defaultProps;
 
 export default ContractViewHeader;

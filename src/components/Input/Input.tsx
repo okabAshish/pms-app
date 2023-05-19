@@ -50,6 +50,7 @@ const defaultProps: Props = {
     borderRadius: 4,
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
+    color: '#000',
   },
 };
 
@@ -136,7 +137,7 @@ const Input = (props: Props) => {
           ...props.inputStyles,
         }}
         placeholder={props.placehoder}
-        placeholderTextColor={'rgba(0,0,0,0.3)'}
+        placeholderTextColor={'rgba(0,0,0,0.4)'}
         autoFocus={props.autoFoucs}
         autoCapitalize={props.autoCapitalize}
         autoComplete={props.autoComplete}
