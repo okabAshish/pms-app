@@ -17,6 +17,7 @@ import {useSelector} from 'react-redux';
 import AddPropertyImageCard from '../../components/AddPropertyImageCard/AddPropertyImageCard';
 import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import UploadImage, {Asset} from '../../components/UploadImage/UploadImage';
 import {useGetImageCategoryListMutation} from '../../features/auth/auth';
 import {useAddPropertyMutation} from '../../features/auth/owner';
@@ -45,6 +46,7 @@ const AddPropertyImages = (props: Props) => {
   const [dropDownValue, setDropDownValue] = useState<any>(null);
   const [removed, setRemoved] = useState<ImageData>();
   const [value, setValue] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   const [getImageCategoryList] = useGetImageCategoryListMutation();
   const [addproperty] = useAddPropertyMutation();
@@ -65,6 +67,7 @@ const AddPropertyImages = (props: Props) => {
   };
 
   const getImageCategory = async () => {
+    setLoading(true);
     try {
       await getImageCategoryList({})
         .unwrap()
@@ -84,9 +87,11 @@ const AddPropertyImages = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const handleSave = async () => {
+    setLoading(true);
     try {
       if (imageDatas.length === 0) {
         throw (Error.name = 'Add More Images');
@@ -122,6 +127,7 @@ const AddPropertyImages = (props: Props) => {
     } catch (err) {
       console.warn(err);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -131,6 +137,10 @@ const AddPropertyImages = (props: Props) => {
   useEffect(() => {
     getImageCategory();
   }, []);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>

@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
 import AddFloatingButton from '../../components/AddFloatingButton/AddFloatingButton';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
 import {useOwnerPropertiesMutation} from '../../features/auth/auth';
 import {OwnerPropertyListData} from '../../features/types';
@@ -17,12 +18,14 @@ const PropertyScreen = (props: Props) => {
     onEndReachedCalledDuringMomentum,
     setOnEndReachedCalledDuringMomentum,
   ] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   console.log(onEndReachedCalledDuringMomentum, propertyList.length, page);
 
   const [getAllOwnerProperties] = useOwnerPropertiesMutation();
 
   const getProperties = async () => {
+    setLoading(true);
     try {
       await getAllOwnerProperties({limit: 5, page: 1})
         .unwrap()
@@ -35,10 +38,12 @@ const PropertyScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const reGetProperties = async () => {
     console.log('Run????');
+    // setLoading(true);
     setPage(page + 1);
     try {
       await getAllOwnerProperties({limit: 5, page: page})
@@ -56,11 +61,16 @@ const PropertyScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    // setLoading(false);
   };
 
   useEffect(() => {
     getProperties();
   }, []);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   const renderFooter = () => {
     return (

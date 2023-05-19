@@ -6,6 +6,7 @@ import {
 } from '../../features/contract/contract';
 import {ContractTermUpdateBody} from '../../features/contract/contractTypes';
 import Input from '../Input/Input';
+import LoadingModal from '../LoadingModal/LoadingModal';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -24,11 +25,14 @@ const AddContractTermTitleCard = (props: Props) => {
   const [title, setTitle] = useState(props.value ? props.value : '');
   //   console.log(props.value);
 
+  const [loading, setLoading] = useState(false);
+
   const [addTitle] = useAddTermsTitleMutation();
   const [editTitle] = useEditTermTitleMutation();
 
   const add = async () => {
     try {
+      setLoading(true);
       await addTitle({title: title})
         .unwrap()
         .then(res => {
@@ -38,10 +42,12 @@ const AddContractTermTitleCard = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const edit = async () => {
     try {
+      setLoading(true);
       let body: ContractTermUpdateBody = {
         param: props.id,
         title: JSON.stringify({title: title}),
@@ -56,11 +62,16 @@ const AddContractTermTitleCard = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     setTitle(props.value);
   }, [props.value]);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <Modal visible={props.isVisible} transparent={true}>

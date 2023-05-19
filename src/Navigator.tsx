@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {
@@ -28,9 +28,12 @@ import AddPropertyDetailsScreen from './screens/AddPropertyScreen/AddPropertyDet
 import AddPropertyFurnishingScreen from './screens/AddPropertyScreen/AddPropertyFurnishingScreen';
 import AddPropertyImages from './screens/AddPropertyScreen/AddPropertyImages';
 import AddPropertyScreen from './screens/AddPropertyScreen/AddPropertyScreen';
+import BillsScreen from './screens/BillsScreen/BillsScreen';
+import ContractViewScreen from './screens/ContractViewScreen/ContractViewScreen';
 import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import InvitationScreen from './screens/InvitationScreen/InvitationScreen';
 import InviteTenantScreen from './screens/InviteTenantScreen/InviteTenantScreen';
+import MaintenanceRequestsScreen from './screens/MaintenanceRequestsScreen/MaintenanceRequestsScreen';
 import OwnerContractsScreen from './screens/OwnerContractsScreen/OwnerContractsScreen';
 import OwnerTenantScreen from './screens/OwnerTenantScreen/OwnerTenantScreen';
 import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
@@ -67,6 +70,7 @@ const Navigator = (props: Props) => {
     setLoading(true);
     setdeaf(true);
     try {
+      // setLoading(true);
       //AsyncStorage.removeItem('token');
       const token = await AsyncStorage.getItem('token');
       console.log('token', token);
@@ -81,6 +85,7 @@ const Navigator = (props: Props) => {
         dispatch(setLoggedIn(true));
         setIsLoggedIn(true);
       }
+      // setLoading(true);
     } catch (e) {
       // error reading value
       console.log(e);
@@ -89,6 +94,10 @@ const Navigator = (props: Props) => {
   };
 
   !isLoggedIn && !deaf && getData();
+
+  useEffect(() => {
+    setIsLoggedIn(logIn);
+  }, [logIn]);
 
   if (loading) {
     return <LoadingModal />;
@@ -245,6 +254,7 @@ const Navigator = (props: Props) => {
       <>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="Property-View" component={PropertyViewScreen} />
+          <Stack.Screen name="Contract-View" component={ContractViewScreen} />
         </Stack.Navigator>
       </>
     );
@@ -256,10 +266,6 @@ const Navigator = (props: Props) => {
         <DashBoardNavBar openDrawer={() => drawer.current?.openDrawer()} />
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen
-            name="SignUp"
-            component={isLoggedIn ? DashboardScreen : SignUpScreen}
-          />
-          <Stack.Screen
             name="Dashboard"
             component={isLoggedIn ? DashboardScreen : SignUpScreen}
           />
@@ -267,6 +273,12 @@ const Navigator = (props: Props) => {
           <Stack.Screen name="Tenant" component={OwnerTenantScreen} />
           <Stack.Screen name="Contracts" component={OwnerContractsScreen} />
           <Stack.Screen name="Invitation-List" component={InvitationScreen} />
+          <Stack.Screen
+            name="Maintenance"
+            component={MaintenanceRequestsScreen}
+          />
+          <Stack.Screen name="Bill" component={BillsScreen} />
+
           <Stack.Screen
             name="Property-Invitation"
             component={PropertyInvitation}
@@ -278,22 +290,42 @@ const Navigator = (props: Props) => {
 
   console.log('is log', isLoggedIn);
 
-  return (
-    <NavigationContainer>
-      <Drawer
-        ref={drawer}
-        drawerWidth={300}
-        renderNavigationView={() =>
-          userRole === 2 ? <SliderComponent /> : <TenantSliderComponent />
-        }>
-        <>
+  const Main = () => {
+    return (
+      <>
+        <Drawer
+          ref={drawer}
+          drawerWidth={300}
+          renderNavigationView={() =>
+            userRole === 2 ? <SliderComponent /> : <TenantSliderComponent />
+          }>
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="Main" component={DashboardMenus} />
+            <Stack.Screen
+              name="Main"
+              component={isLoggedIn ? DashboardMenus : SignUpScreen}
+            />
             <Stack.Screen name="ADD" component={AddMenus} />
             <Stack.Screen name="View" component={ViewScreen} />
           </Stack.Navigator>
+        </Drawer>
+      </>
+    );
+  };
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <>
+          <Stack.Screen
+            name="Main"
+            component={isLoggedIn ? Main : SignUpScreen}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={isLoggedIn ? DashboardScreen : SignUpScreen}
+          />
         </>
-      </Drawer>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

@@ -1,3 +1,11 @@
+import {
+  OwnerContract,
+  OwnerPropertyDetailsData,
+  OwnerPropertyDetailsDataFurnishingDetails,
+  OwnerPropertyDetailsData_PropertyAmenities,
+} from '../ownerTypes';
+import {AuthUserDetais} from '../types';
+
 export interface ContractState {
   contract_period: string;
   grace_period: string;
@@ -187,4 +195,100 @@ export interface AddContractResponseData {
   success: boolean;
   data: number;
   message: string;
+}
+
+export interface ContractDetailsResponseData {
+  success: boolean;
+  data: ContractDetails;
+  message: string;
+}
+
+export interface ContractDetailsParams {
+  params: number;
+}
+
+export interface ContractPropertiesData extends OwnerPropertyDetailsData {
+  contract_id: number;
+  property_id: number;
+  usage?: any;
+  property_type: string;
+  unit?: any;
+  city: string;
+  state: string;
+  country: string;
+  street?: any;
+  building_no?: any;
+  building_name?: any;
+  floor_no?: any;
+  area: number;
+  furnishing_type?: any;
+  parking_type: string;
+  nof_parking: number;
+  pet_allowed: number;
+  nof_baths: number;
+  nof_balconies: number;
+  nof_bedrooms: number;
+  total_no_floor: number;
+  age_of_property: string;
+  contact_phone_no?: any;
+  property_descr?: any;
+
+  notice_period?: any;
+  property_facing?: any;
+  wheel_chair_access: number;
+
+  hoa: string;
+
+  created_at: string;
+  updated_at: string;
+  contract_property_amenities: OwnerPropertyDetailsData_PropertyAmenities;
+  contract_property_furnishings: OwnerPropertyDetailsDataFurnishingDetails;
+}
+
+export interface ContractTermsData extends ContractTermSingleData {
+  contract_id: number;
+  term_id: number;
+  contract_title_id: number;
+  term_text: string;
+}
+
+export interface ContractDetailsTerms extends Array<ContractTermsData> {}
+
+export interface ContractTermTitleData extends ContractTermListSingleData {
+  contract_id: number;
+  title_id: number;
+  title_text: string;
+  created_at: string;
+  updated_at: string;
+  contract_terms: ContractDetailsTerms;
+}
+
+export interface ContractDetailsTermsTitle
+  extends Array<ContractTermTitleData> {}
+
+export interface ContractOwnerData extends AuthUserDetais {
+  contract_id: number;
+  owner_id: number;
+  title: string;
+}
+
+export interface ContractPaymentDateAmountData extends AddContractSlabData {
+  id: number;
+  contract_id: number;
+
+  is_bill_generated: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ContractPaymentDateAmountList
+  extends Array<ContractPaymentDateAmountData> {}
+
+export interface ContractDetails extends OwnerContract {
+  tenant_lawyer_id: number;
+  payment_frequency_data?: any;
+  contract_properties_data: ContractPropertiesData;
+  contract_term_titles: ContractDetailsTermsTitle;
+  contract_owner_data: ContractOwnerData;
+  contract_payment_date_amount_data: ContractPaymentDateAmountList;
 }

@@ -1,14 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
 import InvitationCard from '../../components/InvitationCard/InvitationCard';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {useOwnerInvitationMutation} from '../../features/auth/auth';
 import {OwnerInvitationListData} from '../../features/types';
 
-type Props = {}
+type Props = {};
 
 const InvitationScreen = (props: Props) => {
-  const [invitationList, setInvitationList] = useState<OwnerInvitationListData>([]);
+  const [invitationList, setInvitationList] = useState<OwnerInvitationListData>(
+    [],
+  );
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+
   const [
     onEndReachedCalledDuringMomentum,
     setOnEndReachedCalledDuringMomentum,
@@ -19,12 +24,13 @@ const InvitationScreen = (props: Props) => {
   const [getAllOwnerInvitation] = useOwnerInvitationMutation();
 
   const getInvitation = async () => {
+    setLoading(true);
     try {
       await getAllOwnerInvitation({limit: 5, page: 1})
         .unwrap()
         .then(res => {
           console.log(res);
-          
+
           if (res.success) {
             setInvitationList(res?.data?.data);
           }
@@ -32,9 +38,11 @@ const InvitationScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const reGetInvitation = async () => {
+    // setLoading(true);
     console.log('Run????');
     setPage(page + 1);
     try {
@@ -53,11 +61,16 @@ const InvitationScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    // setLoading(false);
   };
 
   useEffect(() => {
     getInvitation();
   }, []);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   const renderFooter = () => {
     return (
@@ -101,6 +114,6 @@ const InvitationScreen = (props: Props) => {
       </View>
     </View>
   );
-}
+};
 
-export default InvitationScreen
+export default InvitationScreen;

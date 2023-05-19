@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
 import AddFloatingButton from '../../components/AddFloatingButton/AddFloatingButton';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import OwnerContractCard from '../../components/OwnerContractCard/OwnerContractCard';
 import {useGetOwnerContractListMutation} from '../../features/auth/owner';
 import {OwnerContractList} from '../../features/ownerTypes';
@@ -14,10 +15,12 @@ type Props = {};
 const OwnerContractsScreen = (props: Props) => {
   const navigation = useNavigation();
   const [contractList, setContractList] = useState<OwnerContractList>([]);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [getOwnerContractList] = useGetOwnerContractListMutation();
 
   const getContract = async () => {
+    setLoading(true);
     try {
       await getOwnerContractList({limit: 5, page: 1})
         .unwrap()
@@ -31,9 +34,11 @@ const OwnerContractsScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const reGetContract = async () => {
+    // setLoading(true);
     console.log('Run????');
     setPage(page + 1);
     try {
@@ -49,6 +54,7 @@ const OwnerContractsScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    // setLoading(false);
   };
 
   useEffect(() => {
@@ -69,6 +75,10 @@ const OwnerContractsScreen = (props: Props) => {
       </View>
     );
   };
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>

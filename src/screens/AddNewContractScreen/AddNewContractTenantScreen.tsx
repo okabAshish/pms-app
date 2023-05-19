@@ -12,6 +12,7 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch, useSelector} from 'react-redux';
 import DropDown from '../../components/DropDown/DropDown';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import OwnerTenantsCard from '../../components/OwnerTenantsCard/OwnerTenantsCard';
 import {useGetOwnerTenantListMutation} from '../../features/contract/contract';
 import {setTenantId} from '../../features/contract/contractSlice';
@@ -40,6 +41,7 @@ const AddNewContractTenantScreen = (props: Props) => {
 
   // console.log(contract?.property_id);
   const getTenants = async () => {
+    setLoading(false);
     try {
       await getOwnerTenantList({
         property_id: contract?.property_id ? contract?.property_id : 0,
@@ -70,6 +72,7 @@ const AddNewContractTenantScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const checkSelectedValue = v => {
@@ -81,6 +84,10 @@ const AddNewContractTenantScreen = (props: Props) => {
   useEffect(() => {
     getTenants();
   }, [contract?.property_id]);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>

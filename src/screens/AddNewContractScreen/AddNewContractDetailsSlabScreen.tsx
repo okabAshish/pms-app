@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import DatePicketInput from '../../components/DatePicketInput/DatePicketInput';
 import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import RadioButton from '../../components/RadioButton/RadioButton';
 import {setContractSlabData} from '../../features/contract/contractSlice';
 import {
@@ -39,6 +40,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
 
   console.log(date, contract_details.start_date, 'DDDDD');
 
+  const [loading, setLoading] = useState(false);
   const [slabs, setSlabs] = useState([]);
   const [fineType, setFineType] = useState('');
   const [late_fee, setLateFee] = useState(null);
@@ -72,6 +74,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
   };
 
   const addPaymentSlab = async () => {
+    setLoading(true);
     try {
       if (!parentRentalAmount || !amount || !date) {
         console.log('Caught Error');
@@ -120,6 +123,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const nextScreen1 = () => {
@@ -178,6 +182,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
     let amnt = Number(item.amount);
 
     try {
+      setLoading(true);
       b += amnt;
 
       //   console.log(b);
@@ -201,6 +206,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const nextScreen = async () => {
@@ -211,6 +217,10 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
       navigation.navigate('AddContract-5');
     }
   };
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <View style={{backgroundColor: '#45485F', flex: 1}}>

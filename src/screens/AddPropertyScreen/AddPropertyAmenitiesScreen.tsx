@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import CheckBox from '../../components/CheckBox/CheckBox';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {useGetOwnerPropertyAmenitiesListMutation} from '../../features/auth/owner';
 import {setAddPropertyFour} from '../../features/owner/ownerSlice';
 
@@ -22,11 +23,13 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
 
   const [FurnishedDetails, setFurnishedDetails] = useState([]);
   const [AmenitiesList, setAmenitiesList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [getOwnerPropertyAmenitiesList] =
     useGetOwnerPropertyAmenitiesListMutation();
 
   const getAmenities = async () => {
+    setLoading(true);
     try {
       await getOwnerPropertyAmenitiesList({})
         .unwrap()
@@ -47,11 +50,16 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     getAmenities();
   }, []);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   console.log(FurnishedDetails);
 

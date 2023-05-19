@@ -12,6 +12,7 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch, useSelector} from 'react-redux';
 import DropDown from '../../components/DropDown/DropDown';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
 import {
   useGetOwnerPropertyDetailsMutation,
@@ -27,6 +28,7 @@ const AddNewContractScreen = (props: Props) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const contract = useSelector<RootState>(state => state.contract);
+  const [loading, setLoading] = useState(false);
 
   const [propertyList, setPropertyList] = useState([]);
   const [propertyDetails, setPropertyDetails] =
@@ -39,6 +41,7 @@ const AddNewContractScreen = (props: Props) => {
   console.log(propertyDetails);
 
   const getProperties = async () => {
+    setLoading(true);
     try {
       await getOwnerPropertyList({})
         .unwrap()
@@ -61,9 +64,11 @@ const AddNewContractScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const getPropertyDetails = async (val: number) => {
+    setLoading(true);
     try {
       await getOwnerPropertyDetails({param: val})
         .unwrap()
@@ -75,12 +80,17 @@ const AddNewContractScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     getProperties();
     dispatch(setP({property_id: 0}));
   }, []);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>

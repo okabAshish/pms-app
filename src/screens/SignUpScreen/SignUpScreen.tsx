@@ -41,27 +41,30 @@ const SignUpScreen = (props: Props) => {
     console.log(req);
     setLoading(true);
     try {
+      // setLoading(true);
       await login({body: req})
         .unwrap()
         .then(async res => {
           console.log(res);
           if (res?.success) {
-
             //if (checked) {
-              await AsyncStorage.setItem('token', res?.data?.token);
-              await AsyncStorage.setItem('role_id', String.apply(index));
-              let user = JSON.stringify(res.data?.user_detail);
-              await AsyncStorage.setItem('user', user);
-              
+            await AsyncStorage.setItem('token', res?.data?.token);
+            await AsyncStorage.setItem('role_id', String.apply(index));
+            let user = JSON.stringify(res.data?.user_detail);
+            await AsyncStorage.setItem('user', user);
+
             //}
             dispatch(setUser(user));
             dispatch(setToken(res?.data?.token));
             dispatch(setLoggedIn(true));
-            navigation.dispatch(CommonActions.navigate({name: 'Dashboard'}));
+            navigation.dispatch(
+              CommonActions.navigate({name: 'Main', path: 'DashBoard'}),
+            );
           } else {
             console.warn('not match');
           }
         });
+      // setLoading(true);
     } catch (err) {
       console.log(err);
     }

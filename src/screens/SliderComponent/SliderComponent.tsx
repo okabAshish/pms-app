@@ -9,6 +9,7 @@ import {CommonActions, useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {useDispatch} from 'react-redux';
+import {logOut} from '../../features/auth/authProfile';
 import {setPageName} from '../../features/pageName/pageName';
 
 type Props = {};
@@ -115,6 +116,7 @@ const SliderComponent = (props: Props) => {
         dispatch(setPageName('Maintenance Request'));
 
         setActive('Maintenance-Request');
+        navigation.dispatch(CommonActions.navigate({name: 'Maintenance'}));
       },
     },
     {
@@ -127,6 +129,7 @@ const SliderComponent = (props: Props) => {
         dispatch(setPageName('Bills'));
 
         setActive('Bills');
+        navigation.dispatch(CommonActions.navigate({name: 'Bill'}));
       },
     },
   ];
@@ -229,6 +232,7 @@ const SliderComponent = (props: Props) => {
             onPress={async () => {
               await AsyncStorage.removeItem('token');
               await AsyncStorage.removeItem('user');
+              dispatch(logOut());
               navigation.dispatch(CommonActions.navigate({name: 'SignUp'}));
             }}>
             <Image

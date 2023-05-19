@@ -15,6 +15,7 @@ import {useDispatch} from 'react-redux';
 import DatePicketInput from '../../components/DatePicketInput/DatePicketInput';
 import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {useGetContractTypeListMutation} from '../../features/contract/contract';
 import {setContractData} from '../../features/contract/contractSlice';
 import {AddContractBodyData} from '../../features/contract/contractTypes';
@@ -48,6 +49,7 @@ const AddNewContractDetailsScreen = (props: Props) => {
   });
 
   const [last_date, setLastDate] = useState(Date.now());
+  const [loading, setLoading] = useState(false);
 
   const [getContractTypeList] = useGetContractTypeListMutation();
 
@@ -65,6 +67,7 @@ const AddNewContractDetailsScreen = (props: Props) => {
   };
 
   const getContractTypes = async () => {
+    setLoading(true);
     try {
       await getContractTypeList({})
         .unwrap()
@@ -84,6 +87,7 @@ const AddNewContractDetailsScreen = (props: Props) => {
     } catch (err) {
       console.warn(err);
     }
+    setLoading(false);
   };
 
   const handleRentalAmount = () => {
@@ -162,6 +166,10 @@ const AddNewContractDetailsScreen = (props: Props) => {
   useEffect(() => {
     changeEndDate();
   }, [contract.start_date]);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>

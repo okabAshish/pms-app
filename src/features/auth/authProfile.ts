@@ -30,9 +30,14 @@ const authProfile = createSlice({
     setLoggedIn: (state, action: PayloadAction<any>) => {
       state.isLoggedIn = action.payload;
     },
+    logOut: state => {
+      state.token = '';
+      state.isLoggedIn = false;
+      state.user = {} as Auth['user'];
+    },
   },
 });
 
-export const {setUser, setToken, setLoggedIn} = authProfile.actions;
+export const {setUser, setToken, setLoggedIn, logOut} = authProfile.actions;
 
 export default authProfile.reducer;

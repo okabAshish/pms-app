@@ -12,6 +12,7 @@ import {
 import {useDispatch} from 'react-redux';
 import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {
   useGetAllCountriesMutation,
   useGetCityOfStateMutation,
@@ -27,6 +28,7 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
   const [countries, setCountries] = useState();
   const [states, setStates] = useState();
   const [cities, setCities] = useState();
+  const [loading, setLoading] = useState(false);
 
   const [countryValue, setCountryValue] = useState<Number>();
   const [stateValue, setStateValue] = useState<Number>();
@@ -43,6 +45,7 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
   const [getCityOfState] = useGetCityOfStateMutation();
 
   const getCountries = async () => {
+    setLoading(true);
     try {
       await getAllCountries({})
         .unwrap()
@@ -62,9 +65,11 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const getStates = async () => {
+    setLoading(true);
     try {
       await getStateOfCountry({param: String(countryValue)})
         .unwrap()
@@ -84,9 +89,11 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const getCities = async () => {
+    setLoading(true);
     try {
       await getCityOfState({param: String(stateValue)})
         .unwrap()
@@ -106,9 +113,11 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const nextScreen = () => {
+    setLoading(true);
     try {
       if (countryValue === null || stateValue === null || cityValue === null) {
         throw (Error.name = `${key} is empty`);
@@ -138,11 +147,16 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     getCountries();
   }, []);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>

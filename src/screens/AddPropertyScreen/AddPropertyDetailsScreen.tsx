@@ -5,8 +5,9 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useDispatch} from 'react-redux';
 import Input from '../../components/Input/Input';
-import {useDispatch, useSelector} from 'react-redux';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {setAddPropertyTwo} from '../../features/owner/ownerSlice';
 
 type Props = {};
@@ -19,16 +20,19 @@ const AddPropertyDetailsScreen = (props: Props) => {
     bedrooms: '',
     bathrooms: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const nextScreen = () => {
+    setLoading(true);
     try {
       for (const key in propertyDetails) {
-      
         if (
-          propertyDetails[key] === null || propertyDetails[key] === '' || propertyDetails[key] === undefined 
-        ){
-          throw Error.name=`${key} is empty`
-        }      
+          propertyDetails[key] === null ||
+          propertyDetails[key] === '' ||
+          propertyDetails[key] === undefined
+        ) {
+          throw (Error.name = `${key} is empty`);
+        }
       }
       console.log('success');
       dispatch(
@@ -39,11 +43,15 @@ const AddPropertyDetailsScreen = (props: Props) => {
       );
       navigation.navigate('AddProperty-3');
     } catch (error) {
-      console.log(error)
-    }   
-      
+      console.log(error);
+    }
+    setLoading(false);
   };
-  console.log(propertyDetails)
+
+  if (loading) {
+    return <LoadingModal />;
+  }
+
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
       {/* <StatusBar backgroundColor={'#45485F'} barStyle="light-content" /> */}
@@ -92,7 +100,10 @@ const AddPropertyDetailsScreen = (props: Props) => {
           <Input
             switchButton={false}
             onChange={e =>
-              setPropertyDetails({...propertyDetails, bedrooms: Number(e.nativeEvent.text)})
+              setPropertyDetails({
+                ...propertyDetails,
+                bedrooms: Number(e.nativeEvent.text),
+              })
             }
             placehoder="Enter number of the bedrooms"
             label="Number Of Bedrooms"
@@ -102,7 +113,10 @@ const AddPropertyDetailsScreen = (props: Props) => {
           <Input
             switchButton={false}
             onChange={e =>
-              setPropertyDetails({...propertyDetails, bathrooms: Number(e.nativeEvent.text)})
+              setPropertyDetails({
+                ...propertyDetails,
+                bathrooms: Number(e.nativeEvent.text),
+              })
             }
             placehoder="Enter number of the bathrooms"
             label="Number Of Bathroom"

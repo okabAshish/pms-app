@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import {BASE_URL} from '../../../config';
 import {
   Auth,
   CityOfStateListParams,
@@ -22,7 +23,7 @@ import {
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://192.168.1.105:8105/api/',
+    baseUrl: BASE_URL,
     async prepareHeaders(headers) {
       const token = await AsyncStorage.getItem('token');
 

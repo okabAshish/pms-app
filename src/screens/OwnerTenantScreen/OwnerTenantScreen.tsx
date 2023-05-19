@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, View} from 'react-native';
 import AddFloatingButton from '../../components/AddFloatingButton/AddFloatingButton';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import OwnerTenantsCard from '../../components/OwnerTenantsCard/OwnerTenantsCard';
 import {useOwnerAllTenantListMutation} from '../../features/auth/auth';
 import {OwnerTenantListData} from '../../features/types';
@@ -13,10 +14,12 @@ const OwnerTenantScreen = (props: Props) => {
 
   const [tenantList, setTenantList] = useState<OwnerTenantListData>([]);
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const [ownerAllTenantList] = useOwnerAllTenantListMutation();
 
   const allTenants = async () => {
+    setLoading(true);
     try {
       await ownerAllTenantList({page: page, limit: 5})
         .unwrap()
@@ -28,9 +31,11 @@ const OwnerTenantScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const reGetTenants = async () => {
+    // setLoading(true);
     setPage(page + 1);
     try {
       await ownerAllTenantList({page: page, limit: 5})
@@ -44,6 +49,7 @@ const OwnerTenantScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    // setLoading(false);
   };
 
   useEffect(() => {
@@ -64,6 +70,10 @@ const OwnerTenantScreen = (props: Props) => {
       </View>
     );
   };
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>

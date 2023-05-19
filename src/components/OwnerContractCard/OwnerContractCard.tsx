@@ -1,5 +1,6 @@
 import {faEye, faFilePdf} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
@@ -38,13 +39,21 @@ const defaultProps: Props = {
 // const statusBackgroundColor = ['','rgb(248,176,176)','rgb(246,192,241)','rgba(32, 201, 151, 0.15)','rgb(246, 59, 17)'];
 
 const OwnerContractCard = (props: Props) => {
+  const navigation = useNavigation();
+
   return (
     <TouchableOpacity
       style={{
         backgroundColor: '#f5f5f5',
         borderRadius: 9,
         marginTop: 20,
-      }}>
+      }}
+      onPress={() =>
+        navigation.navigate('View', {
+          screen: 'Contract-View',
+          id: props.contract_id,
+        })
+      }>
       <View style={{}}>
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 8, paddingHorizontal: 12, paddingVertical: 10}}>
@@ -83,7 +92,7 @@ const OwnerContractCard = (props: Props) => {
                     : props.tenant_name}
                 </Text>
               </View>
-              {props.vacant==1 && (
+              {props.vacant == 1 && (
                 <View
                   style={{
                     paddingHorizontal: 6,
@@ -316,7 +325,7 @@ const OwnerContractCard = (props: Props) => {
                   }}>
                   Created At{' '}
                   <Text style={{fontFamily: 'Poppins-SemiBold'}}>
-                   { props.created_at }
+                    {props.created_at}
                   </Text>
                 </Text>
               </View>

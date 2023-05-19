@@ -14,6 +14,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import CustomAlertModal from '../../container/CustomAlertModal/CustomAlertModal';
 import {useGetPropertyTypeMutation} from '../../features/auth/owner';
 import {setError} from '../../features/error/error';
@@ -62,6 +63,7 @@ const AddPropertyScreen = (props: Props) => {
   const propertyType = async () => {
     setLoading(true);
     try {
+      // setLoading(true);
       await getPropertyType({})
         .unwrap()
         .then(res => {
@@ -81,6 +83,7 @@ const AddPropertyScreen = (props: Props) => {
             setPropertyTypeList(propertyDropdownData);
           }
         });
+      // setLoading(true);
     } catch (err) {
       dispatch(setError({error: true, message: err}));
       setTimeout(() => {
@@ -98,6 +101,7 @@ const AddPropertyScreen = (props: Props) => {
   console.log(property);
 
   const nextScreen = () => {
+    setLoading(true);
     try {
       for (const key in property) {
         if (
@@ -124,6 +128,7 @@ const AddPropertyScreen = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   if (error?.error) {
@@ -131,9 +136,7 @@ const AddPropertyScreen = (props: Props) => {
   }
 
   if (loading) {
-    <>
-      <Text>Loading</Text>
-    </>;
+    return <LoadingModal />;
   }
 
   return (

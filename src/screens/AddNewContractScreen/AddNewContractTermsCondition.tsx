@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
   SafeAreaView,
   StatusBar,
   Text,
@@ -12,6 +11,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useSelector} from 'react-redux';
 import AddContractTermTitleCard from '../../components/AddContractTermTitleCard/AddContractTermTitleCard';
 import AddContractTermsCard from '../../components/AddContractTermsCard/AddContractTermsCard';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {
   useAddContractMutation,
   useGetTermsListMutation,
@@ -55,11 +55,13 @@ const AddNewContractTermsCondition = (props: Props) => {
   const allTerms = async () => {
     setLoading(true);
     try {
+      // setLoading(true);
       await getTermsList({})
         .unwrap()
         .then(res => {
           setTermTitles(res.data);
         });
+      // setLoading(true);
     } catch (err) {
       console.log(err, '>>>>>>Error');
     }
@@ -90,6 +92,7 @@ const AddNewContractTermsCondition = (props: Props) => {
   };
 
   const saveContract = async () => {
+    setLoading(true);
     try {
       console.log(contract);
       await addContract(contract)
@@ -103,6 +106,7 @@ const AddNewContractTermsCondition = (props: Props) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -110,11 +114,7 @@ const AddNewContractTermsCondition = (props: Props) => {
   }, [showTitleModal, success]);
 
   if (loading) {
-    return (
-      <SafeAreaView style={{justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator />
-      </SafeAreaView>
-    );
+    return <LoadingModal />;
   }
 
   return (

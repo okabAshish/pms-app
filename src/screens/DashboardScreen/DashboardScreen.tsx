@@ -6,27 +6,25 @@ import DashboardReacentTransaction from '../../components/DashboardReacentTransa
 import DashboardRecentActivities from '../../components/DashboardRecentActivities/DashboardRecentActivities';
 import DashboardReport from '../../components/DashboardReport/DashboardReport';
 import DashboardTaskSummary from '../../components/DashboardTaskSummary/DashboardTaskSummary';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-/*Tenant*/ 
-import TenantDashboardReport from '../../components/Tenant/TenantDashboardReport/TenantDashboardReport';
-import TenantDashboardTransaction from '../../components/Tenant/TenantDashboardTransaction/TenantDashboardTransaction';
-import TenantDashboardTaskSummary from '../../components/Tenant/TenantDashboardTaskSummary/TenantDashboardTaskSummary';
+/*Tenant*/
 import TenantDashboardActivities from '../../components/Tenant/TenantDashboardActivities/TenantDashboardActivities';
+import TenantDashboardReport from '../../components/Tenant/TenantDashboardReport/TenantDashboardReport';
+import TenantDashboardTaskSummary from '../../components/Tenant/TenantDashboardTaskSummary/TenantDashboardTaskSummary';
+import TenantDashboardTransaction from '../../components/Tenant/TenantDashboardTransaction/TenantDashboardTransaction';
 
+import {useSelector} from 'react-redux';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {
   useOwnerDashboardMutation,
   useTenantDashboardMutation,
 } from '../../features/auth/auth';
 import {OwnerDashBoardData, TenantDashboardData} from '../../features/types';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import {RootState} from '../../store';
 
 type Props = {};
 
 const DashboardScreen = (props: Props) => {
-
-  const auth = useSelector<RootState>(state=>state.auth)
+  const auth = useSelector<RootState>(state => state.auth);
 
   const [loading, setLoading] = useState(false);
   const [tenantDashboardData, setTenantDashboardData] =
@@ -41,10 +39,9 @@ const DashboardScreen = (props: Props) => {
   const getAllDashboardData = async () => {
     setLoading(true);
     try {
+      // setLoading(true);
 
-      
-      console.log('roleId',JSON.parse(auth.user).user_details.role_id);
-
+      console.log('roleId', JSON.parse(auth.user).user_details.role_id);
 
       const role_id = JSON.parse(auth.user).user_details.role_id;
       setUserRole(role_id);
@@ -69,6 +66,7 @@ const DashboardScreen = (props: Props) => {
             }
           });
       }
+      // setLoading(true);
     } catch (err) {
       console.log(err, '<<<<<<<<<<Dashboard Error');
     }
@@ -92,7 +90,8 @@ const DashboardScreen = (props: Props) => {
           paddingHorizontal: 20,
           paddingTop: 20,
         }}>
-          {userRole==2 ? (<>
+        {userRole == 2 ? (
+          <>
             <DashboardReport
               key={'Report'}
               total_properties={ownerDashboardData?.total_properties}
@@ -109,32 +108,39 @@ const DashboardScreen = (props: Props) => {
             />
             <DashboardTaskSummary
               completed={ownerDashboardData?.task_summary.completed}
-              work_in_progress={ownerDashboardData?.task_summary?.work_in_progress}
+              work_in_progress={
+                ownerDashboardData?.task_summary?.work_in_progress
+              }
               new={ownerDashboardData?.task_summary?.new}
             />
             <DashboardRecentActivities
               activity={ownerDashboardData?.recent_activity}
             />
-        </> ) : (<>
-          <TenantDashboardReport
-            key={'Report'}
-            total_invitations= {tenantDashboardData?.total_invitations}
-            total_contracts= {tenantDashboardData?.total_contracts}
-            rented_property= {tenantDashboardData?.rented_property}
-          />  
-          <DashBoardRevenueOverView />
-          <TenantDashboardTransaction
+          </>
+        ) : (
+          <>
+            <TenantDashboardReport
+              key={'Report'}
+              total_invitations={tenantDashboardData?.total_invitations}
+              total_contracts={tenantDashboardData?.total_contracts}
+              rented_property={tenantDashboardData?.rented_property}
+            />
+            <DashBoardRevenueOverView />
+            <TenantDashboardTransaction
               trasactions={tenantDashboardData?.transactions}
             />
-          <TenantDashboardTaskSummary
+            <TenantDashboardTaskSummary
               completed={tenantDashboardData?.task_summary.completed}
-              work_in_progress={tenantDashboardData?.task_summary?.work_in_progress}
+              work_in_progress={
+                tenantDashboardData?.task_summary?.work_in_progress
+              }
               new={tenantDashboardData?.task_summary?.new}
             />
-          <TenantDashboardActivities
+            <TenantDashboardActivities
               activity={tenantDashboardData?.recent_activity}
+              key={'TenantDashboardActivities'}
             />
-        </>
+          </>
         )}
         <View style={{marginTop: 100}}></View>
       </ScrollView>

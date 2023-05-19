@@ -82,7 +82,13 @@ const TenantDashboardActivities = (props: Props) => {
                 }}></View>
 
               <View>
-                <Text style={{color: '#000', fontFamily: 'Poppins-Regular'}}>
+                <Text
+                  style={{
+                    color: '#000',
+                    fontFamily: 'Poppins-Regular',
+                    flex: 200,
+                    flexWrap: 'wrap',
+                  }}>
                   {item?.message}
                 </Text>
                 <Text

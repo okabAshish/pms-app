@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import CheckBox from '../../components/CheckBox/CheckBox';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import RadioButton from '../../components/RadioButton/RadioButton';
 import {
   useGetFurnishingListMutation,
@@ -48,6 +49,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   const furnishingTypeData = async () => {
     setLoading(true);
     try {
+      // setLoading(true);
       await getFurnishingType({})
         .unwrap()
         .then(res => {
@@ -63,6 +65,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
             furnishingListFunction();
           }
         });
+      // setLoading(true);
     } catch (err) {
       dispatch(setError({error: true, message: err}));
       setTimeout(() => {
@@ -76,6 +79,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   const furnishingListFunction = async () => {
     setLoading(true);
     try {
+      // setLoading(true);
       await getFurnishingList({})
         .unwrap()
         .then(res => {
@@ -95,6 +99,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
             console.log(furnishingCheckboxData);
           }
         });
+      // setLoading(true);
     } catch (err) {
       dispatch(setError({error: true, message: err}));
       setTimeout(() => {
@@ -126,6 +131,10 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   useEffect(() => {
     furnishingTypeData();
   }, []);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>

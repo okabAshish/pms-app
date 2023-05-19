@@ -1,8 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import {BASE_URL} from '../../../config';
 import {
   AddContractBodyData,
   AddContractResponseData,
+  ContractDetailsParams,
+  ContractDetailsResponseData,
   ContractTenantListRequest,
   ContractTenantListResponseData,
   ContractTermAddTermBody,
@@ -19,7 +22,7 @@ import {
 export const contractApi = createApi({
   reducerPath: 'contractApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://192.168.1.105:8105/api/',
+    baseUrl: BASE_URL,
     async prepareHeaders(headers) {
       const token = await AsyncStorage.getItem('token');
 
@@ -147,6 +150,18 @@ export const contractApi = createApi({
         }),
       },
     ),
+    getContractDetails: builder.mutation<
+      ContractDetailsResponseData,
+      ContractDetailsParams
+    >({
+      query: req => ({
+        url: `/owner/contract-details/${req.params}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -163,4 +178,5 @@ export const {
   useGetOwnerTenantListMutation,
   useGetContractTypeListMutation,
   useAddContractMutation,
+  useGetContractDetailsMutation,
 } = contractApi;

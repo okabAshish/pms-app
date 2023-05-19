@@ -16,6 +16,7 @@ import {
 } from '../../features/contract/contractTypes';
 import {RootState} from '../../store';
 import Input from '../Input/Input';
+import LoadingModal from '../LoadingModal/LoadingModal';
 import RadioButton from '../RadioButton/RadioButton';
 import AddContractSubTermsCard from './AddContractSubTermsCard';
 
@@ -42,7 +43,7 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
   const user_details = JSON.parse(user);
 
   const [Term, setTerm] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [showSubTerms, setShowSubTerms] = useState(false);
   const [showInputForNewTerm, setShowInputForNewTerm] = useState(false);
   const [newTerm, setNewTerm] = useState('');
@@ -100,6 +101,7 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
   };
 
   const deleteTitle = async () => {
+    setLoading(true);
     try {
       await deleteTermTitle({param: props.id})
         .unwrap()
@@ -111,10 +113,12 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const delet = async (id: number) => {
     console.log(id);
+    setLoading(true);
     try {
       await deleteTerm({param: id})
         .unwrap()
@@ -128,9 +132,11 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const add = async () => {
+    setLoading(true);
     try {
       await addTerm({term: newTerm, title_id: props.title_id})
         .unwrap()
@@ -140,9 +146,11 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const edit = async (id: number) => {
+    setLoading(true);
     try {
       await editTerm({title: JSON.stringify({term: newTerm}), param: id})
         .unwrap()
@@ -152,6 +160,7 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   // console.log(newTerms);
@@ -238,6 +247,10 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
   useEffect(() => {
     setnewTerms(props.terms);
   }, [showSubTermsData]);
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <TouchableOpacity
