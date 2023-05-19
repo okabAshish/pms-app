@@ -34,6 +34,7 @@ import InviteTenantScreen from './screens/InviteTenantScreen/InviteTenantScreen'
 import OwnerContractsScreen from './screens/OwnerContractsScreen/OwnerContractsScreen';
 import OwnerTenantScreen from './screens/OwnerTenantScreen/OwnerTenantScreen';
 import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
+import PropertyViewScreen from './screens/PropertyViewScreen/PropertyViewScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import SliderComponent from './screens/SliderComponent/SliderComponent';
 import TenantSliderComponent from './screens/SliderComponent/TenantSliderComponent';
@@ -239,6 +240,16 @@ const Navigator = (props: Props) => {
     );
   };
 
+  const ViewScreen = () => {
+    return (
+      <>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Property-View" component={PropertyViewScreen} />
+        </Stack.Navigator>
+      </>
+    );
+  };
+
   const DashboardMenus = () => {
     return (
       <>
@@ -256,7 +267,10 @@ const Navigator = (props: Props) => {
           <Stack.Screen name="Tenant" component={OwnerTenantScreen} />
           <Stack.Screen name="Contracts" component={OwnerContractsScreen} />
           <Stack.Screen name="Invitation-List" component={InvitationScreen} />
-          <Stack.Screen name="Property-Invitation" component={PropertyInvitation} />
+          <Stack.Screen
+            name="Property-Invitation"
+            component={PropertyInvitation}
+          />
         </Stack.Navigator>
       </>
     );
@@ -269,11 +283,14 @@ const Navigator = (props: Props) => {
       <Drawer
         ref={drawer}
         drawerWidth={300}
-        renderNavigationView={() => userRole === 2 ? <SliderComponent /> : <TenantSliderComponent /> }>
+        renderNavigationView={() =>
+          userRole === 2 ? <SliderComponent /> : <TenantSliderComponent />
+        }>
         <>
           <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen name="Main" component={DashboardMenus} />
             <Stack.Screen name="ADD" component={AddMenus} />
+            <Stack.Screen name="View" component={ViewScreen} />
           </Stack.Navigator>
         </>
       </Drawer>

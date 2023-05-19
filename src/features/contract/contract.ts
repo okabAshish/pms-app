@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {
+  AddContractBodyData,
+  AddContractResponseData,
   ContractTenantListRequest,
   ContractTenantListResponseData,
   ContractTermAddTermBody,
@@ -133,6 +135,18 @@ export const contractApi = createApi({
         },
       }),
     }),
+    addContract: builder.mutation<AddContractResponseData, AddContractBodyData>(
+      {
+        query: req => ({
+          url: 'owner/add-contract',
+          method: 'POST',
+          body: req,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        }),
+      },
+    ),
   }),
 });
 
@@ -148,4 +162,5 @@ export const {
   useEditTermTitleMutation,
   useGetOwnerTenantListMutation,
   useGetContractTypeListMutation,
+  useAddContractMutation,
 } = contractApi;

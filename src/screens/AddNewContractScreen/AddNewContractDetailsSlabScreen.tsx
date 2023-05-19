@@ -132,7 +132,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
           payment_amount: slabs[i]?.amount,
           fine_amount: slabs[i]?.late_fee_amount,
           grace_period: slabs[i]?.late_fee_grace_period,
-          is_deposite_included: slabs[i]?.security_deposit,
+          is_deposite_included: slabs[i]?.security_deposit.length > 0 ? 1 : 0,
         });
       }
     } else {
@@ -142,7 +142,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
           payment_amount: slabs[i]?.amount,
           fine_amount: slabs[i]?.late_fee_amount,
           grace_period: slabs[i]?.late_fee_grace_period,
-          is_deposite_included: slabs[i]?.securityDeposit,
+          is_deposite_included: slabs[i]?.security_deposit.length > 0 ? 1 : 0,
         });
       }
     }
@@ -151,7 +151,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
 
     dispatch(
       setContractSlabData({
-        late_fee_applicable: late_fee,
+        late_fee_applicable: late_fee === 0 ? 1 : 0,
         fine_type: fineType,
         late_fee_amount: fineType === '0' ? late_fee_amount : '',
         late_fee_grace_period: lateFeeGracePeriod,

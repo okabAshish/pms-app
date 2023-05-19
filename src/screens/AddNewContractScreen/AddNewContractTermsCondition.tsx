@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
@@ -8,19 +9,35 @@ import {
   View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useSelector} from 'react-redux';
 import AddContractTermTitleCard from '../../components/AddContractTermTitleCard/AddContractTermTitleCard';
 import AddContractTermsCard from '../../components/AddContractTermsCard/AddContractTermsCard';
-import {useGetTermsListMutation} from '../../features/contract/contract';
-import {ContractTermList} from '../../features/contract/contractTypes';
+import {
+  useAddContractMutation,
+  useGetTermsListMutation,
+} from '../../features/contract/contract';
+import {
+  AddContractBodyData,
+  ContractTermList,
+} from '../../features/contract/contractTypes';
+import {RootState} from '../../store';
 
 type Props = {};
 
 const AddNewContractTermsCondition = (props: Props) => {
+  const contract: AddContractBodyData = useSelector<RootState>(
+    state => state.contract,
+  );
+
+  const navigation = useNavigation();
+
   const [termTitles, setTermTitles] = useState<ContractTermList>([]);
   const [selectedTermTitles, setSelectedTermTitles] = useState([]);
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [addContract] = useAddContractMutation();
 
   const handleSuccess = () => {
     setTimeout(() => {
@@ -72,10 +89,21 @@ const AddNewContractTermsCondition = (props: Props) => {
     setSelectedTermTitles(a);
   };
 
-  console.log(
-    selectedTermTitles,
-    selectedTermTitles.find(val => (val.title_id == 1 ? 'hello' : 'sada')),
-  );
+  const saveContract = async () => {
+    try {
+      console.log(contract);
+      await addContract(contract)
+        .unwrap()
+        .then(res => {
+          console.log(res);
+          if (res.success) {
+            navigation.navigate('Main', {scree: 'Contreact'});
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     allTerms();
@@ -205,7 +233,7 @@ const AddNewContractTermsCondition = (props: Props) => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                navigation.navigate('AddContract-4');
+                saveContract();
               }}>
               <Text
                 style={{
@@ -215,7 +243,7 @@ const AddNewContractTermsCondition = (props: Props) => {
                   marginRight: 5,
                   color: '#fff',
                 }}>
-                Next
+                Save
               </Text>
               {/* <FontAwesomeIcon icon={faChevronRight} size={12} color="#fff" /> */}
             </TouchableOpacity>

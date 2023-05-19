@@ -1,5 +1,6 @@
 import {faEdit, faEye} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 
@@ -19,6 +20,8 @@ const defaultProps: Props = {
 };
 
 const PropertyCard = (props: Props) => {
+  const navigation = useNavigation();
+
   const [imgeUrl, setimgeUrl] = useState(props?.imageUrl);
   return (
     <TouchableOpacity
@@ -28,6 +31,9 @@ const PropertyCard = (props: Props) => {
         backgroundColor: '#f5f5f5',
         borderRadius: 9,
         marginTop: 20,
+      }}
+      onPress={() => {
+        navigation.navigate('View', {screen: 'Preoperty-View'});
       }}>
       <View style={{paddingHorizontal: 12, paddingVertical: 10}}>
         <View style={{flexDirection: 'row'}}>

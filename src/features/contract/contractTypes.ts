@@ -1,5 +1,4 @@
 export interface ContractState {
-  contract_type: string;
   contract_period: string;
   grace_period: string;
   start_date: string;
@@ -183,3 +182,9 @@ export interface ContractTypeListData {
 }
 
 export interface ContractTypeList extends Array<ContractTypeListData> {}
+
+export interface AddContractResponseData {
+  success: boolean;
+  data: number;
+  message: string;
+}

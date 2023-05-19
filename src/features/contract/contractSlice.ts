@@ -59,7 +59,7 @@ const contract = createSlice({
       action: PayloadAction<ContractState & AddContractBodyData>,
     ) => {
       // console.log(action.payload, 'Action');
-      state.contract_type = action.payload.contract_type;
+      state.contract_type_id = action.payload.contract_type_id;
       state.contract_period = action.payload.contract_period;
       state.grace_period = action.payload.grace_period;
       state.start_date = action.payload.start_date;

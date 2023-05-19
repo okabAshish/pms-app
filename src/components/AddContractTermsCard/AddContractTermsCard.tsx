@@ -17,6 +17,7 @@ import {
 import {RootState} from '../../store';
 import Input from '../Input/Input';
 import RadioButton from '../RadioButton/RadioButton';
+import AddContractSubTermsCard from './AddContractSubTermsCard';
 
 interface Props {
   title_id: string;
@@ -192,7 +193,7 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
     );
   };
 
-  const handleSubTermCheck = term_id => {
+  const handleSubTermCheck = (term_id, title_id) => {
     // props.handleTerm(props.title_id);
 
     let t = [];
@@ -203,7 +204,9 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
     if (t.length > 0) {
       console.log('called');
       // console.log(first)
-      const index = t.findIndex(obj => obj.title_id === props.title_id);
+      const index = t.findIndex(obj => obj.title_id === title_id);
+
+      console.log(t.findIndex(obj => obj.title_id === title_id));
 
       if (index !== -1) {
         // Object is present, so remove it from the array
@@ -222,10 +225,10 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
       } else {
         console.log('AC');
 
-        t.push({term_id: props.title_id, terms_data: [term_id]});
+        t.push({title_id: title_id, terms_data: [term_id]});
       }
     } else {
-      t.push({term_id: props.title_id, terms_data: [term_id]});
+      t.push({title_id: title_id, terms_data: [term_id]});
     }
 
     console.log(t, '>>>>>>>T');
@@ -325,75 +328,22 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
         <View style={{paddingHorizontal: 12, marginTop: 20}}>
           {showSubTermsData &&
             newTerms.map((item, index) => {
-              console.log(item);
               return (
-                <View key={item.id + index} style={{flexDirection: 'row'}}>
-                  <RadioButton
-                    labels={[item?.term]}
-                    buttonSize={14}
-                    textStyle={{
-                      flexWrap: 'wrap',
-                      color: '#484848',
-                      fontSize: 12,
-                      fontFamily: 'Poppins-Regular',
-                      marginLeft: 5,
-                      // flex: 1,
-                      flexDirection: 'column',
-                    }}
-                    containerStyles={{flex: 1}}
-                    onChange={e => {
-                      handleSubTermCheck(item.id);
-                    }}
-                  />
-                  {item.type === 1 &&
-                    item?.created_by === user_details.user_id && (
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <TouchableOpacity
-                          style={{
-                            marginHorizontal: 5,
-                            marginVertical: 5,
-                            flexDirection: 'row',
-                            backgroundColor: '#00ABE4',
-                            paddingLeft: 10,
-                            paddingRight: 8,
-                            borderRadius: 3,
-                            paddingVertical: 4,
-                          }}
-                          onPress={() => {
-                            setShowInputForNewTerm(true);
-                            setNewTerm(item?.term);
-                            setShowSubTermsData(false);
-                            setSubTermId(item?.id);
-                          }}>
-                          <FontAwesomeIcon
-                            icon={faEdit}
-                            color="#fff"
-                            size={12}
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{
-                            marginHorizontal: 5,
-                            flexDirection: 'row',
-                            backgroundColor: '#45485F',
-                            paddingLeft: 10,
-                            paddingRight: 8,
-                            borderRadius: 3,
-                            paddingVertical: 4,
-                          }}
-                          onPress={() => {
-                            confirmDeleteSubMenu(item?.id);
-                          }}>
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            color="#fff"
-                            size={12}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                </View>
+                <AddContractSubTermsCard
+                  id={item.id}
+                  key={item.id + index}
+                  title_id={item.title_id}
+                  created_by={item.created_by}
+                  term={item.term}
+                  type={item.type}
+                  user_details={user_details}
+                  setSubTermId={e => setSubTermId(e)}
+                  setNewTerm={e => setNewTerm(e)}
+                  setShowInputForNewTerm={e => setShowInputForNewTerm(e)}
+                  setShowSubTermsData={e => setShowSubTermsData(e)}
+                  confirmDeleteSubMenu={e => confirmDeleteSubMenu(e)}
+                  handleSubTermCheck={(a, b) => handleSubTermCheck(a, b)}
+                />
               );
             })}
           <View style={{marginTop: -12}}>

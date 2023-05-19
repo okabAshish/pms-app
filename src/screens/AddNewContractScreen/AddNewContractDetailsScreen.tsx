@@ -32,7 +32,7 @@ const AddNewContractDetailsScreen = (props: Props) => {
   const [noticePeriod, setNoticePeriod] = useState(60);
   const [switchModeType, setSwitchModeType] = useState('Percentage');
   const [contract, setContract] = useState<AddContractBodyData>({
-    contract_type_id: Number(''),
+    contract_type_id: '',
     contract_period: '',
     grace_period: '',
     start_date: Date.now(),
@@ -120,6 +120,7 @@ const AddNewContractDetailsScreen = (props: Props) => {
   };
 
   const nextScreen = () => {
+    console.log(contract);
     dispatch(
       setContractData({
         contract_type_id: contract.contract_type_id,
@@ -132,8 +133,9 @@ const AddNewContractDetailsScreen = (props: Props) => {
         monthly_rent: contract.monthly_rent,
         monthly_service_charge: contract.monthly_service_charge,
         other_charge: contract.other_charge,
-        discount:
-          contract.discount + (switchModeType === 'Percentage' ? '%' : ''),
+        discount: contract.discount
+          ? contract.discount + (switchModeType === 'Percentage' ? '%' : '0')
+          : '0',
         total_rental_amount: contract.total_rental_amount,
         total_contract_amount: contract.total_contract_amount,
       }),
