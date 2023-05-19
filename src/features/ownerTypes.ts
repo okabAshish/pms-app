@@ -344,3 +344,4 @@ export interface OwnerPropertyAmenitiesResponseData {
   data: OwnerPropertyAmenitiesList;
   message: string;
 }
+

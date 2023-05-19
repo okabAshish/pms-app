@@ -101,6 +101,7 @@ const PropertyScreen = (props: Props) => {
           }}
           renderItem={({item, index}) => (
             <PropertyCard
+              id={item?.id}
               property_id={'Prop_0000000' + item?.id}
               building_name={item?.property_name}
               key={index + item?.id}
