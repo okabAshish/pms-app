@@ -404,73 +404,73 @@ export interface RentedProperty {
         created_at?: string;
         updated_at?: string;
     },
-    // "contract_tenant_data": {
-    //     "id": 15,
-    //     "contract_id": 23,
-    //     "tenant_id": 59,
-    //     "title": "Mr.",
-    //     "first_name": "Peter",
-    //     "middle_name": "",
-    //     "last_name": "Parker",
-    //     "email": "peterparker456@gmail.com",
-    //     "phone": "2254554587",
-    //     "address": "2011 Providence Lane",
-    //     "city": "Mirefleurs",
-    //     "state": "Bushehr",
-    //     "zip": "898565",
-    //     "account_type": "1",
-    //     "nationality": "United Arab Emirates",
-    //     "national_id": null,
-    //     "passport_number": null,
-    //     "passport_expiry": null,
-    //     "visa_number": null,
-    //     "visa_expiry": null,
-    //     "company_type": "",
-    //     "company_name": null,
-    //     "contact_person": null,
-    //     "contact_number": null,
-    //     "company_website": null,
-    //     "created_at": "2023-04-12T12:42:16.000000Z",
-    //     "updated_at": "2023-04-12T12:42:16.000000Z"
-    // },
-    // "contract_owner_data": {
-    //     "id": 20,
-    //     "contract_id": 23,
-    //     "owner_id": 56,
-    //     "title": "Mr.",
-    //     "first_name": "Paul",
-    //     "middle_name": null,
-    //     "last_name": "Parker",
-    //     "email": "paulparker@gmail.com",
-    //     "phone": "2017896541",
-    //     "address": "158, AV DE LA DEMOCRATIE (ex HUILERIES), KINSHASA - GOMBE",
-    //     "address_two": null,
-    //     "city": "La Châtre",
-    //     "state": "Chaharmahal and Bakhtiari",
-    //     "zip": "78952",
-    //     "account_type": "1",
-    //     "nationality": "United Arab Emirates",
-    //     "national_id": null,
-    //     "passport_number": null,
-    //     "passport_expiry": null,
-    //     "profile_photo": null,
-    //     "company_type": null,
-    //     "company_name": null,
-    //     "contact_person": null,
-    //     "company_website": null,
-    //     "created_at": "2023-04-12T12:42:16.000000Z",
-    //     "updated_at": "2023-04-12T12:42:16.000000Z"
-    // },
-    // "contract_type_name": {
-    //     "id": 1,
-    //     "name": "Residential",
-    //     "created_at": "2022-11-21T12:04:27.000000Z",
-    //     "updated_at": "2022-11-25T07:33:45.000000Z"
-    // },
-    // "contract_status_name": {
-    //     "id": 4,
-    //     "name": "Occupied",
-    //     "created_at": "2023-04-03T16:10:58.000000Z",
-    //     "updated_at": "2023-04-03T16:10:58.000000Z"
-    // }
+    contract_tenant_data?: {
+        id: number;
+        contract_id?: number;
+        tenant_id?: number;
+        title?: string;
+        first_name?: string;
+        middle_name?: string;
+        last_name?: string;
+        email?: string;
+        phone?: string;
+        address?: string;
+        city?: string;
+        state?: string;
+        zip?: string;
+        account_type?: string;
+        nationality?: string;
+        national_id?: any;
+        passport_number?: any;
+        passport_expiry?: any;
+        visa_number?: any;
+        visa_expiry?: any;
+        company_type?: string;
+        company_name?: any;
+        contact_person?: any;
+        contact_number?: any;
+        company_website?: any;
+        created_at?: string;
+        updated_at?: string;
+    },
+    contract_owner_data?: {
+        id: number;
+        contract_id?: number;
+        owner_id?: number;
+        title?: string;
+        first_name?: string;
+        middle_name?: any;
+        last_name?: string;
+        email?: string;
+        phone?: string;
+        address?: string;
+        address_two?: any;
+        city?: string;
+        state?: string;
+        zip?: string;
+        account_type?: string;
+        nationality?: string;
+        national_id?: any;
+        passport_number?: any;
+        passport_expiry?: any;
+        profile_photo?: any;
+        company_type?: any;
+        company_name?: any;
+        contact_person?: any;
+        company_website?: any;
+        created_at?: string;
+        updated_at?: string;
+    },
+    contract_type_name?: {
+        id: 1,
+        name?: string;
+        created_at?: string;
+        updated_at?: string;
+    },
+    contract_status_name?: {
+        id: number;
+        name?: string;
+        created_at?: string;
+        updated_at?: string;
+    }
 }
