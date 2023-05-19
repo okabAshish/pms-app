@@ -121,6 +121,7 @@ const AddPropertyImages = (props: Props) => {
           .then((res: AddPropertyResponseData) => {
             if (res?.success) {
               console.log(res);
+              navigation.navigate('Property');
             }
           });
       }
@@ -311,7 +312,6 @@ const AddPropertyImages = (props: Props) => {
               }}
               onPress={() => {
                 handleSave();
-                navigation.navigate('Property');
               }}>
               <Text
                 style={{

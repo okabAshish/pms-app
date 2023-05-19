@@ -33,7 +33,7 @@ const PropertyCard = (props: Props) => {
         marginTop: 20,
       }}
       onPress={() => {
-        navigation.navigate('View', {screen: 'Preoperty-View'});
+        // navigation.navigate('View', {screen: 'Preoperty-View'});
       }}>
       <View style={{paddingHorizontal: 12, paddingVertical: 10}}>
         <View style={{flexDirection: 'row'}}>
