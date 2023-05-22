@@ -31,23 +31,6 @@ const PropertyViewImageGallary = (props: Props) => {
   const navigation = useNavigation();
   const _scrollView = useRef<ScrollViewProps>();
 
-  const imgGallary = [
-    {
-      id: 2,
-      imgUrl:
-        'https://images.pexels.com/photos/1974596/pexels-photo-1974596.jpeg',
-      text: 'Hii',
-    },
-    {
-      id: 1,
-      imgUrl:
-        'https://images.pexels.com/photos/2129796/pexels-photo-2129796.png',
-      text: 'Hello',
-    },
-  ];
-
-  console.log(props.imges);
-
   return (
     <ScrollView
       horizontal

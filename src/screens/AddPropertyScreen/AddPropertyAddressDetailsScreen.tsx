@@ -210,6 +210,7 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
               getStates(v);
             }}
             value={countryValue}
+            search
           />
           <DropDown
             label="State"
@@ -221,6 +222,7 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
               getCities(v);
             }}
             value={stateValue}
+            search
           />
           <DropDown
             label="City"
@@ -232,6 +234,7 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
               // getCities();
             }}
             value={stateValue}
+            search
           />
           <Input
             label="Zip Code"
