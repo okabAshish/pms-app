@@ -8,6 +8,8 @@ import {
   PropertyInvitationListResponseData,
   RentedPropertyListParam,
   RentedPropertyListResponseData,
+  TenantContactListResponseData,
+  TenantContactListParam,
 } from '../tenantTypes';
 
 // Define a service using a base URL and expected endpoints
@@ -54,6 +56,18 @@ export const tenantApi = createApi({
     >({
       query: req => ({
         url: `tenant/rented-property-list?limit=${req.limit}&page=${req.page}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    getTenantContactList: builder.mutation<
+    TenantContactListResponseData,
+    TenantContactListParam
+    >({
+      query: req => ({
+        url: `tenant/property-invitation-list?limit=${req.limit}&page=${req.page}`,
         method: 'GET',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',

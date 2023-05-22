@@ -13,6 +13,11 @@ export interface RentedPropertyListParam {
     page: number;
 }
 
+export interface TenantContactListParam {
+    limit: number;
+    page: number;
+}
+
 export interface PropertyInvitationListResponseData {
     success: boolean;
     data: PropertyInvitationListLimitData;
@@ -470,6 +475,119 @@ export interface RentedProperty {
     contract_status_name?: {
         id: number;
         name?: string;
+        created_at?: string;
+        updated_at?: string;
+    }
+}
+
+export interface TenantContactListResponseData {
+    success: boolean;
+    data: TenantContactListLimitData;
+    message: string;
+}
+
+export interface TenantContactListLimitData {
+    data: TenantContactList;
+    meta: {
+        from: number;
+        to: number;
+        total: number;
+        count: number;
+        per_page: string;
+        current_page: number;
+        last_page: number;
+    };
+    links: {
+        first_page_url?: string;
+        last_page_url?: string;
+        next_page_url?: string;
+        prev_page_url?: string;
+    };
+}
+
+export interface TenantContactList extends Array<TenantContact> {}
+
+export interface TenantContact {
+    id: number;
+    property_id?: number;
+    owner_id?: number;
+    tenant_id?: number;
+    contract_number?: string;
+    start_date?: string;
+    end_date?: string;
+    contract_period?: string;
+    security_deposit?: number;
+    monthly_rent?: number;
+    monthly_service_charge?: number;
+    monthly_other_charge?: number;
+    discount?: string;
+    total_monthly_amt?: number;
+    activation_date?: any;
+    contract_status?: number;
+    contract_type_id?: number;
+    contract_signed_date?: any;
+    contract_authorised_id?: any;
+    contract_authorised_by?: any;
+    contract_authorised_date?: any;
+    payment_frequency?: any;
+    late_fee_applicable?: number;
+    late_fine_slab_type?: string;
+    late_fee_type?: any;
+    late_fee_amt?: any;
+    grace_period?: any;
+    sent_to_tenant_for_approval?: number;
+    is_approved_by_tenant?: number;
+    discard?: number;
+    contract_start_grace_period?: string;
+    contract_reject_reason?: any;
+    mark_as_vacant?: number;
+    notice_period?: any;
+    vacant_request_by_owner?: number;
+    vacant_request_by_tenant?: number;
+    vacant_request_approved?: number;
+    vacant_request_date?: any;
+    vacant_date?: any;
+    vacant_reason?: any;
+    created_at?: string;
+    updated_at?: string;
+    lawyer_contract_data?: any;
+    contract_type_name?: {
+        id: number;
+        name?: string;
+        created_at?: string;
+        updated_at?: string;
+    },
+    contract_status_name?: {
+        id: number;
+        name?: string;
+        created_at?: string;
+        updated_at?: string;
+    },
+    contract_owner_data?: {
+        id: number;
+        contract_id?: number;
+        owner_id?: number;
+        title?: string;
+        first_name?: string;
+        middle_name?: string;
+        last_name?: string;
+        email?: string;
+        phone?: string;
+        address?: string;
+        address_two?: any;
+        city?: string;
+        state?: string;
+        zip?: string;
+        account_type?: string;
+        nationality?: string;
+        national_id?: any;
+        passport_number?: any;
+        passport_expiry?: any;
+        profile_photo?: any;
+        company_type?: any;
+        company_name?: any;
+        contact_person?: any;
+        company_website?: any;
         created_at?: string;
         updated_at?: string;
     }

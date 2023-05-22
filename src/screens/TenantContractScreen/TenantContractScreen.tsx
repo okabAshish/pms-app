@@ -1,6 +1,9 @@
 import React from 'react';
 import {SafeAreaView, ScrollView} from 'react-native';
 import TenantContractScreenCard from '../../components/TenantContractScreenCard/TenantContractScreenCard';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
+
+
 
 type Props = {};
 
@@ -12,6 +15,6 @@ const TenantContractScreen = (props: Props) => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}; 
 
 export default TenantContractScreen;
