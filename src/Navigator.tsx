@@ -38,10 +38,12 @@ import OwnerContractsScreen from './screens/OwnerContractsScreen/OwnerContractsS
 import OwnerTenantScreen from './screens/OwnerTenantScreen/OwnerTenantScreen';
 import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
 import PropertyViewScreen from './screens/PropertyViewScreen/PropertyViewScreen';
+import RentedPropertyScreen from './screens/RentedPropertyScreen/RentedPropertyScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import SliderComponent from './screens/SliderComponent/SliderComponent';
 import TenantSliderComponent from './screens/SliderComponent/TenantSliderComponent';
 import PropertyInvitation from './screens/Tenant/TenantPropertyInvitation/TenantPropertyInvitation';
+import TenantContractScreen from './screens/TenantContractScreen/TenantContractScreen';
 
 type Props = {};
 
@@ -61,6 +63,10 @@ const Navigator = (props: Props) => {
   const drawer = useRef<Drawer>(null);
   const {isLoggedIn: logIn} = useSelector(state => state.auth);
 
+  const auth = useSelector(state => state.auth);
+
+  // console.log(auth);
+
   const [isLoggedIn, setIsLoggedIn] = useState(logIn);
   const [loading, setLoading] = useState(false);
   const [deaf, setdeaf] = useState(false);
@@ -78,6 +84,7 @@ const Navigator = (props: Props) => {
         // value previously stored
         let _user = await AsyncStorage.getItem('user');
         const role_id = JSON.parse(_user).user_details.role_id;
+        console.log(JSON.parse(_user), 'asdasdas');
         setUserRole(role_id);
         //let user = JSON.parse(_user);
         dispatch(setUser(_user));
@@ -93,9 +100,9 @@ const Navigator = (props: Props) => {
     setLoading(false);
   };
 
-  !isLoggedIn && !deaf && getData();
-
   useEffect(() => {
+    getData();
+
     setIsLoggedIn(logIn);
   }, [logIn]);
 
@@ -103,7 +110,7 @@ const Navigator = (props: Props) => {
     return <LoadingModal />;
   }
 
-  // console.log(isLoggedIn, routeNameRef, navigationRef);
+  // console.log(isLoggedIn, userRole);
 
   const AddMenus = () => {
     return (
@@ -272,6 +279,15 @@ const Navigator = (props: Props) => {
           <Stack.Screen name="Property" component={PropertyScreen} />
           <Stack.Screen name="Tenant" component={OwnerTenantScreen} />
           <Stack.Screen name="Contracts" component={OwnerContractsScreen} />
+          <Stack.Screen
+            name="Tenant-Contracts"
+            component={TenantContractScreen}
+          />
+          <Stack.Screen
+            name="Tenant-Rented-Property"
+            component={RentedPropertyScreen}
+          />
+
           <Stack.Screen name="Invitation-List" component={InvitationScreen} />
           <Stack.Screen
             name="Maintenance"
