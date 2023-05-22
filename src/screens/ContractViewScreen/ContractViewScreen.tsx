@@ -1,6 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import ContractDetailsComponent, {
   SlabContainer,
 } from '../../components/ContractDetailsComponent/ContractDetailsComponent';
@@ -491,6 +498,39 @@ const ContractViewScreen = (props: Props) => {
         {data.map((item, index) => (
           <ContractDetailsComponent slab={item} key={index} />
         ))}
+        <View
+          style={{
+            paddingVertical: 20,
+            flexDirection: 'row',
+            backgroundColor: '#45485F',
+            justifyContent: 'flex-end',
+            paddingHorizontal: 10,
+          }}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#0EB9F2',
+              borderRadius: 5,
+              paddingHorizontal: 15,
+              paddingVertical: 5,
+              marginHorizontal: 10,
+            }}>
+            <Text style={{fontFamily: 'Poppins-Medium', color: '#fff'}}>
+              View PDF
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#0EB9F2',
+              borderRadius: 5,
+              paddingHorizontal: 15,
+              paddingVertical: 5,
+              marginHorizontal: 10,
+            }}>
+            <Text style={{fontFamily: 'Poppins-Medium', color: '#fff'}}>
+              Download PDF
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
