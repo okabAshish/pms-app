@@ -84,6 +84,7 @@ const Navigator = (props: Props) => {
         // value previously stored
         let _user = await AsyncStorage.getItem('user');
         const role_id = JSON.parse(_user).user_details.role_id;
+        console.log(role_id);
         console.log(JSON.parse(_user), 'asdasdas');
         setUserRole(role_id);
         //let user = JSON.parse(_user);
@@ -305,6 +306,7 @@ const Navigator = (props: Props) => {
   };
 
   console.log('is log', isLoggedIn);
+  console.log('userRole', userRole);
 
   const Main = () => {
     return (
@@ -314,6 +316,7 @@ const Navigator = (props: Props) => {
           drawerWidth={300}
           renderNavigationView={() =>
             userRole === 2 ? <SliderComponent /> : <TenantSliderComponent />
+            //userRole === 2 ? console.log('owner') : console.log('tenant')
           }>
           <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen
