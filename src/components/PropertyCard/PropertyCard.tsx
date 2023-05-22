@@ -1,7 +1,6 @@
 import {faEdit, faEye} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import { isDayjs } from 'dayjs';
 import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 
@@ -38,10 +37,12 @@ const PropertyCard = (props: Props) => {
       }}
       onPress={() => 
         navigation.navigate('View', {
+
           screen: 'Property-View',
           params: {id: props.id},
         })
       }>
+
       <View style={{paddingHorizontal: 12, paddingVertical: 10}}>
         <View style={{flexDirection: 'row'}}>
           <View style={{marginRight: 10}}>
@@ -66,12 +67,14 @@ const PropertyCard = (props: Props) => {
           </View>
           <View style={{flex: 1}}>
             <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+
               <TouchableOpacity onPress={() =>
                   navigation.navigate('View', {
                     screen: 'Preoperty-View',
                     params: {id: props.id},
                   })
                 }
+
                 style={{
                   backgroundColor: 'rgba(69, 72, 95, 0.4)',
                   padding: 4,
