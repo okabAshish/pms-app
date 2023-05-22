@@ -25,7 +25,7 @@ const PropertyCard = (props: Props) => {
   const navigation = useNavigation();
 
   const [imgeUrl, setimgeUrl] = useState(props?.imageUrl);
-  console.log(props);
+  console.log('id-',props.id);
   return (
     <TouchableOpacity
       style={{
@@ -35,12 +35,14 @@ const PropertyCard = (props: Props) => {
         borderRadius: 9,
         marginTop: 20,
       }}
-      onPress={() => {
+      onPress={() => 
         navigation.navigate('View', {
-          screen: 'Preoperty-View',
+
+          screen: 'Property-View',
           params: {id: props.id},
-        });
-      }}>
+        })
+      }>
+
       <View style={{paddingHorizontal: 12, paddingVertical: 10}}>
         <View style={{flexDirection: 'row'}}>
           <View style={{marginRight: 10}}>
@@ -65,13 +67,14 @@ const PropertyCard = (props: Props) => {
           </View>
           <View style={{flex: 1}}>
             <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-              <TouchableOpacity
-                onPress={() => {
+
+              <TouchableOpacity onPress={() =>
                   navigation.navigate('View', {
                     screen: 'Preoperty-View',
-                    id: props.id,
-                  });
-                }}
+                    params: {id: props.id},
+                  })
+                }
+
                 style={{
                   backgroundColor: 'rgba(69, 72, 95, 0.4)',
                   padding: 4,

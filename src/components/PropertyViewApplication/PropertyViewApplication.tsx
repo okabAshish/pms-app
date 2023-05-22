@@ -9,16 +9,29 @@ import React from 'react';
 import {View} from 'react-native';
 import PropertyViewApplicationCard from './PropertyViewApplicationCard';
 
-type Props = {};
+interface props {
+  property_built_year : string;
+  parking_available : string;
+  no_of_bedrooms : string;
+  no_of_bathroom : string;
+  balcony_terrace : string;
+};
+
+const defaultProps: Props = {
+  property_built_year: 'N/A',
+  parking_available: 'N/A',
+  no_of_bedrooms : 'N/A',
+  no_of_bathroom : 'N/A',
+  balcony_terrace : 'N/A',
+};
 
 const PropertyViewApplication = (props: Props) => {
   const data = [
-    {icon: faCalendar, title: 'Build Year', desc: '2015'},
-    {icon: faCar, title: 'Parking Available', desc: 'No'},
-    {icon: faBed, title: 'Bedrooms', desc: '3 Rooms'},
-    {icon: faTable, title: 'Balcony Available', desc: 'No'},
-
-    {icon: faBath, title: 'Bathrooms', desc: '2 Rooms'},
+    {icon: faCalendar, title: 'Build Year', desc: props.property_built_year},
+    {icon: faCar, title: 'Parking Available', desc: props.parking_available},
+    {icon: faBed, title: 'Bedrooms', desc: props.no_of_bedrooms},
+    {icon: faTable, title: 'Balcony Available', desc: props.balcony_terrace},
+    {icon: faBath, title: 'Bathrooms', desc: props.no_of_bathroom},
   ];
 
   return (
