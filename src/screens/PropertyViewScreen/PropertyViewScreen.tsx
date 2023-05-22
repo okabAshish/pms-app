@@ -11,7 +11,7 @@ import LoadingModal from '../../components/LoadingModal/LoadingModal';
 type Props = {};
 
 const PropertyViewScreen = (props: Props) => {
-  console.log(props.id, 'CCCC');
+  //console.log(props, 'CCCC');
   const [loading, setLoading] = useState(false);
 
   const [details, setDetatils] = useState<OwnerPropertyDetailsData>();
@@ -19,12 +19,12 @@ const PropertyViewScreen = (props: Props) => {
   const [OwnerPropertyDetails] = useGetOwnerPropertyDetailsMutation();
   const getDetails = async () => {
     setLoading(true);
-    console.log(props?.id, 'xxx');
+    //console.log(props?.route?.params?.id, 'xxx');
     try {
-      await OwnerPropertyDetails({param: props?.id})
+      await OwnerPropertyDetails({param: props?.route?.params?.id})
         .unwrap()
         .then(res => {
-          console.log(res);
+          //console.log(res);
           
           if (res.success) {
             setDetatils(res.data);
@@ -52,11 +52,32 @@ const PropertyViewScreen = (props: Props) => {
         paddingVertical: 15,
       }}>
       <ScrollView>
-        <PropertyViewImageGallary />
+        <PropertyViewImageGallary 
+          
+        />
         <View style={{paddingHorizontal: 20, flex: 1}}>
-          <PropertyViewApplication />
-          <PropertyViewAddress />
-          <PropertyViewInfo />
+          <PropertyViewApplication 
+            property_built_year = {props.property_built_year}
+            parking_available = {details?.parking_available == 1 ? 'Yes' : 'No'}
+            no_of_bedrooms = {details?.no_of_bedrooms}
+            no_of_bathroom = {details?.no_of_bathroom}
+            balcony_terrace = {details?.balcony_terrace == 1 ? 'Yes' : 'No'}
+
+          />
+          <PropertyViewAddress 
+            state_name = {details?.state_name}
+            city_name = {details?.city_name}
+            zip = {details?.zip}
+            address_one = {details?.address_one}
+            address_two = {details?.address_two}
+          />
+          <PropertyViewInfo 
+            property_name = {details?.property_name}
+            property_type_name = {details?.property_type_name}
+            property_size = {details?.property_size}
+            hoa_fee = {details?.hoa_fee}
+            hoa_fee_type = {details?.hoa_fee_type}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

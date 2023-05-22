@@ -2,6 +2,7 @@ import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {BlurView} from '@react-native-community/blur';
 import React, {createRef, useRef, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {
   Dimensions,
   ImageBackground,
@@ -17,7 +18,7 @@ const PropertyViewImageGallary = () => {
   const [viewRef, setViewRef] = useState(null);
   const [blurType, setBlurType] = useState('light');
   const backgroundImageRef = createRef();
-
+  const navigation = useNavigation();
   const _scrollView = useRef<ScrollViewProps>();
 
   const imgGallary = [
@@ -58,14 +59,14 @@ const PropertyViewImageGallary = () => {
               marginVertical: 20,
               flexDirection: 'row',
             }}>
-            <TouchableOpacity
+            <TouchableOpacity 
               style={{
                 backgroundColor: 'rgba(255,255,255,0.7)',
                 padding: 4,
                 borderRadius: 9999,
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}>
+              }} onPress={() => navigation.goBack()}>
               <View
                 style={{
                   backgroundColor: '#fff',

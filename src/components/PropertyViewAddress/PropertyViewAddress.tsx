@@ -1,29 +1,43 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-type Props = {};
+interface Props {
+  state_name : string;
+  city_name : string;
+  zip : string;
+  address_one : string;
+  address_two : string;
+};
+
+const defaultProps: Props = {
+  state_name : 'N/A',
+  city_name : 'N/A',
+  zip : 'N/A',
+  address_one : 'N/A',
+  address_two : 'N/A',
+};
 
 const PropertyViewAddress = (props: Props) => {
   const data = [
     {
       title: 'State',
-      desc: 'N/A',
+      desc: props.state_name,
     },
     {
       title: 'City',
-      desc: 'N/A',
+      desc: props.city_name,
     },
     {
       title: 'Zip Code',
-      desc: 'N/A',
+      desc: props.zip,
     },
     {
       title: 'Address 1',
-      desc: 'N/A',
+      desc: props.address_one,
     },
     {
       title: 'Address 2',
-      desc: 'N/A',
+      desc: props.address_two,
     },
   ];
 

@@ -1,29 +1,44 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-type Props = {};
+interface Props {
+  property_name : string;
+  property_type_name : string;
+  property_size : number;
+  hoa_fee : string;
+  hoa_fee_type : string;
+};
+
+const defaultProps: Props = {
+  property_name : "N/A",
+  property_type_name : "N/A",
+  property_size : 0,
+  hoa_fee : "N/A",
+  hoa_fee_type : "N/A",
+};
 
 const PropertyViewInfo = (props: Props) => {
+  console.log(props)
   const data = [
     {
       title: 'Property Name',
-      desc: 'N/A',
+      desc: props.property_name,
     },
     {
       title: 'Property Type',
-      desc: 'N/A',
+      desc: props.property_type_name,
     },
     {
       title: 'Property Size',
-      desc: 'N/A',
+      desc: props.property_size,
     },
     {
       title: 'Hoa Fee',
-      desc: 'N/A',
+      desc: props.hoa_fee,
     },
     {
       title: 'Fee Duration',
-      desc: 'N/A',
+      desc: props.hoa_fee_type,
     },
   ];
 
