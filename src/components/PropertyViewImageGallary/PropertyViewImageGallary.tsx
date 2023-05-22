@@ -1,8 +1,8 @@
 import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {BlurView} from '@react-native-community/blur';
-import React, {createRef, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import React, {createRef, useRef, useState} from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -14,7 +14,17 @@ import {
 } from 'react-native';
 const {width} = Dimensions.get('window');
 
-const PropertyViewImageGallary = () => {
+interface ImageDetails {
+  imgUrl: string;
+  text: string;
+  text2: string;
+}
+
+interface Props {
+  imges: Array<ImageDetails>;
+}
+
+const PropertyViewImageGallary = (props: Props) => {
   const [viewRef, setViewRef] = useState(null);
   const [blurType, setBlurType] = useState('light');
   const backgroundImageRef = createRef();
@@ -35,13 +45,16 @@ const PropertyViewImageGallary = () => {
       text: 'Hello',
     },
   ];
+
+  console.log(props.imges);
+
   return (
     <ScrollView
       horizontal
       pagingEnabled
       showsHorizontalScrollIndicator={false}
       style={{flex: 1}}>
-      {imgGallary.map((item, index) => (
+      {props.imges.map((item, index) => (
         <ImageBackground
           source={{
             uri: item.imgUrl,
@@ -52,21 +65,23 @@ const PropertyViewImageGallary = () => {
             marginHorizontal: 20,
             justifyContent: 'space-between',
           }}
-          imageStyle={{borderRadius: 10}}>
+          imageStyle={{borderRadius: 10}}
+          key={index}>
           <View
             style={{
               marginHorizontal: 20,
               marginVertical: 20,
               flexDirection: 'row',
             }}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={{
                 backgroundColor: 'rgba(255,255,255,0.7)',
                 padding: 4,
                 borderRadius: 9999,
                 justifyContent: 'center',
                 alignItems: 'center',
-              }} onPress={() => navigation.goBack()}>
+              }}
+              onPress={() => navigation.goBack()}>
               <View
                 style={{
                   backgroundColor: '#fff',
@@ -104,7 +119,8 @@ const PropertyViewImageGallary = () => {
               blurAmount={1}
               blurRadius={1}
             />
-            <Text style={{color: '#fff'}}>Hello</Text>
+            <Text style={{color: '#fff'}}>{item.text}</Text>
+            <Text style={{color: '#fff'}}>{item.text2}</Text>
           </View>
         </ImageBackground>
       ))}

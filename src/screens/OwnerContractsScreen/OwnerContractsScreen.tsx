@@ -59,7 +59,7 @@ const OwnerContractsScreen = (props: Props) => {
 
   useEffect(() => {
     getContract();
-  }, []);
+  }, [props?.route]);
 
   const renderFooter = () => {
     return (

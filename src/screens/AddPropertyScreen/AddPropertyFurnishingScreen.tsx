@@ -32,7 +32,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   const error = useSelector(state => state?.error);
   const owner = useSelector(state => state?.owner);
 
-  const [typeValue, setTypeValue] = useState(0);
+  const [typeValue, setTypeValue] = useState(null);
   const [furnisingValue, setFurnisingValue] = useState([]);
   const [furnishedType, setFurnishedType] = useState([]);
   const [furnishedList, setFurnishedList] = useState([]);

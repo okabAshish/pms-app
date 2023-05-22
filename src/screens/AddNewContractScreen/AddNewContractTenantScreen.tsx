@@ -29,6 +29,7 @@ const AddNewContractTenantScreen = (props: Props) => {
   const contract = useSelector<RootState>(state => state.contract);
 
   const [tenantList, setTenantList] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [responseTenantList, setResponseTenantList] =
     useState<ContractTenantList>([]);
 

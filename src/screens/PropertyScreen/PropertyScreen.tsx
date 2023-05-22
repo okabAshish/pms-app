@@ -66,7 +66,7 @@ const PropertyScreen = (props: Props) => {
 
   useEffect(() => {
     getProperties();
-  }, []);
+  }, [props?.route]);
 
   if (loading) {
     return <LoadingModal />;

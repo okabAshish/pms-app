@@ -518,18 +518,6 @@ const ContractViewScreen = (props: Props) => {
               View PDF
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#0EB9F2',
-              borderRadius: 5,
-              paddingHorizontal: 15,
-              paddingVertical: 5,
-              marginHorizontal: 10,
-            }}>
-            <Text style={{fontFamily: 'Poppins-Medium', color: '#fff'}}>
-              Download PDF
-            </Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -68,10 +68,10 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
     setLoading(false);
   };
 
-  const getStates = async () => {
+  const getStates = async id => {
     setLoading(true);
     try {
-      await getStateOfCountry({param: String(countryValue)})
+      await getStateOfCountry({param: String(id)})
         .unwrap()
         .then(res => {
           if (res.success) {
@@ -92,10 +92,10 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
     setLoading(false);
   };
 
-  const getCities = async () => {
+  const getCities = async id => {
     setLoading(true);
     try {
-      await getCityOfState({param: String(stateValue)})
+      await getCityOfState({param: String(id)})
         .unwrap()
         .then(res => {
           if (res.success) {
@@ -207,7 +207,7 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
             dropDownHeight={400}
             onChange={v => {
               setCountryValue(Number(v));
-              getStates();
+              getStates(v);
             }}
             value={countryValue}
           />
@@ -218,7 +218,7 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
             onChange={v => {
               setStateValue(Number(v));
               // getStates();
-              getCities();
+              getCities(v);
             }}
             value={stateValue}
           />
