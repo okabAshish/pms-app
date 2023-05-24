@@ -5,7 +5,7 @@ import TenantInvitationCard from '../../../components/Tenant/TenantInvitationCar
 import {useGetPropertyInvitationMutation} from '../../../features/auth/tenant';
 import {PropertyInvitationList} from '../../../features/tenantTypes';
 
-type Props = {};
+type Props = {}; 
 
 const InvitationScreen = (props: Props) => {
   const [invitationList, setInvitationList] = useState<PropertyInvitationList>(
