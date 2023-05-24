@@ -9,9 +9,11 @@ import {
   ImageCategoryListResponseData,
   ListParams,
   LoginBody,
+  OwnerBillListResponseData,
   OwnerDashboardResponseData,
   OwnerInvitationListParams,
   OwnerInvitationListResponseData,
+  OwnerMaintenanceRequestListResponseData,
   OwnerPropertListResponseData,
   OwnerTenantListResponseData,
   StateOfCountryListParams,
@@ -94,6 +96,27 @@ export const authApi = createApi({
         },
       }),
     }),
+    ownerAllMaintenanceRequestList: builder.mutation<
+      OwnerMaintenanceRequestListResponseData,
+      ListParams
+    >({
+      query: req => ({
+        url: `owner/maintenance-request-list?limit=${req.limit}&page=${req.page}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    ownerAllBillList: builder.mutation<OwnerBillListResponseData, ListParams>({
+      query: req => ({
+        url: `owner/invoice-list?limit=${req.limit}&page=${req.page}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
     ownerInvitation: builder.mutation<
       OwnerInvitationListResponseData,
       OwnerInvitationListParams
@@ -159,6 +182,8 @@ export const {
   useTenantDashboardMutation,
   useOwnerPropertiesMutation,
   useOwnerAllTenantListMutation,
+  useOwnerAllMaintenanceRequestListMutation,
+  useOwnerAllBillListMutation,
   useOwnerInvitationMutation,
   useGetAllCountriesMutation,
   useGetStateOfCountryMutation,

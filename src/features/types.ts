@@ -1,3 +1,8 @@
+import {
+  OwnerContract,
+  OwnerPropertyDetailsData_PropertyImage_Medias,
+} from './ownerTypes';
+
 export interface Pokemon {
   name?: string;
 }
@@ -1017,3 +1022,130 @@ export interface ImageCategoryListData {
 }
 
 export interface ImageCategoryList extends Array<ImageCategoryListData> {}
+
+export interface OwnerMaintenanceRequestListData {
+  id: number;
+  property_id: number;
+  contract_id: number;
+  issue_details: string;
+  maint_category_id: number;
+  priority_id: number;
+  tenant_id: number;
+  owner_id: number;
+  issue_date: string;
+  expense_amount?: any;
+  vendor_id: number;
+  resolve_date?: any;
+  resolution_details?: any;
+  status: number;
+  media_url?: any;
+  otp: string;
+  created_at: string;
+  updated_at: string;
+  photo_url: string;
+  maintenance_category: {
+    id: number;
+    category_name: string;
+    created_at: string;
+    updated_at: string;
+  };
+  maintenance_priority: {
+    id: number;
+    priority_name: string;
+    created_at: string;
+    updated_at: string;
+  };
+  maintenance_status: {
+    id: string;
+    status_name: string;
+    created_at: string;
+    updated_at: string;
+  };
+  vendor_detail: {
+    id: number;
+    vendor_name: string;
+    maintenance_category_id: number;
+    created_at: string;
+    updated_at: string;
+  };
+  media: OwnerPropertyDetailsData_PropertyImage_Medias;
+}
+
+export interface OwnerMaintenanceRequestList
+  extends Array<OwnerMaintenanceRequestListData> {}
+
+export interface OwnerMaintenanceRequestListResponseData {
+  success: boolean;
+  data: {data: OwnerMaintenanceRequestList};
+  message: string;
+}
+
+export interface OwnerBillContractData extends OwnerContract {
+  contract_properties_data: {
+    id: number;
+    contract_id: number;
+    property_id: number;
+    usage?: any;
+    property_type: string;
+    unit?: any;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+    street?: any;
+    building_no?: any;
+    building_name: string;
+    floor_no: string;
+    area: number;
+    furnishing_type: string;
+    parking_type: string;
+    nof_parking: number;
+    pet_allowed: number;
+    nof_baths: number;
+    nof_balconies: number;
+    nof_bedrooms: number;
+    total_no_floor?: any;
+    age_of_property: string;
+    contact_phone_no?: any;
+    property_descr: string;
+    property_name: string;
+    notice_period?: any;
+    property_facing?: any;
+    wheel_chair_access: number;
+    address_one: string;
+    address_two: string;
+    hoa: string;
+    hoa_fee: string;
+    hoa_fee_type: string;
+    balcony_terrace: string;
+    created_at: string;
+    updated_at: string;
+  };
+}
+export interface OwnerBillListData {
+  id: number;
+  bill_ref_number: string;
+  contract_id: number;
+  owner_id: number;
+  tenant_id: number;
+  contract_payment_date_amount_id: number;
+  total_payable_amount: string;
+  payment_date: string;
+  bill_generation_date: string;
+  is_paid: number;
+  is_fine_applicable: number;
+  grace_period: number;
+  fine_amount: string;
+  created_at: string;
+  updated_at: string;
+  billing_fine_data: Array<any>;
+  billing_contract_data: OwnerBillContractData;
+}
+
+export interface OwnerBillList extends Array<OwnerBillListData> {}
+
+export interface OwnerBillListResponseData {
+  success: boolean;
+  data: {data: OwnerBillList};
+  message: string;
+}

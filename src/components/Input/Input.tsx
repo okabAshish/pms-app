@@ -144,6 +144,7 @@ const Input = (props: Props) => {
         autoCorrect={props.autoCorrect}
         value={value}
         editable={!props.disabled}
+        keyboardType={props.keyboardType}
         {...props.inputProps}
       />
     </View>

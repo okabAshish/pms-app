@@ -1,7 +1,10 @@
 import {faHouse, faHouseUser, faLink} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {setPageName} from '../../features/pageName/pageName';
 
 interface Props {
   rented: number;
@@ -18,11 +21,15 @@ const defaultProps: Props = {
 const DashboardReport = (props: Props) => {
   console.log(props);
 
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const report = [
     {
       title: 'Property Owners',
       subTitle: 'Total Properties',
       value: props.total_properties,
+      slug: 'Property',
       color_1: '#00ABE4',
       color_2: 'rgba(0, 171, 228, 0.35)',
       icon: faHouse,
@@ -43,6 +50,7 @@ const DashboardReport = (props: Props) => {
       color_1: '#E4AE00',
       color_2: 'rgba(255, 229, 145, 0.35)',
       icon: faLink,
+      slug: 'Invitation-List',
     },
   ];
   return (
@@ -53,7 +61,7 @@ const DashboardReport = (props: Props) => {
         marginTop: 25,
       }}>
       {report.map((item, index) => (
-        <View
+        <TouchableOpacity
           style={{
             borderWidth: 1,
             padding: 10,
@@ -62,7 +70,13 @@ const DashboardReport = (props: Props) => {
             flex: 1,
             marginHorizontal: item?.middle ? 5 : 0,
           }}
-          key={item.title + item?.color_1}>
+          key={item.title + item?.color_1}
+          onPress={() => {
+            if (item?.slug) {
+              dispatch(setPageName(item.title));
+              navigation.navigate(item?.slug);
+            }
+          }}>
           <View
             style={{
               padding: 8,
@@ -126,7 +140,7 @@ const DashboardReport = (props: Props) => {
               {item?.value}
             </Text>
           </View>
-        </View>
+        </TouchableOpacity>
       ))}
     </View>
   );

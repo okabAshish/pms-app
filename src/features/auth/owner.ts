@@ -5,6 +5,8 @@ import {
   AddPropertyResponseData,
   FurnishingListResponseData,
   FurnishingTypeResponseData,
+  InviteTenantBody,
+  InviteTenantResponseData,
   OwnerContractListParam,
   OwnerContractListResponseData,
   OwnerPropertyAmenitiesResponseData,
@@ -12,6 +14,7 @@ import {
   OwnerPropertyDetailsResponseData,
   OwnerPropertyListResponseData,
   PropertyTypeResponseData,
+  TenantInvitationDropDownResponseData,
   resendInvitationParam,
   resendInvitationResponseData,
 } from '../ownerTypes';
@@ -129,7 +132,31 @@ export const ownerApi = createApi({
         },
       }),
     }),
-    
+    tenantInvitationDropdown: builder.mutation<
+      TenantInvitationDropDownResponseData,
+      {}
+    >({
+      query: req => ({
+        url: 'owner/invitation-send-dropdowns',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    sendTenantInvitation: builder.mutation<
+      InviteTenantResponseData,
+      InviteTenantBody
+    >({
+      query: req => ({
+        url: 'owner/send-invitation',
+        method: 'POST',
+        body: req,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -148,4 +175,7 @@ export const {
   useGetOwnerPropertyDetailsMutation,
 
   useGetOwnerPropertyAmenitiesListMutation,
+
+  useTenantInvitationDropdownMutation,
+  useSendTenantInvitationMutation,
 } = ownerApi;

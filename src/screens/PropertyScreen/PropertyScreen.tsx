@@ -13,7 +13,7 @@ const PropertyScreen = (props: Props) => {
   const navigation = useNavigation();
 
   const [propertyList, setPropertyList] = useState<OwnerPropertyListData>([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(2);
   const [
     onEndReachedCalledDuringMomentum,
     setOnEndReachedCalledDuringMomentum,

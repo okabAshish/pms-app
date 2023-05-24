@@ -34,6 +34,7 @@ import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import InvitationScreen from './screens/InvitationScreen/InvitationScreen';
 import InviteTenantScreen from './screens/InviteTenantScreen/InviteTenantScreen';
 import MaintenanceRequestsScreen from './screens/MaintenanceRequestsScreen/MaintenanceRequestsScreen';
+import MainternanceRequestViewScreen from './screens/MainternanceRequestViewScreen/MainternanceRequestViewScreen';
 import OwnerContractsScreen from './screens/OwnerContractsScreen/OwnerContractsScreen';
 import OwnerTenantScreen from './screens/OwnerTenantScreen/OwnerTenantScreen';
 import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
@@ -43,7 +44,9 @@ import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import SliderComponent from './screens/SliderComponent/SliderComponent';
 import TenantSliderComponent from './screens/SliderComponent/TenantSliderComponent';
 import PropertyInvitation from './screens/Tenant/TenantPropertyInvitation/TenantPropertyInvitation';
+import TenantBillScreen from './screens/TenantBillScreen/TenantBillScreen';
 import TenantContractScreen from './screens/TenantContractScreen/TenantContractScreen';
+import TenantMaintenanceRequestScreen from './screens/TenantMaintenanceRequestScreen/TenantMaintenanceRequestScreen';
 
 type Props = {};
 
@@ -263,6 +266,10 @@ const Navigator = (props: Props) => {
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="Property-View" component={PropertyViewScreen} />
           <Stack.Screen name="Contract-View" component={ContractViewScreen} />
+          <Stack.Screen
+            name="Maintenance-View"
+            component={MainternanceRequestViewScreen}
+          />
         </Stack.Navigator>
       </>
     );
@@ -289,6 +296,13 @@ const Navigator = (props: Props) => {
             component={RentedPropertyScreen}
           />
 
+          <Stack.Screen
+            name="Tenant-Maintenance-Request"
+            component={TenantMaintenanceRequestScreen}
+          />
+
+          <Stack.Screen name="Tenant-Bill" component={TenantBillScreen} />
+
           <Stack.Screen name="Invitation-List" component={InvitationScreen} />
           <Stack.Screen
             name="Maintenance"
@@ -314,8 +328,9 @@ const Navigator = (props: Props) => {
         <Drawer
           ref={drawer}
           drawerWidth={300}
-          renderNavigationView={() =>
-            userRole === 2 ? <SliderComponent /> : <TenantSliderComponent />
+          renderNavigationView={
+            () =>
+              userRole === 2 ? <SliderComponent /> : <TenantSliderComponent />
             //userRole === 2 ? console.log('owner') : console.log('tenant')
           }>
           <Stack.Navigator screenOptions={{headerShown: false}}>

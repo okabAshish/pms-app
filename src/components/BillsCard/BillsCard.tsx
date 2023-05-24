@@ -1,31 +1,29 @@
-import {
-  faBuilding,
-  faCalendar,
-  faFile,
-} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 
-type Props = {};
+type Props = {
+  bill_ref_number: string;
+  total_payable_amount: string;
+  payment_date: string;
+  is_paid: number;
+};
 
 const BillsCard = (props: Props) => {
   return (
     <TouchableOpacity
       style={{
         width: '100%',
-        backgroundColor: '#363f4e',
-        borderRadius: 5,
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#f3f3f3',
+        borderRadius: 8,
         paddingHorizontal: 20,
         paddingVertical: 20,
         marginVertical: 20,
+        elevation: 1,
+        shadowColor: 'rgba(0,0,0,0.3)',
       }}>
-      <View
-        style={{
-          top: 20,
-          right: 10,
-          position: 'absolute',
-        }}>
+      <View style={{}}>
         {/* <View
           style={{
             backgroundColor: '#20c997',
@@ -42,7 +40,7 @@ const BillsCard = (props: Props) => {
             Paid
           </Text>
         </View> */}
-        <View
+        {/* <View
           style={{
             backgroundColor: 'red',
             borderRadius: 4,
@@ -57,7 +55,7 @@ const BillsCard = (props: Props) => {
             }}>
             Not Paid
           </Text>
-        </View>
+        </View> */}
       </View>
       <View
         style={{
@@ -66,22 +64,25 @@ const BillsCard = (props: Props) => {
           alignItems: 'center',
         }}>
         <View
-          style={{
-            backgroundColor: '#fff',
-            paddingHorizontal: 12,
-            paddingVertical: 5,
-            borderRadius: 4,
-          }}>
+          style={
+            {
+              // backgroundColor: '#fff',
+            }
+          }>
           <Text
             style={{
               color: '#000',
-              fontFamily: 'Poppins-Medium',
+              fontFamily: 'Poppins-Regular',
             }}>
-            # 6665-1681122292-2023-04-10
+            # {props.bill_ref_number}
           </Text>
         </View>
+        <Text
+          style={{color: '#000', fontFamily: 'Poppins-SemiBold', fontSize: 16}}>
+          ${props.total_payable_amount}
+        </Text>
       </View>
-      <View style={{marginTop: 15, marginBottom: 10}}>
+      {/* <View style={{marginTop: 15, marginBottom: 10}}>
         <View>
           <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             <FontAwesomeIcon icon={faBuilding} color="#fff" />
@@ -258,10 +259,62 @@ const BillsCard = (props: Props) => {
               </Text>
             </View>
           </View> */}
+      {/* </View> */}
+      {/* </View> */}
+
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginTop: 15,
+        }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={{color: '#000', fontFamily: 'Poppins-Regular'}}>
+            Due Date :
+          </Text>
+          <Text style={{color: '#474747', fontFamily: 'Poppins-Regular'}}>
+            {' '}
+            {props.payment_date}
+          </Text>
         </View>
+        {props.is_paid ? (
+          <View
+            style={{
+              backgroundColor: 'rgba(32, 201, 151, 0.15)',
+              borderRadius: 4,
+              paddingHorizontal: 10,
+              paddingVertical: 2,
+            }}>
+            <Text
+              style={{
+                color: '#20C997',
+                fontFamily: 'Poppins-Bold',
+                fontSize: 12,
+              }}>
+              Paid
+            </Text>
+          </View>
+        ) : (
+          <View
+            style={{
+              backgroundColor: '#FFC0F1',
+              borderRadius: 4,
+              paddingHorizontal: 10,
+              paddingVertical: 2,
+            }}>
+            <Text
+              style={{
+                color: '#C920C2',
+                fontFamily: 'Poppins-Bold',
+                fontSize: 12,
+              }}>
+              Not Paid
+            </Text>
+          </View>
+        )}
       </View>
 
-      <View style={{flexDirection: 'row', marginTop: 0}}>
+      {/* <View style={{flexDirection: 'row', marginTop: 0}}>
         <TouchableOpacity
           style={{
             backgroundColor: '#01abe4',
@@ -278,7 +331,7 @@ const BillsCard = (props: Props) => {
             Show Invoice
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </TouchableOpacity>
   );
 };

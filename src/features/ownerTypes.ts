@@ -345,3 +345,56 @@ export interface OwnerPropertyAmenitiesResponseData {
   message: string;
 }
 
+export interface TenantInvitationDropDownResponseData {
+  success: boolean;
+  message: string;
+  data: {
+    property_list: TenantInvitationDropDownPropertyList;
+    tenant_list: TenantInvitationDropDownTenantList;
+  };
+}
+
+export interface TenantInvitationDropDownPropertyListData {
+  id: number;
+  owner_id: number;
+  property_name: string;
+}
+
+export interface TenantInvitationDropDownPropertyList
+  extends Array<TenantInvitationDropDownPropertyListData> {}
+
+export interface TenantInvitationDropDownTenantListData {
+  id: number;
+  user_id: number;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  address: string;
+  account_type: number;
+}
+
+export interface TenantInvitationDropDownTenantList
+  extends Array<TenantInvitationDropDownTenantListData> {}
+
+export interface InviteTenantBody {
+  is_existing_tenant: string;
+  invitation_type: string;
+  property_id: string;
+  selected_tenant_email?: Array<string>;
+  email?: string;
+  phone?: string;
+  phone_code?: string;
+  flag?: string;
+}
+export interface InviteTenantResponseData {
+  success: boolean;
+  data: InviteTenantData;
+  message: string;
+}
+
+export interface InviteTenantData {
+  url: string;
+  created_by_user: string;
+}

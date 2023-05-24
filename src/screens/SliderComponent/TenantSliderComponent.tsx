@@ -9,7 +9,7 @@ import {CommonActions, useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {useDispatch} from 'react-redux';
-import { logOut } from '../../features/auth/authProfile';
+import {logOut} from '../../features/auth/authProfile';
 import {setPageName} from '../../features/pageName/pageName';
 
 type Props = {};
@@ -32,6 +32,21 @@ const TenantSliderComponent = (props: Props) => {
         dispatch(setPageName('Dashboard'));
         setActive('Dashboard');
         navigation.dispatch(CommonActions.navigate({name: 'Dashboard'}));
+      },
+    },
+    {
+      name: 'Maintenance Requests',
+      type: 'Menu',
+      slug: 'Maintenance-Requests',
+      show: true,
+      icon: require('../../assets/images/icons/documenttext.svg'),
+      onPress: () => {
+        dispatch(setPageName('Maintenance Requests'));
+
+        setActive('Maintenance-Requests');
+        navigation.dispatch(
+          CommonActions.navigate({name: 'Tenant-Maintenance-Request'}),
+        );
       },
     },
     {
@@ -77,6 +92,44 @@ const TenantSliderComponent = (props: Props) => {
         );
       },
     },
+
+    {
+      name: 'Bills',
+      slug: 'Bill',
+      type: 'Menu',
+      icon: require('../../assets/images/icons/user.svg'),
+      extraAttow: faChevronRight,
+      show: true,
+      onPress: () => {
+        setSubMenu(!subMenu);
+      },
+    },
+
+    {
+      name: 'Pay Bills',
+      slug: 'Tenant-Bills',
+      type: 'Sub-Menu',
+      show: subMenu,
+      onPress: () => {
+        dispatch(setPageName('Bill List'));
+
+        setActive('Tenant-Bills');
+        // navigation.dispatch(CommonActions.navigate({name: 'Tenant'}));
+      },
+    },
+    {
+      name: 'All Transcations',
+      slug: 'Tenant-Bill-Transaction',
+      type: 'Sub-Menu',
+      show: subMenu,
+      onPress: () => {
+        dispatch(setPageName('All Transcations'));
+
+        setActive('Tenant-Bill-Transaction');
+        navigation.dispatch(CommonActions.navigate({name: 'Tenant-Bill'}));
+      },
+    },
+
     //   {
     //     name: 'Property',
     //     slug: 'Property',

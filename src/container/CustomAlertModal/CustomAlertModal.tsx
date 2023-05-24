@@ -40,6 +40,7 @@ const CustomAlertModal = (props: Props) => {
               // flex: 1,
               flexWrap: 'wrap',
               width: '100%',
+              color: '#fff',
             }}>
             {error.message}
           </Text>
