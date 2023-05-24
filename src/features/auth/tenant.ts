@@ -67,7 +67,7 @@ export const tenantApi = createApi({
     TenantContactListParam
     >({
       query: req => ({
-        url: `tenant/property-invitation-list?limit=${req.limit}&page=${req.page}`,
+        url: `tenant/contract-list?limit=${req.limit}&page=${req.page}`,
         method: 'GET',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -79,4 +79,8 @@ export const tenantApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {useGetPropertyInvitationMutation} = tenantApi;
+export const {
+  useGetPropertyInvitationMutation,
+  useGetTenantContactListMutation,
+  useGetRentedPropertyMutation,
+} = tenantApi;

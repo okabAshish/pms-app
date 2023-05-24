@@ -330,10 +330,10 @@ export interface RentedProperty {
     tenant_id?: number;
     lawyer_id?: any;
     tenant_lawyer_id?: any;
-    contract_number?: string;
-    start_date?: string;
-    end_date?: string;
-    contract_period?: string;
+    contract_number: string;
+    start_date: string;
+    end_date: string;
+    contract_period: string;
     security_deposit?: number;
     monthly_rent?: number;
     monthly_service_charge?: number;
@@ -396,7 +396,7 @@ export interface RentedProperty {
         age_of_property?: string;
         contact_phone_no?: any;
         property_descr?: any;
-        property_name?: string;
+        property_name: string;
         notice_period?: any;
         property_facing?: any;
         wheel_chair_access?: number;
@@ -443,11 +443,11 @@ export interface RentedProperty {
         contract_id?: number;
         owner_id?: number;
         title?: string;
-        first_name?: string;
+        first_name: string;
         middle_name?: any;
-        last_name?: string;
+        last_name: string;
         email?: string;
-        phone?: string;
+        phone: string;
         address?: string;
         address_two?: any;
         city?: string;
@@ -472,9 +472,9 @@ export interface RentedProperty {
         created_at?: string;
         updated_at?: string;
     },
-    contract_status_name?: {
+    contract_status_name: {
         id: number;
-        name?: string;
+        name: string;
         created_at?: string;
         updated_at?: string;
     }

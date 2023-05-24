@@ -7,8 +7,23 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
+import dayjs from 'dayjs';
 
-type Props = {};
+interface Props {
+  contract_number: string;
+  end_date: string;
+  owner_name: string;
+  owner_contact: string;
+  created_at: string;
+}
+
+const defaultProps: Props = {
+  contract_number: 'N/A',
+  end_date: 'N/A',
+  owner_name: 'N/A',
+  owner_contact: 'N/A',
+  created_at: 'N/A'
+}
 
 const TenantContractScreenCard = (props: Props) => {
   return (
@@ -18,6 +33,7 @@ const TenantContractScreenCard = (props: Props) => {
         borderRadius: 10,
         paddingHorizontal: 20,
         paddingVertical: 12,
+        marginTop: 20,
       }}>
       <View
         style={{
@@ -38,7 +54,7 @@ const TenantContractScreenCard = (props: Props) => {
               letterSpacing: 0.7,
               fontSize: 16,
             }}>
-            # 921969321495
+            # {props.contract_number}
           </Text>
           <Text
             style={{
@@ -47,7 +63,7 @@ const TenantContractScreenCard = (props: Props) => {
 
               fontSize: 12,
             }}>
-            Property Vacated on 18th Apr, 2023
+            Property Vacated on {dayjs(props.end_date).format('DD MMM, YYYY')}
           </Text>
           <View>
             <View style={{flexDirection: 'row', marginTop: 10}}>
@@ -59,7 +75,7 @@ const TenantContractScreenCard = (props: Props) => {
                   color: '#fff',
                   fontSize: 14,
                 }}>
-                Paul Parker
+                {props.owner_name}
               </Text>
             </View>
             <View style={{flexDirection: 'row', marginTop: 10}}>
@@ -71,7 +87,7 @@ const TenantContractScreenCard = (props: Props) => {
                   color: '#fff',
                   fontSize: 14,
                 }}>
-                2017896541
+                {props.owner_contact}
               </Text>
             </View>
             <View style={{flexDirection: 'row', marginTop: 10}}>
@@ -83,7 +99,7 @@ const TenantContractScreenCard = (props: Props) => {
                   color: '#fff',
                   fontSize: 14,
                 }}>
-                27-03-2023
+                {dayjs(props.created_at).format('DD-MM-YYYY')}
               </Text>
             </View>
           </View>

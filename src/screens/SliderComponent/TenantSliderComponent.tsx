@@ -42,8 +42,7 @@ const TenantSliderComponent = (props: Props) => {
       icon: require('../../assets/images/icons/documenttext.svg'),
       onPress: () => {
         dispatch(setPageName('Contract List'));
-
-        setActive('Contract');
+        setActive('My-Contract');
         navigation.dispatch(CommonActions.navigate({name: 'Tenant-Contracts'}));
       },
     },
@@ -56,7 +55,7 @@ const TenantSliderComponent = (props: Props) => {
       onPress: () => {
         dispatch(setPageName('Rented Property'));
 
-        setActive('Contract');
+        setActive('Rented-Property');
         navigation.dispatch(
           CommonActions.navigate({name: 'Tenant-Rented-Property'}),
         );

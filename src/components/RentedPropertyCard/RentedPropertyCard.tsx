@@ -1,10 +1,50 @@
-import {faCalendar, faPhone, faUser} from '@fortawesome/free-solid-svg-icons';
+import {faCalendar, faPhone, faUser, faBuilding} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Text, View} from 'react-native';
-type Props = {};
+import dayjs from 'dayjs';
+
+interface Props {
+  contract_number: string;
+  start_date: string;
+  end_date: string;
+  owner_name: string;
+  property_name: string;
+  owner_contact: string;
+  contract_status: number;
+  address: string;
+}
+
+const defaultProps: Props = {
+  contract_number: 'N/A',
+  start_date: 'N/A',
+  end_date: 'N/A',
+  owner_name: 'N/A',
+  property_name: 'N/A',
+  owner_contact: 'N/A',
+  contract_status: 0,
+  address: 'N/A'
+}
+
 
 const RentedPropertyCard = (props: Props) => {
+  const contractStatusView = () => {
+    return (
+        <Text
+          style={{
+            backgroundColor: '#fff',
+            paddingHorizontal: 8,
+            paddingVertical: 4,
+            borderRadius: 6,
+            color: '#00ABE4',
+            fontSize: 12,
+            fontFamily: 'Poppins-Medium',
+          }}>
+          {props.contract_status}
+        </Text>
+    );
+  }
+
   return (
     <View
       style={{
@@ -12,6 +52,7 @@ const RentedPropertyCard = (props: Props) => {
         borderRadius: 10,
         paddingHorizontal: 20,
         paddingVertical: 12,
+        marginTop: 20,
       }}>
       <View
         style={{
@@ -32,7 +73,7 @@ const RentedPropertyCard = (props: Props) => {
               letterSpacing: 0.7,
               fontSize: 16,
             }}>
-            # 921969321495
+            # {props.contract_number}
           </Text>
           <Text
             style={{
@@ -41,7 +82,7 @@ const RentedPropertyCard = (props: Props) => {
 
               fontSize: 12,
             }}>
-            Property Vacated on 18th Apr, 2023
+            {props.address}
           </Text>
           <View>
             <View style={{flexDirection: 'row', marginTop: 10}}>
@@ -53,11 +94,11 @@ const RentedPropertyCard = (props: Props) => {
                   color: '#fff',
                   fontSize: 14,
                 }}>
-                Paul Parker
+                {props.owner_name}
               </Text>
             </View>
             <View style={{flexDirection: 'row', marginTop: 10}}>
-              <FontAwesomeIcon icon={faUser} color="#fff" />
+              <FontAwesomeIcon icon={faBuilding} color="#fff" />
               <Text
                 style={{
                   marginLeft: 12,
@@ -65,7 +106,7 @@ const RentedPropertyCard = (props: Props) => {
                   color: '#fff',
                   fontSize: 14,
                 }}>
-                Paul Parker
+                {props.property_name}
               </Text>
             </View>
             <View style={{flexDirection: 'row', marginTop: 10}}>
@@ -77,7 +118,7 @@ const RentedPropertyCard = (props: Props) => {
                   color: '#fff',
                   fontSize: 14,
                 }}>
-                2017896541
+                {props.owner_contact}
               </Text>
             </View>
             <View style={{flexDirection: 'row', marginTop: 10}}>
@@ -89,7 +130,7 @@ const RentedPropertyCard = (props: Props) => {
                   color: '#fff',
                   fontSize: 14,
                 }}>
-                27-03-2023
+                {dayjs(props.start_date).format('DD MMM, YYYY')} - {dayjs(props.end_date).format('DD MMM, YYYY')}
               </Text>
             </View>
           </View>
@@ -101,18 +142,7 @@ const RentedPropertyCard = (props: Props) => {
             flexDirection: 'row',
             alignItems: 'flex-start',
           }}>
-          <Text
-            style={{
-              backgroundColor: '#fff',
-              paddingHorizontal: 8,
-              paddingVertical: 4,
-              borderRadius: 6,
-              color: '#00ABE4',
-              fontSize: 12,
-              fontFamily: 'Poppins-Medium',
-            }}>
-            Occupied
-          </Text>
+          {contractStatusView()}
         </View>
       </View>
     </View>
