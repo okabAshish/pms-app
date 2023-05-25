@@ -83,4 +83,5 @@ export const {
   useGetPropertyInvitationMutation,
   useGetTenantContactListMutation,
   useGetRentedPropertyMutation,
+  useGetMaintenanceRequestMutation,
 } = tenantApi;
