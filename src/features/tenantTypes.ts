@@ -238,7 +238,7 @@ export interface MaintenanceRequest {
     priority_id?: number;
     tenant_id?: number;
     owner_id?: number;
-    issue_date?: string;
+    issue_date: string;
     expense_amount?: any;
     vendor_id?: any;
     resolve_date?: any;
@@ -249,25 +249,82 @@ export interface MaintenanceRequest {
     created_at?: string;
     updated_at?: string;
     photo_url?: string;
-    maintenance_category?: {
+    maintenance_category: {
         id?: number;
-        category_name?: string;
+        category_name: string;
         created_at?: string;
         updated_at?: string;
     },
-    maintenance_priority?: {
+    maintenance_priority: {
         id: number;
-        priority_name?: string;
+        priority_name: string;
         created_at?: string;
         updated_at?: string;
     },
-    maintenance_status?: {
+    maintenance_status: {
         id: number;
-        status_name?: string;
+        status_name: string;
         created_at?: string;
         updated_at?: string;
     },
-    vendor_detail?: string;
+    vendor_detail: {
+        id?: 1,
+        vendor_name: string;
+        maintenance_category_id?: number;
+        created_at?: string;
+        updated_at?: string;
+    },
+    property_details: {
+        id?: number;
+        owner_id?: number;
+        usage_id?: any;
+        property_type_id?: number;
+        unit_id?: any;
+        city_id?: number;
+        state_id?: number;
+        zip?: string;
+        country_id?: number;
+        street?: any;
+        building_no?: any;
+        building_name?: string;
+        floor_no?: string;
+        area?: number;
+        rented?: number;
+        status?: any;
+        monthly_rent_amt?: any;
+        security_deposit?: any;
+        furnishing_type_id?: number;
+        parking_type?: number;
+        nof_parking?: number;
+        pet_allowed?: number;
+        nof_baths?: number;
+        nof_balconies?: number;
+        nof_bedrooms?: number;
+        availability_date?: any;
+        total_no_floor?: any;
+        age_of_property?: string;
+        contact_phone_no?: any;
+        property_descr?: string;
+        property_name?: string;
+        available_for?: any;
+        notice_period?: any;
+        facing_id?: any;
+        wheel_chair_access?: number;
+        lease_duration?: any;
+        property_latitude?: any;
+        property_longitude?: any;
+        hoa?: number;
+        hoa_fee?: string;
+        hoa_fee_type?: string;
+        balcony_terrace?: number;
+        address_1?: string;
+        address_2?: string;
+        parking_available?: number;
+        property_size_type?: number;
+        created_at?: string;
+        updated_at?: string;
+        prefix?: string;
+    },
     media?: MaintenanceRequestMediaList;
 }
 
@@ -557,9 +614,9 @@ export interface TenantContact {
         created_at?: string;
         updated_at?: string;
     },
-    contract_status_name?: {
+    contract_status_name: {
         id: number;
-        name?: string;
+        name: string;
         created_at?: string;
         updated_at?: string;
     },

@@ -160,8 +160,21 @@ const MaintaenanceRequestCard = (props: Props) => {
                   marginHorizontal: 8,
                 }}
                 onPress={() =>
-                  navigation.navigate('View', {screen: 'Maintenance-View'})
-                }>
+                  navigation.navigate('View', {
+                    screen: 'Maintenance-View',
+                    params: {
+                      property: props.property,
+                      tenant: props.tenant,
+                      priority: props.priority,
+                      category: props.category,
+                      assigned_vendor: props.assigned_vendor,
+                      status: props.status,
+                      date: props.date,
+                      issue_details: props.issue_details,
+                    },
+                  })
+                }
+                >
                 <FontAwesomeIcon icon={faEye} color="#45485F" />
               </TouchableOpacity>
               <TouchableOpacity

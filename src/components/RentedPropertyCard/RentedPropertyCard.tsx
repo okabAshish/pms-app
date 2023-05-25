@@ -11,7 +11,7 @@ interface Props {
   owner_name: string;
   property_name: string;
   owner_contact: string;
-  contract_status: number;
+  contract_status: string;
   address: string;
 }
 
@@ -22,21 +22,60 @@ const defaultProps: Props = {
   owner_name: 'N/A',
   property_name: 'N/A',
   owner_contact: 'N/A',
-  contract_status: 0,
+  contract_status: 'N/A',
   address: 'N/A'
 }
 
-
 const RentedPropertyCard = (props: Props) => {
+  const ButtonArray = [
+    {
+      status: 'occupied',
+      color: '#36b5e7',
+      backgroundColor: '#ffffff',
+    },
+    {
+      status: 'draft',
+      color: '#36b5e7',
+      backgroundColor: '#83fcbe',
+    },
+    {
+      status: 'create',
+      color: '#36b5e7',
+      backgroundColor: '#fff965',
+    },
+    {
+      status: 'reject',
+      color: '#ffffff',
+      backgroundColor: '#f99c40',
+    },
+    {
+      status: 'expired',
+      color: '#ffffff',
+      backgroundColor: '#f34041',
+    },
+    {
+      status: 'cancelled',
+      color: '#ffffff',
+      backgroundColor: '#f34041',
+    },
+    {
+      status: 'finalized',
+      color: '#ffffff',
+      backgroundColor: '#003fe2',
+    },
+  ]
+
   const contractStatusView = () => {
+    const buttonData = ButtonArray.find(val=>val.status===props.contract_status.toLowerCase());
+    console.log(buttonData);
     return (
         <Text
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: buttonData?.backgroundColor,
             paddingHorizontal: 8,
             paddingVertical: 4,
             borderRadius: 6,
-            color: '#00ABE4',
+            color: buttonData?.color,
             fontSize: 12,
             fontFamily: 'Poppins-Medium',
           }}>
@@ -44,6 +83,8 @@ const RentedPropertyCard = (props: Props) => {
         </Text>
     );
   }
+
+
 
   return (
     <View
