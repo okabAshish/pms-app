@@ -20,6 +20,8 @@ import {RootState} from '../../store';
 
 type Props = {};
 
+let todaysDate = new Date().getDate();
+
 const AddNewContractDetailsSlabScreen = (props: Props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -30,7 +32,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
   const [switchModeTypeForLateFee, setSwitchModeTypeForLateFee] =
     useState('Percentage');
   const [parentRentalAmount, setParentRentalAmount] = useState(
-    contract_details.total_contract_amount,
+    contract_details.total_rental_amount,
   );
   const [securityDeposit, setSecurityDeposit] = useState(
     contract_details.security_deposit,
@@ -49,6 +51,23 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
 
   const [late_fee_amountFixed, setLateFeeAmountFixed] = useState(false);
   const [lateFeeGracePeriodFixed, setLateFeeGracePeriodFixed] = useState(false);
+
+  const showConfirmDialog = () => {
+    return Alert.alert(
+      'Will not able to Add Slab',
+      `Negative slab cannot be added`,
+      [
+        // The "Yes" button
+
+        // The "No" button
+        // Does nothing but dismiss the dialog when tapped
+        {
+          text: 'Okay',
+          onPress: () => {},
+        },
+      ],
+    );
+  };
 
   const confirmDeleteSlab = (id: number) => {
     return Alert.alert(
@@ -73,9 +92,35 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
     );
   };
 
+  let err = () => {
+    return Alert.alert(
+      "Date Can't be Less tha Last Slab Date",
+      `Selcted Date is less than Last Slab Date`,
+      [
+        // The "Yes" button
+        // The "No" button
+        // Does nothing but dismiss the dialog when tapped
+        {
+          text: 'Okay',
+          onPress: () => {},
+        },
+      ],
+    );
+  };
+
   const addPaymentSlab = async () => {
     setLoading(true);
     try {
+      console.log(dayjs(date).date() === String(todaysDate), 'asdasdsad');
+      // if (dayjs(date).date() === String(todaysDate)) {
+      //   err();
+      // }
+      slabs.find(val => {
+        if (val.date >= date) {
+          err();
+          throw (Error.name = 'Err');
+        }
+      });
       if (!parentRentalAmount || !amount || !date) {
         console.log('Caught Error');
       } else {
@@ -112,6 +157,11 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
         if (total <= 0) {
           throw (Error.name = 'Pending Total problem');
         } else {
+          if (amnt > total) {
+            showConfirmDialog();
+            throw (Error.name = 'Err');
+          }
+
           total = total - amnt;
           setSlabs([...slabs, a]);
           setParentRentalAmount(String(total));
@@ -466,7 +516,25 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
               label="Date"
               onChange={v => {
                 console.log(v);
-                setDate(v);
+                slabs.find(val => {
+                  if (val.date >= v) {
+                    Alert.alert(
+                      "Date Can't be Less tha Last Slab Date",
+                      `Selcted Date is less than Last Slab Date`,
+                      [
+                        // The "Yes" button
+                        // The "No" button
+                        // Does nothing but dismiss the dialog when tapped
+                        {
+                          text: 'Okay',
+                          onPress: () => {},
+                        },
+                      ],
+                    );
+                  } else {
+                    setDate(v);
+                  }
+                });
               }}
               value={dayjs(date).format('DD/MM/YYYY')}
             />

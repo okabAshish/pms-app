@@ -210,6 +210,11 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
                 borderRadius: 3,
                 flexDirection: 'row',
                 alignItems: 'center',
+              }}
+              onPress={() => {
+                if (navigation.canGoBack()) {
+                  navigation.goBack();
+                }
               }}>
               <FontAwesomeIcon icon={faChevronLeft} size={12} color="#fff" />
               <Text

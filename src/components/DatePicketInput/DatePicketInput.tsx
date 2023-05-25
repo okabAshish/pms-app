@@ -2,6 +2,7 @@ import {faCalendar} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   KeyboardTypeOptions,
   Text,
   TextInputAndroidProps,
@@ -11,8 +12,7 @@ import {
 } from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import {useDispatch, useSelector} from 'react-redux';
-import CustomAlertModal from '../../container/CustomAlertModal/CustomAlertModal';
-import {setError} from '../../features/error/error';
+import {RootState} from '../../store';
 
 type Props = {
   label?: string;
@@ -47,7 +47,7 @@ const defaultProps: Props = {
 
 const DatePicketInput = (props: Props) => {
   const dispatch = useDispatch();
-  const error = useSelector(state => state.error);
+  const error = useSelector<RootState>(state => state.error);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState(props.value);
@@ -60,35 +60,43 @@ const DatePicketInput = (props: Props) => {
     setDatePickerVisibility(false);
   };
 
-  console.log(props.value);
+  // console.log(props.value);
+
+  const showConfirmDialog = () => {
+    return Alert.alert(
+      "Date Can't be Less tha Today's Date",
+      `Selcted Date is less than Today Date`,
+      [
+        // The "Yes" button
+        // The "No" button
+        // Does nothing but dismiss the dialog when tapped
+        {
+          text: 'Okay',
+          onPress: () => {},
+        },
+      ],
+    );
+  };
 
   const handleConfirm = date => {
     // console.warn('A date has been picked: ', date);
 
     if (date < Date.now()) {
-      dispatch(
-        setError({
-          error: true,
-          message: 'Selected Date cannot be less than todays date',
-        }),
-      );
-      setTimeout(() => {
-        dispatch(setError({error: false, message: ''}));
-      }, 3000);
+      showConfirmDialog();
     } else {
       setSelectedDate(date);
       props.onChange(date);
-      hideDatePicker();
     }
+    hideDatePicker();
   };
 
   useEffect(() => {
     setSelectedDate(props.value);
   }, [props.value]);
 
-  if (error.error) {
-    return <CustomAlertModal />;
-  }
+  // if (error?.error) {
+  //   return <CustomAlertModal />;
+  // }
 
   return (
     <View style={{...props.containerStyles}}>

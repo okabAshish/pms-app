@@ -4,7 +4,7 @@ import {
   faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
@@ -169,7 +169,7 @@ const AddPropertyImages = (props: Props) => {
           .then((res: AddPropertyResponseData) => {
             if (res?.success) {
               console.log(res);
-              navigation.navigate('Property');
+              navigation.dispatch(CommonActions.navigate({name: 'Property'}));
             }
           });
       }
@@ -388,6 +388,11 @@ const AddPropertyImages = (props: Props) => {
                 borderRadius: 3,
                 flexDirection: 'row',
                 alignItems: 'center',
+              }}
+              onPress={() => {
+                if (navigation.canGoBack()) {
+                  navigation.goBack();
+                }
               }}>
               <FontAwesomeIcon icon={faChevronLeft} size={12} color="#fff" />
               <Text

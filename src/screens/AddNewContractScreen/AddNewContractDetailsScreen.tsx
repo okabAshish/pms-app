@@ -165,7 +165,7 @@ const AddNewContractDetailsScreen = (props: Props) => {
 
   useEffect(() => {
     changeEndDate();
-  }, [contract.start_date]);
+  }, [contract.start_date, contract.contract_period]);
 
   if (loading) {
     return <LoadingModal />;
@@ -219,7 +219,7 @@ const AddNewContractDetailsScreen = (props: Props) => {
             datas={ContractTypeList}
             onChange={value => {
               console.log(value);
-              setContract({...contract, contract_type_id: value});
+              setContract({...contract, contract_type_id: Number(value)});
               //   setProperty({...property, type: value});
             }}
           />
