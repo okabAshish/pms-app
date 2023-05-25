@@ -30,6 +30,8 @@ const owner = createSlice({
     zip: '',
     address_one: '',
     address_two: '',
+
+    property_images: [],
   } as unknown as AddPropertyInputData,
   reducers: {
     setAddPropertyOne: (state, action: PayloadAction<AddPropertyInputData>) => {
@@ -82,6 +84,35 @@ const owner = createSlice({
     ) => {
       state.image_count = action.payload.image_count;
     },
+    setAllPropertyData: (
+      state,
+      action: PayloadAction<AddPropertyInputData>,
+    ) => {
+      state.property_name = action.payload.property_name;
+      state.property_size = action.payload.property_size;
+      state.property_type_id = action.payload.property_type_id;
+      state.property_size_type = action.payload.property_size_type;
+      state.property_built_year = action.payload.property_built_year;
+      state.hoa_fee = action.payload.hoa_fee;
+      state.hoa_fee_type = action.payload.hoa_fee_type;
+      state.no_of_bedrooms = action.payload.no_of_bedrooms;
+      state.no_of_bathroom = action.payload.no_of_bathroom;
+      state.furnishing_type_id = action.payload.furnishing_type_id;
+      state.property_furnishing_detail =
+        action.payload.property_furnishing_detail;
+      state.property_amenities = action.payload.property_amenities;
+      state.balcony_terrace = action.payload.balcony_terrace;
+      state.parking_available = action.payload.parking_available;
+      state.no_of_parking = action.payload.no_of_parking;
+      state.parking_type = action.payload.parking_type;
+      state.country_id = action.payload.country_id;
+      state.state_id = action.payload.state_id;
+      state.city_id = action.payload.city_id;
+      state.zip = action.payload.zip;
+      state.address_one = action.payload.address_one;
+      state.address_two = action.payload.address_two;
+      state.property_images = action.payload.property_images;
+    },
   },
 });
 
@@ -92,6 +123,8 @@ export const {
   setAddPropertyFour,
   setAddPropertyFive,
   setAddPropertySix,
+  setAddPropertySeven,
+  setAllPropertyData,
 } = owner.actions;
 
 export default owner.reducer;

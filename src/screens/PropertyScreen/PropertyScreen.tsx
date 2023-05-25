@@ -111,7 +111,14 @@ const PropertyScreen = (props: Props) => {
           )}
         />
         <AddFloatingButton
-          onPress={() => navigation.navigate('ADD', {screen: 'AddProperty'})}
+          onPress={() =>
+            navigation.navigate('ADD', {
+              screen: 'AddProperty',
+              params: {
+                type: 'Add',
+              },
+            })
+          }
         />
       </View>
     </View>

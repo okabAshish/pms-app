@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
@@ -19,10 +19,16 @@ import {
   useGetStateOfCountryMutation,
 } from '../../features/auth/auth';
 import {setAddPropertySix} from '../../features/owner/ownerSlice';
+import {AddPropertyInputData} from '../../features/ownerTypes';
+import {RootState} from '../../store';
 
 type Props = {};
 
 const AddPropertyAddressDetailsScreen = (props: Props) => {
+  const property: AddPropertyInputData = useSelector<RootState>(
+    state => state.owner,
+  );
+
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [countries, setCountries] = useState();
@@ -60,6 +66,13 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
               });
             }
             setCountries(a);
+
+            if (property.country_id) {
+              setCountryValue(property.country_id);
+              getStates(property.country_id);
+              // setStateValue(property.state_id);
+              // setcityValue(property.city_id);
+            }
           }
         });
     } catch (err) {
@@ -84,6 +97,13 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
               });
             }
             setStates(a);
+
+            if (property.state_id) {
+              setStateValue(property.state_id);
+              getCities(property.state_id);
+              // setStateValue(property.state_id);
+              // setcityValue(property.city_id);
+            }
           }
         });
     } catch (err) {
@@ -108,6 +128,18 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
               });
             }
             setCities(a);
+
+            if (property.city_id) {
+              setcityValue(property.city_id);
+              // getStates(property.country_id)
+              // setStateValue(property.state_id);
+              // setcityValue(property.city_id);
+              setAddress({
+                address_one: property.address_one,
+                address_two: property.address_two,
+                zip: property.zip,
+              });
+            }
           }
         });
     } catch (err) {
@@ -143,7 +175,11 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
           address_two: address.address_two,
         }),
       );
-      navigation.navigate('AddProperty-7');
+      if (props.route.params.type === 'Add') {
+        navigation.navigate('AddProperty-7', {type: 'Add'});
+      } else {
+        navigation.navigate('AddProperty-7', {type: 'Edit'});
+      }
     } catch (err) {
       console.log(err);
     }
@@ -209,7 +245,11 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
               setCountryValue(Number(v));
               getStates(v);
             }}
-            value={countryValue}
+            value={
+              countryValue
+                ? countries?.find(val => val.id === countryValue)
+                : cityValue
+            }
             search
           />
           <DropDown
@@ -221,7 +261,11 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
               // getStates();
               getCities(v);
             }}
-            value={stateValue}
+            value={
+              stateValue
+                ? states?.find(val => val.id === stateValue)
+                : stateValue
+            }
             search
           />
           <DropDown
@@ -233,7 +277,9 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
               // getStates();
               // getCities();
             }}
-            value={stateValue}
+            value={
+              cityValue ? cities?.find(val => val.id === cityValue) : cityValue
+            }
             search
           />
           <Input

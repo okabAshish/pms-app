@@ -89,6 +89,15 @@ const PropertyCard = (props: Props) => {
                   backgroundColor: 'rgba(0, 171, 228, 0.24)',
                   padding: 4,
                   borderRadius: 3,
+                }}
+                onPress={() => {
+                  navigation.navigate('ADD', {
+                    screen: 'AddProperty',
+                    params: {
+                      id: props.id,
+                      type: 'Edit',
+                    },
+                  });
                 }}>
                 <FontAwesomeIcon icon={faEdit} color="#00ABE4" size={12} />
               </TouchableOpacity>

@@ -21,7 +21,11 @@ import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import UploadImage, {Asset} from '../../components/UploadImage/UploadImage';
 import {useGetImageCategoryListMutation} from '../../features/auth/auth';
 import {useAddPropertyMutation} from '../../features/auth/owner';
-import {AddPropertyResponseData} from '../../features/ownerTypes';
+import {
+  AddPropertyInputData,
+  AddPropertyResponseData,
+  OwnerPropertyDetailsData_PropertyImages,
+} from '../../features/ownerTypes';
 import {RootState} from '../../store';
 
 interface ImageData {
@@ -32,16 +36,28 @@ interface ImageData {
 
 interface ImageDatas extends Array<ImageData> {}
 
-type Props = {};
+type Props = {
+  route: {
+    params: {
+      id: string;
+      type: string;
+    };
+  };
+};
 
 const AddPropertyImages = (props: Props) => {
   const navigation = useNavigation();
-  const property = useSelector<RootState>(state => state.owner);
+
+  const property: AddPropertyInputData = useSelector<RootState>(
+    state => state.owner,
+  );
 
   const [filePath, setFilePath] = useState<Asset>();
   const [imageData, setImageData] = useState<ImageData>();
 
   const [imageDatas, setImageDatas] = useState<ImageDatas>([]);
+  const [uploadedImages, setUploadedImages] = useState<ImageDatas>([]);
+
   const [imageTypes, setImageTypes] = useState([]);
   const [dropDownValue, setDropDownValue] = useState<any>(null);
   const [removed, setRemoved] = useState<ImageData>();
@@ -66,6 +82,21 @@ const AddPropertyImages = (props: Props) => {
     setRemoved({} as ImageData);
   };
 
+  const removeDa = v => {
+    let a = uploadedImages;
+
+    console.log(a, 'refresh');
+
+    const i = a.indexOf(v);
+    if (i > -1) {
+      // only splice array when item is found
+      a.splice(i, 1); // 2nd parameter means remove one item only
+    }
+
+    setUploadedImages(a);
+    setRemoved({} as ImageData);
+  };
+
   const getImageCategory = async () => {
     setLoading(true);
     try {
@@ -82,6 +113,23 @@ const AddPropertyImages = (props: Props) => {
               });
             }
             setImageTypes(a);
+
+            if (property.property_images.length > 0) {
+              let a: OwnerPropertyDetailsData_PropertyImages =
+                property.property_images;
+              let b: ImageDatas = [];
+              a.forEach(val => {
+                b.push({
+                  imageUrl: {
+                    uri: val.media[0].original_url,
+                  },
+                  imageCaption: val.image_caption,
+                  imageType: val.image_category.name,
+                });
+              });
+
+              setUploadedImages(b);
+            }
           }
         });
     } catch (err) {
@@ -126,13 +174,68 @@ const AddPropertyImages = (props: Props) => {
           });
       }
     } catch (err) {
-      console.warn(err);
+      console.warn(err.data);
     }
     setLoading(false);
   };
 
+  const handleUpdate = async () => {
+    setLoading(true);
+    try {
+      console.log(property);
+    } catch (err) {
+      console.warn(err.data);
+    }
+    setLoading(false);
+  };
+
+  const addImage = () => {
+    try {
+      // for (const key in imageData) {
+      //   if (
+      //     imageData[key] === null ||
+      //     imageData[key] === '' ||
+      //     imageData[key] === undefined
+      //   ) {
+      //     // console.log('assaasd')
+      //     throw (Error.name = 'error');
+      //   }
+      // }
+
+      if (!imageData?.imageUrl.uri) {
+        throw (Error.name = 'error');
+      }
+
+      let a: ImageDatas = imageDatas;
+
+      a = [
+        ...a,
+        {
+          imageCaption: imageData?.imageCaption,
+          imageType: imageData?.imageType,
+          imageUrl: imageData?.imageUrl as Asset,
+        },
+      ];
+
+      setImageDatas(a);
+      setImageData({
+        imageUrl: {} as Asset,
+        imageCaption: '',
+        imageType: '',
+      });
+      setFilePath({} as Asset);
+      setDropDownValue(null);
+      setValue(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     remove(removed);
+    if (property.property_images) {
+      removeDa(removed);
+    }
   }, [removed?.imageUrl]);
 
   useEffect(() => {
@@ -186,6 +289,23 @@ const AddPropertyImages = (props: Props) => {
         </View>
 
         <View style={{marginVertical: 20}}>
+          {uploadedImages && uploadedImages?.length > 0 && (
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              {uploadedImages?.map((item: ImageData, index) => {
+                return (
+                  <AddPropertyImageCard
+                    key={index.toString()}
+                    onRemoved={v => setRemoved(v)}
+                    imageType={item?.imageType as string}
+                    imageCaption={item.imageCaption as string}
+                    imageUrl={item.imageUrl}
+                    item={item}
+                  />
+                );
+              })}
+            </View>
+          )}
+
           {imageDatas && imageDatas?.length > 0 && (
             <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
               {imageDatas?.map((item: ImageData, index) => {
@@ -245,26 +365,7 @@ const AddPropertyImages = (props: Props) => {
                 borderRadius: 9999,
               }}
               onPress={() => {
-                let a: ImageDatas = imageDatas;
-
-                a = [
-                  ...a,
-                  {
-                    imageCaption: imageData?.imageCaption,
-                    imageType: imageData?.imageType,
-                    imageUrl: imageData?.imageUrl as Asset,
-                  },
-                ];
-
-                setImageDatas(a);
-                setImageData({
-                  imageUrl: {} as Asset,
-                  imageCaption: '',
-                  imageType: '',
-                });
-                setFilePath({} as Asset);
-                setDropDownValue(null);
-                setValue(null);
+                addImage();
               }}>
               <FontAwesomeIcon icon={faPlus} size={24} color="#fff" />
             </TouchableOpacity>
@@ -311,7 +412,11 @@ const AddPropertyImages = (props: Props) => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                handleSave();
+                if (props.route.params.type === 'Edit') {
+                  handleUpdate();
+                } else {
+                  handleSave();
+                }
               }}>
               <Text
                 style={{
@@ -321,7 +426,7 @@ const AddPropertyImages = (props: Props) => {
                   marginRight: 5,
                   color: '#fff',
                 }}>
-                Save
+                {props.route.params.type === 'Edit' ? 'Update' : 'Save'}
               </Text>
               <FontAwesomeIcon icon={faCheck} size={12} color="#fff" />
             </TouchableOpacity>

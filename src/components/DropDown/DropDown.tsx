@@ -45,6 +45,8 @@ const DropDown = (props: Props) => {
     setValue(props.value);
   }, [props.value]);
 
+  console.log(props.value);
+
   return (
     <View style={{marginVertical: 10, flex: 1, ...props.containerStyles}}>
       <Text style={{color: '#45485F', marginBottom: 10}}>{props.label}</Text>

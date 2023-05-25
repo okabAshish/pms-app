@@ -20,28 +20,52 @@ import {
 import {setError} from '../../features/error/error';
 import {setAddPropertyThree} from '../../features/owner/ownerSlice';
 import {
+  AddPropertyInputData,
   FurnishingListData,
   FurnishingTypeList,
 } from '../../features/ownerTypes';
+import {RootState} from '../../store';
 
-type Props = {};
+type Props = {
+  route: {
+    params: {
+      id: string;
+      type: string;
+    };
+  };
+};
 
 const AddPropertyFurnishingScreen = (props: Props) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const error = useSelector(state => state?.error);
-  const owner = useSelector(state => state?.owner);
+  const owner: AddPropertyInputData = useSelector<RootState>(
+    state => state?.owner,
+  );
 
-  const [typeValue, setTypeValue] = useState(null);
+  const [typeValue, setTypeValue] = useState(
+    props.route.params.type === 'Edit'
+      ? String(owner.furnishing_type_id).length > 0
+        ? String(owner.furnishing_type_id)
+        : null
+      : null,
+  );
+
+  // console.log(owner.furnishing_type_id);
   const [furnisingValue, setFurnisingValue] = useState([]);
   const [furnishedType, setFurnishedType] = useState([]);
   const [furnishedList, setFurnishedList] = useState([]);
   const [furnishedDetails, setFurnishedDetails] = useState({
-    furnishing_type_id: '',
+    furnishing_type_id:
+      props.route.params.type === 'Edit'
+        ? String(owner.furnishing_type_id).length > 0
+          ? String(owner.furnishing_type_id)
+          : null
+        : null,
     property_furnishing_detail: [],
   });
 
-  //console.log(furnishedDetails);
+  // console.log(owner.property_furnishing_detail);
   const [getFurnishingType] = useGetFurnishingTypeMutation();
   const [getFurnishingList] = useGetFurnishingListMutation();
   const dispatch = useDispatch();
@@ -76,6 +100,28 @@ const AddPropertyFurnishingScreen = (props: Props) => {
     setLoading(false);
   };
 
+  const handleFurnishingData = () => {
+    let a: Array<T> = owner.property_furnishing_detail;
+
+    console.log(a);
+    let b = [];
+    a.forEach(v => {
+      // b.push({
+      //   slug: v.furnishing_name.furnish_name,
+      //   title: v.furnishing_name.furnish_name,
+      //   icon: v.furnishing_name.icon,
+      //   id: v.furnishing_name.id,
+      // });
+      b.push(v.furnishing_name.id);
+    });
+
+    setFurnisingValue(b);
+    setFurnishedDetails({
+      ...furnishedDetails,
+      property_furnishing_detail: String(b),
+    });
+  };
+
   const furnishingListFunction = async () => {
     setLoading(true);
     try {
@@ -93,9 +139,15 @@ const AddPropertyFurnishingScreen = (props: Props) => {
                 slug: FurnishingListData[i].furnish_name,
                 title: FurnishingListData[i].furnish_name,
                 icon: FurnishingListData[i].icon,
+                id: FurnishingListData[i].id,
               };
             }
             setFurnishedList(furnishingCheckboxData);
+
+            if (owner.property_furnishing_detail.length > 0) {
+              handleFurnishingData();
+            }
+
             console.log(furnishingCheckboxData);
           }
         });
@@ -110,7 +162,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
     setLoading(false);
   };
 
-  // console.log(furnisingValue);
+  console.log(furnisingValue);
 
   const selectedFurnishType = v => {
     setTypeValue(v);
@@ -120,10 +172,8 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   const page3 = () => {
     dispatch(
       setAddPropertyThree({
-        furnishing_type_id: furnishedDetails.furnishing_type_id,
-        property_furnishing_detail: JSON.stringify(
-          furnishedDetails.property_furnishing_detail,
-        ),
+        furnishing_type_id: String(furnishedDetails.furnishing_type_id),
+        property_furnishing_detail: furnishedDetails.property_furnishing_detail,
       }),
     );
   };
@@ -184,10 +234,10 @@ const AddPropertyFurnishingScreen = (props: Props) => {
           onChange={v => {
             selectedFurnishType(v);
           }}
-          value={typeValue}
+          value={Number(typeValue)}
         />
 
-        {typeValue === 1 && (
+        {(typeValue == 1 || typeValue == 2) && (
           <>
             <Text
               style={{
@@ -200,7 +250,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
 
             <CheckBox
               labels={furnishedList}
-              // value={furnisingValue}
+              value={furnisingValue}
               onChange={v => {
                 // console.log(v);
                 setFurnisingValue(v);
@@ -255,7 +305,11 @@ const AddPropertyFurnishingScreen = (props: Props) => {
               onPress={() => {
                 if (furnishedDetails.furnishing_type_id) {
                   page3();
-                  navigation.navigate('AddProperty-4');
+                  if (props.route.params.type === 'Add') {
+                    navigation.navigate('AddProperty-4', {type: 'Add'});
+                  } else {
+                    navigation.navigate('AddProperty-4', {type: 'Edit'});
+                  }
                 }
               }}>
               <Text

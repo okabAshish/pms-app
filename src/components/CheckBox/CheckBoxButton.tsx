@@ -1,14 +1,26 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 
 type Props = {
   onChange: (v: string) => void;
   value: string;
   list?: any;
+  checked: boolean;
+};
+
+const defaultProps: Props = {
+  checked: false,
+  onChange: (v: string) => {},
+  value: '',
 };
 
 const CheckBoxButton = (props: Props) => {
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(props.checked);
+
+  useEffect(() => {
+    setChecked(props.checked);
+  }, [props.checked]);
+
   return (
     <TouchableOpacity
       style={{
@@ -34,5 +46,6 @@ const CheckBoxButton = (props: Props) => {
     </TouchableOpacity>
   );
 };
+CheckBoxButton.defaultProps = defaultProps;
 
 export default CheckBoxButton;

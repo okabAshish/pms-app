@@ -13,6 +13,7 @@ import {
   OwnerPropertyDetailsRequest,
   OwnerPropertyDetailsResponseData,
   OwnerPropertyListResponseData,
+  ParkingTypeListResponseData,
   PropertyTypeResponseData,
   TenantInvitationDropDownResponseData,
   resendInvitationParam,
@@ -58,6 +59,15 @@ export const ownerApi = createApi({
     getFurnishingType: builder.mutation<FurnishingTypeResponseData, {}>({
       query: () => ({
         url: 'furnishing-type-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    getParkingTypeList: builder.mutation<ParkingTypeListResponseData, {}>({
+      query: () => ({
+        url: 'parking-type-list',
         method: 'GET',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -166,6 +176,8 @@ export const {
   useGetResendInvitationMutation,
   useGetPropertyTypeMutation,
   useGetOwnerContractListMutation,
+
+  useGetParkingTypeListMutation,
 
   useGetFurnishingTypeMutation,
   useGetFurnishingListMutation,

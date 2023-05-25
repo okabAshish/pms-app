@@ -1,6 +1,6 @@
 import * as Icon from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, ViewStyle} from 'react-native';
 import CheckBoxButton from './CheckBoxButton';
 
@@ -8,6 +8,7 @@ type LabelData = {
   slug: string;
   title: string;
   icon?: string;
+  id: number;
 };
 
 type Props = {
@@ -24,9 +25,9 @@ const defaultProps: Props = {
 };
 
 const CheckBox = (props: Props) => {
-  const [checked, setChecked] = useState([]);
+  const [checked, setChecked] = useState(props.value);
 
-  console.log(props.labels, 'CheckBox');
+  // console.log(props.labels, 'CheckBox');
 
   const createIcon = (icon: string) => {
     let a = `${icon?.split(' ')[1].split('-')[1]}`;
@@ -35,6 +36,10 @@ const CheckBox = (props: Props) => {
 
     return Icon['fa' + str];
   };
+
+  useEffect(() => {
+    setChecked(props.value);
+  }, [props.value]);
 
   return (
     <View style={{...props.containerStyles}}>
@@ -50,7 +55,7 @@ const CheckBox = (props: Props) => {
             }}
             key={item.slug + index.toString()}>
             <CheckBoxButton
-              value={item.slug}
+              value={item.id}
               onChange={(v: string) => {
                 let a = checked;
                 if (a.includes(v)) {
@@ -67,6 +72,7 @@ const CheckBox = (props: Props) => {
                   props.onChange(a);
                 }
               }}
+              checked={checked.find(val => val === item.id)}
             />
 
             {item?.icon && (

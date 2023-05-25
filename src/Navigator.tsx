@@ -164,52 +164,66 @@ const Navigator = (props: Props) => {
           <Stack.Screen
             name="AddProperty"
             component={AddPropertyScreen}
-            options={() => ({
-              title: 'Add Property',
-            })}
+            options={r => {
+              return {
+                title: `${r.route.params?.type} Property`,
+              };
+            }}
           />
 
           <Stack.Screen
             name="AddProperty-2"
             component={AddPropertyDetailsScreen}
-            options={() => ({
-              title: 'Add Property',
-            })}
+            options={r => {
+              return {
+                title: `${r.route.params?.type} Property`,
+              };
+            }}
           />
           <Stack.Screen
             name="AddProperty-3"
             component={AddPropertyFurnishingScreen}
-            options={() => ({
-              title: 'Add Property',
-            })}
+            options={r => {
+              return {
+                title: `${r.route.params?.type} Property`,
+              };
+            }}
           />
           <Stack.Screen
             name="AddProperty-4"
             component={AddPropertyAmenitiesScreen}
-            options={() => ({
-              title: 'Add Property',
-            })}
+            options={r => {
+              return {
+                title: `${r.route.params?.type} Property`,
+              };
+            }}
           />
           <Stack.Screen
             name="AddProperty-5"
             component={AddPropertyAddionalDetailsScreen}
-            options={() => ({
-              title: 'Add Property',
-            })}
+            options={r => {
+              return {
+                title: `${r.route.params?.type} Property`,
+              };
+            }}
           />
           <Stack.Screen
             name="AddProperty-6"
             component={AddPropertyAddressDetailsScreen}
-            options={() => ({
-              title: 'Add Property',
-            })}
+            options={r => {
+              return {
+                title: `${r.route.params?.type} Property`,
+              };
+            }}
           />
           <Stack.Screen
             name="AddProperty-7"
             component={AddPropertyImages}
-            options={() => ({
-              title: 'Add Property',
-            })}
+            options={r => {
+              return {
+                title: `${r.route.params?.type} Property`,
+              };
+            }}
           />
           <Stack.Screen
             name="InviteTenant"

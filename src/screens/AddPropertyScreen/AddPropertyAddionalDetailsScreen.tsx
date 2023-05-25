@@ -1,7 +1,7 @@
 import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,16 +9,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
 import RadioButton from '../../components/RadioButton/RadioButton';
+import {useGetParkingTypeListMutation} from '../../features/auth/owner';
 import {setAddPropertyFive} from '../../features/owner/ownerSlice';
+import {AddPropertyInputData} from '../../features/ownerTypes';
+import {RootState} from '../../store';
 
 type Props = {};
 
 const AddPropertyAddionalDetailsScreen = (props: Props) => {
+  const property: AddPropertyInputData = useSelector<RootState>(
+    state => state.owner,
+  );
+
   const dispatch = useDispatch();
 
+  const [parkingTypes, setParkingTypes] = useState([]);
   const [balconyAvaliablity, setBalconyAvaliablity] = useState(0);
   const [parkingAvaliablity, setParkingAvaliablity] = useState(0);
   const [parking, setParking] = useState({
@@ -26,6 +35,53 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
     parking_type: '',
   });
   const navigation = useNavigation();
+
+  const [getParkingTypeList] = useGetParkingTypeListMutation();
+
+  const getParking = async () => {
+    try {
+      await getParkingTypeList({})
+        .unwrap()
+        .then(res => {
+          if (res.success) {
+            let a = [];
+            for (let i = 0; i < res.data.length; i++) {
+              a.push({
+                label: res.data[i].name,
+                value: res.data[i].id,
+                id: res.data[i].id,
+              });
+            }
+
+            if (property.parking_available) {
+              setParkingAvaliablity(1);
+
+              setParking({
+                no_of_parking: Number(property.no_of_parking),
+                parkingType: String(property.parking_type),
+              });
+            }
+
+            if (property.balcony_terrace) {
+              setBalconyAvaliablity(1);
+            }
+
+            setParkingTypes(a);
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getParking();
+  }, []);
+
+  console.log(
+    parkingTypes.find(val => val.label === property.parking_type),
+    '???????',
+  );
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -119,16 +175,21 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
                   no_of_parking: Number(e.nativeEvent.text),
                 })
               }
+              value={String(parking.no_of_parking)}
             />
-            <Input
-              label="Parking Type"
-              placehoder="Enter Parking Type"
-              onChange={e =>
+            <DropDown
+              datas={parkingTypes}
+              label="Property Type?"
+              onChange={v => {
+                console.log(v);
                 setParking({
                   ...parking,
-                  parking_type: e.nativeEvent.text,
-                })
-              }
+                  parking_type: v,
+                });
+              }}
+              value={parkingTypes.find(
+                val => val.label === property.parking_type,
+              )}
             />
           </View>
         )}
@@ -181,7 +242,11 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
                     parking_type: parking.parking_type,
                   }),
                 );
-                navigation.navigate('AddProperty-6');
+                if (props.route.params.type === 'Add') {
+                  navigation.navigate('AddProperty-6', {type: 'Add'});
+                } else {
+                  navigation.navigate('AddProperty-6', {type: 'Edit'});
+                }
               }}>
               <Text
                 style={{

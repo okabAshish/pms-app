@@ -16,14 +16,27 @@ import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import CustomAlertModal from '../../container/CustomAlertModal/CustomAlertModal';
-import {useGetPropertyTypeMutation} from '../../features/auth/owner';
+import {
+  useGetOwnerPropertyDetailsMutation,
+  useGetPropertyTypeMutation,
+} from '../../features/auth/owner';
 import {setError} from '../../features/error/error';
-import {setAddPropertyOne} from '../../features/owner/ownerSlice';
+import {
+  setAddPropertyOne,
+  setAllPropertyData,
+} from '../../features/owner/ownerSlice';
 import {PropertyTypeListData} from '../../features/ownerTypes';
 
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
-type Props = {};
+type Props = {
+  route: {
+    params: {
+      id: string;
+      type: string;
+    };
+  };
+};
 
 let arr = ['Sq ft.', 'Meter'];
 
@@ -39,6 +52,9 @@ const AddPropertyScreen = (props: Props) => {
   const [propertyTypeList, setPropertyTypeList] = useState([]);
 
   const [loading, setLoading] = useState(false);
+  const [propertyScreenType, setPropertyScreenType] = useState(
+    props?.route.params.type,
+  );
   // const [title, setTitle] = useState('');
   // const [type, setType] = useState('');
   // const [size, setSize] = useState('');
@@ -57,8 +73,9 @@ const AddPropertyScreen = (props: Props) => {
   });
 
   const [getPropertyType] = useGetPropertyTypeMutation();
+  const [OwnerPropertyDetails] = useGetOwnerPropertyDetailsMutation();
 
-  console.log(owner);
+  console.log(propertyScreenType);
 
   const propertyType = async () => {
     setLoading(true);
@@ -70,7 +87,8 @@ const AddPropertyScreen = (props: Props) => {
           console.log(res, 'PROPERTY TYPE RES');
 
           if (res.success) {
-            //setPropertyTypeList(res?.data);
+            //setPropertyTypeList(res?.data)
+
             const proertyTypeList: PropertyTypeListData = res?.data;
             const propertyDropdownData: any = [];
             for (let i = 0; i < proertyTypeList.length; i++) {
@@ -81,6 +99,10 @@ const AddPropertyScreen = (props: Props) => {
               };
             }
             setPropertyTypeList(propertyDropdownData);
+
+            if (propertyScreenType === 'Edit') {
+              getPropertyData();
+            }
           }
         });
       // setLoading(true);
@@ -90,6 +112,61 @@ const AddPropertyScreen = (props: Props) => {
         dispatch(setError({error: false, message: ''}));
       }, 350);
       console.log(err, 'EERRRR');
+    }
+    setLoading(false);
+  };
+
+  const getPropertyData = async () => {
+    setLoading(true);
+    //console.log(props?.route?.params?.id, 'xxx');
+    try {
+      await OwnerPropertyDetails({param: props?.route?.params?.id})
+        .unwrap()
+        .then(res => {
+          console.log(res, 'Weroing');
+
+          if (res.success) {
+            dispatch(
+              setAllPropertyData({
+                property_name: res.data.property_name,
+                property_type_id: res.data.property_type_id,
+                property_size: res.data.property_size,
+                property_size_type: res.data.property_size_type,
+                property_built_year: res.data.property_built_year,
+                hoa_fee: res.data.hoa_fee,
+                hoa_fee_type: res.data.hoa_fee_type,
+                no_of_bedrooms: res.data.no_of_bedrooms,
+                no_of_bathroom: res.data.no_of_bathroom,
+                furnishing_type_id: res.data.furnishing_type_id,
+                property_furnishing_detail: res.data.furnishing_details,
+                property_amenities: res.data.property_amenities,
+                balcony_terrace: res.data.balcony_terrace,
+                parking_available: res.data.parking_available,
+                no_of_parking: res.data.no_of_parking,
+                parking_type: res.data.parking_type_name,
+                country_id: res.data.country_id,
+                state_id: res.data.state_id,
+                city_id: res.data.city_id,
+                zip: res.data.zip,
+                address_one: res.data.address_one,
+                address_two: res.data.address_two,
+                property_images: res.data.property_images,
+              }),
+            );
+
+            setProperty({
+              title: res.data.property_name,
+              type: String(res.data.property_type_id),
+              size: String(res.data.property_size),
+              sizeType: res.data.property_size_type == 0 ? 'Sq ft.' : 'Meter',
+              year: res.data.property_built_year,
+              amount: res.data.hoa_fee,
+              duration: res.data.hoa_fee_type,
+            });
+          }
+        });
+    } catch (err) {
+      console.log(err, '<><>');
     }
     setLoading(false);
   };
@@ -113,23 +190,33 @@ const AddPropertyScreen = (props: Props) => {
         }
       }
       console.log('success');
+
       dispatch(
         setAddPropertyOne({
           property_name: String(property.title),
           property_type_id: String(property.type),
-          property_size: String(property.size),
+          property_size: Number(property.size),
           property_size_type: arr.indexOf(property.sizeType),
           property_built_year: String(property.year),
-          hoa_fee: String(property.amount),
+          hoa_fee: Number(property.amount),
           hoa_fee_type: String(property.duration),
         }),
       );
-      navigation.navigate('AddProperty-2');
+
+      if (props.route.params.type === 'Add') {
+        navigation.navigate('AddProperty-2', {type: 'Add'});
+      } else {
+        navigation.navigate('AddProperty-2', {
+          type: 'Edit',
+        });
+      }
     } catch (err) {
       console.log(err);
     }
     setLoading(false);
   };
+
+  console.log(property);
 
   if (error?.error) {
     return <CustomAlertModal />;
@@ -189,6 +276,7 @@ const AddPropertyScreen = (props: Props) => {
             }
             placehoder="Enter a nick name of the property"
             label="Property Title (Nick Name)"
+            value={property.title}
           />
           <DropDown
             label="Property Type"
@@ -196,6 +284,9 @@ const AddPropertyScreen = (props: Props) => {
             onChange={val => {
               setProperty({...property, type: val});
             }}
+            value={propertyTypeList.find(
+              val => String(val.id) === property.type,
+            )}
           />
           <Input
             switchButtonData={arr}
@@ -205,12 +296,15 @@ const AddPropertyScreen = (props: Props) => {
             placehoder="Enter Property Size"
             label="Property Size"
             keyboardType="number-pad"
+            value={property.size}
           />
           <Input
             switchButton={false}
             onChange={e => setProperty({...property, year: e.nativeEvent.text})}
             placehoder="Enter Property Year"
             label="Property Built Year"
+            value={property.year}
+            keyboardType="numeric"
           />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Input
@@ -221,10 +315,12 @@ const AddPropertyScreen = (props: Props) => {
               placehoder="Enter HOA Fee Amount"
               label="HOA Fee"
               containerStyles={{flex: 2, marginRight: 20}}
+              value={property.amount}
+              keyboardType="numeric"
             />
             <DropDown
               label="Fee Duration"
-              value={property.type}
+              value={property.duration}
               onChange={val => {
                 setProperty({...property, duration: val});
               }}

@@ -170,9 +170,24 @@ export interface AddPropertyInputData {
   address_one: string;
   address_two: string;
   image_count: number;
+
+  property_images: OwnerPropertyDetailsData_PropertyImages;
 }
 
 export interface AddPropertyResponseData {}
+
+export interface ParkingTypeListData {
+  id: string;
+  name: string;
+}
+
+export interface ParkingTypeList extends Array<ParkingTypeListData> {}
+
+export interface ParkingTypeListResponseData {
+  success: boolean;
+  message: string;
+  data: ParkingTypeList;
+}
 
 export interface FurnishingTypeResponseData {
   success: boolean;

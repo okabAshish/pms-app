@@ -39,6 +39,7 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
             let a = [];
             for (let i = 0; i < res.data.length; i++) {
               a.push({
+                id: res.data[i].id,
                 slug: res.data[i].id,
                 title: res.data[i].name,
                 icon: res.data[i].icon,
@@ -61,7 +62,7 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
     return <LoadingModal />;
   }
 
-  console.log(FurnishedDetails);
+  console.log(FurnishedDetails, 'AmenitiesList');
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -153,12 +154,17 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
                 alignItems: 'center',
               }}
               onPress={() => {
+                console.log(JSON.stringify(FurnishedDetails), '<><><><>....');
                 dispatch(
                   setAddPropertyFour({
                     property_amenities: JSON.stringify(FurnishedDetails),
                   }),
                 );
-                navigation.navigate('AddProperty-5');
+                if (props.route.params.type === 'Add') {
+                  navigation.navigate('AddProperty-5', {type: 'Add'});
+                } else {
+                  navigation.navigate('AddProperty-5', {type: 'Edit'});
+                }
               }}>
               <Text
                 style={{

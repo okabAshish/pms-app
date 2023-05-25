@@ -5,20 +5,39 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Input from '../../components/Input/Input';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {setAddPropertyTwo} from '../../features/owner/ownerSlice';
+import {RootState} from '../../store';
 
-type Props = {};
+type Props = {
+  route: {
+    params: {
+      id: string;
+      type: string;
+    };
+  };
+};
 
 const AddPropertyDetailsScreen = (props: Props) => {
+  const property = useSelector<RootState>(state => state.owner);
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   let [propertyDetails, setPropertyDetails] = useState({
-    bedrooms: '',
-    bathrooms: '',
+    bedrooms:
+      props.route.params.type === 'Edit'
+        ? property?.no_of_bedrooms
+          ? String(property?.no_of_bedrooms)
+          : ''
+        : '',
+    bathrooms:
+      props.route.params.type === 'Edit'
+        ? property?.no_of_bathroom
+          ? String(property?.no_of_bathroom)
+          : ''
+        : '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -41,7 +60,11 @@ const AddPropertyDetailsScreen = (props: Props) => {
           no_of_bathroom: String(propertyDetails.bathrooms),
         }),
       );
-      navigation.navigate('AddProperty-3');
+      if (props.route.params.type === 'Add') {
+        navigation.navigate('AddProperty-3', {type: 'Add'});
+      } else {
+        navigation.navigate('AddProperty-3', {type: 'Edit'});
+      }
     } catch (error) {
       console.log(error);
     }
@@ -92,7 +115,7 @@ const AddPropertyDetailsScreen = (props: Props) => {
               fontFamily: 'Poppins-Medium',
               fontSize: 18,
             }}>
-            propertyDetails details
+            Property details
           </Text>
         </View>
 
@@ -108,6 +131,7 @@ const AddPropertyDetailsScreen = (props: Props) => {
             placehoder="Enter number of the bedrooms"
             label="Number Of Bedrooms"
             keyboardType="number-pad"
+            value={String(propertyDetails.bedrooms)}
           />
 
           <Input
@@ -121,6 +145,7 @@ const AddPropertyDetailsScreen = (props: Props) => {
             placehoder="Enter number of the bathrooms"
             label="Number Of Bathroom"
             keyboardType="number-pad"
+            value={String(propertyDetails.bathrooms)}
           />
         </KeyboardAwareScrollView>
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
