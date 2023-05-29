@@ -190,7 +190,12 @@ const SignUpScreen = (props: Props) => {
                       Keep me Logged In
                     </Text>
                   </View>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.dispatch(
+                        CommonActions.navigate({name: 'Reset-Password'}),
+                      );
+                    }}>
                     <Text
                       style={{
                         color: 'rgba(90, 207, 246, 1)',
