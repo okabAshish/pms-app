@@ -277,10 +277,11 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
           justifyContent: 'space-between',
         }}>
         <RadioButton
-          labels={[props.title]}
-          value={Term ? '0' : ''}
+          labels={[{name: props.title, id: props.id}]}
+          value={Term ? props.id : ''}
           onChange={v => {
-            if (v === 0) {
+            console.log(v, '<ASDAS<D');
+            if (v.id === props.id) {
               setTerm(true);
             } else {
               setTerm(false);

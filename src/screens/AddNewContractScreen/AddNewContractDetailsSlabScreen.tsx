@@ -438,7 +438,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
           </View>
 
           <RadioButton
-            labels={['Late fee applicable?']}
+            labels={[{id: 1, name: 'Late fee applicable?'}]}
             onChange={i => {
               console.log(i);
               if (slabs.length > 0) {

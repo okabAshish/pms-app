@@ -41,27 +41,27 @@ const defaultProps: Props = {
 
 const RadioButton = (props: Props) => {
   const [checked, setChecked] = useState(
-    props.labels.find(val => val.id == props.value),
+    props.labels.find(val => val.id === props.value),
   );
 
   useEffect(() => {
-    setChecked(props.labels.find(val => val.id == props.value));
-  }, [props.value]);
+    setChecked(props.labels.find(val => val.id === props.value));
+  }, [props?.value]);
 
   return (
     <View style={{...props.containerStyles}}>
       {props.labels.map((item, index) => {
-        console.log(checked, item, checked === item);
+        console.log(checked, item, checked === item, props.value);
         return (
           <View>
             <TouchableOpacity
               onPress={() => {
-                if (checked === item) {
+                if (checked?.id === item.id) {
                   setChecked('');
                   props.onChange('');
                 } else {
-                  setChecked(item);
-                  props.onChange(index);
+                  setChecked(index);
+                  props.onChange(item);
                 }
               }}
               style={{
@@ -74,16 +74,17 @@ const RadioButton = (props: Props) => {
                 style={{
                   height: props.buttonSize,
                   width: props.buttonSize,
-                  backgroundColor: checked === item ? '#0EB9F2' : '#f5f5f5',
+                  backgroundColor:
+                    checked?.id === item.id ? '#0EB9F2' : '#f5f5f5',
                   borderColor: props.borderColor,
                   ...props.checkBoxStyles,
                 }}
                 onPress={() => {
-                  if (checked === item) {
+                  if (checked?.id === item.id) {
                     setChecked('');
                     props.onChange('');
                   } else {
-                    setChecked(item);
+                    setChecked(index);
                     props.onChange(item);
                   }
                 }}>

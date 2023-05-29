@@ -1,4 +1,9 @@
-import {faBars, faBell, faSearch} from '@fortawesome/free-solid-svg-icons';
+import {
+  faBars,
+  faBell,
+  faSearch,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation, useNavigationState} from '@react-navigation/native';
 import React, {useState} from 'react';
@@ -30,7 +35,13 @@ const DashBoardNavBar = (props: Props) => {
           props.openDrawer();
         },
       },
-      {icon: null, avatar: true, onPress: () => {}},
+      {
+        icon: null,
+        avatar: true,
+        onPress: () => {
+          navigation.navigate('View', {screen: 'OwnerProfile'});
+        },
+      },
       {
         icon: null,
         avatar: false,
@@ -126,21 +137,7 @@ const DashBoardNavBar = (props: Props) => {
                     elevation: 5,
                     shadowColor: 'rgba(0,0,0,0.75)',
                   }}>
-                  {user?.profile_photo ? (
-                    <Image
-                      source={{uri: user?.profile_photo}}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        resizeMode: 'cover',
-                      }}
-                    />
-                  ) : (
-                    <Text style={{fontSize: 14, fontFamily: 'Poppins-Medium'}}>
-                      {user?.first_name?.split('')[0] +
-                        user?.last_name?.split('')[0]}
-                    </Text>
-                  )}
+                  <FontAwesomeIcon icon={faUser} />
                 </View>
               ) : (
                 <Text
