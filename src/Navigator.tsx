@@ -31,6 +31,9 @@ import AddPropertyScreen from './screens/AddPropertyScreen/AddPropertyScreen';
 import BillsScreen from './screens/BillsScreen/BillsScreen';
 import ContractViewScreen from './screens/ContractViewScreen/ContractViewScreen';
 import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen/ForgotPasswordScreen';
+import NewPasswordScreen from './screens/ForgotPasswordScreen/NewPasswordScreen';
+import OTPVerification from './screens/ForgotPasswordScreen/OTPVerification';
 import InvitationScreen from './screens/InvitationScreen/InvitationScreen';
 import InviteTenantScreen from './screens/InviteTenantScreen/InviteTenantScreen';
 import MaintenanceRequestsScreen from './screens/MaintenanceRequestsScreen/MaintenanceRequestsScreen';
@@ -382,6 +385,12 @@ const Navigator = (props: Props) => {
             name="Register-Address"
             component={isLoggedIn ? DashboardScreen : RegisterAddressViewScreen}
           />
+          <Stack.Screen
+            name="Reset-Password"
+            component={ForgotPasswordScreen}
+          />
+          <Stack.Screen name="OTP-Verification" component={OTPVerification} />
+          <Stack.Screen name="New-Password" component={NewPasswordScreen} />
         </>
       </Stack.Navigator>
     </NavigationContainer>
