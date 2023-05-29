@@ -40,7 +40,14 @@ const DashBoardNavBar = (props: Props) => {
     ],
     [
       {icon: faSearch, onPress: () => {}, right: true},
-      {icon: faBell, onPress: () => {}, right: true, notification: true},
+      {
+        icon: faBell,
+        onPress: () => {
+          navigation.navigate('View', {screen: 'Notification'});
+        },
+        right: true,
+        notification: true,
+      },
     ],
   ];
   const {user} = useSelector(state => state.auth);

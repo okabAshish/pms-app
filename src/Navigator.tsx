@@ -38,6 +38,7 @@ import InvitationScreen from './screens/InvitationScreen/InvitationScreen';
 import InviteTenantScreen from './screens/InviteTenantScreen/InviteTenantScreen';
 import MaintenanceRequestsScreen from './screens/MaintenanceRequestsScreen/MaintenanceRequestsScreen';
 import MainternanceRequestViewScreen from './screens/MainternanceRequestViewScreen/MainternanceRequestViewScreen';
+import NotificationScreen from './screens/NotificationScreen/NotificationScreen';
 import OwnerContractsScreen from './screens/OwnerContractsScreen/OwnerContractsScreen';
 import OwnerTenantScreen from './screens/OwnerTenantScreen/OwnerTenantScreen';
 import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
@@ -289,6 +290,7 @@ const Navigator = (props: Props) => {
             name="Maintenance-View"
             component={MainternanceRequestViewScreen}
           />
+          <Stack.Screen name="Notification" component={NotificationScreen} />
         </Stack.Navigator>
       </>
     );
