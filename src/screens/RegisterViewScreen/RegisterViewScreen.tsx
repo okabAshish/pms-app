@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import PhoneInput from 'react-native-phone-number-input';
+import DropDown from '../../components/DropDown/DropDown';
 import TextInput from './TextInput';
 
 type Props = {};
@@ -124,60 +125,114 @@ const RegisterViewScreen = (props: Props) => {
               textContainerStyle={{backgroundColor: '#fff'}}
             />
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 20,
-              marginBottom: 20,
-              flex: 1,
-            }}>
-            <TextInput
-              label="Title"
-              placehoder="Mr."
-              containerStyles={{
-                flex: 1,
-                marginRight: 20,
-                borderBottomWidth: 1,
-                borderBottomColor: '#000',
-              }}
-            />
-            <TextInput
-              label="Occupation"
-              placehoder=""
-              containerStyles={{
-                flex: 1,
-                borderBottomWidth: 1,
-                borderBottomColor: '#000',
-              }}
-            />
-          </View>
-          <TextInput
-            label="First Name"
-            placehoder="Enter the First Name"
-            containerStyles={{
-              borderBottomWidth: 1,
-              borderBottomColor: '#000',
-              marginBottom: 20,
-            }}
-          />
-          <TextInput
-            label="Middle Name ( Optional )"
-            placehoder="Enter the Middle Name"
-            containerStyles={{
-              borderBottomWidth: 1,
-              borderBottomColor: '#000',
-              marginBottom: 20,
-            }}
-          />
-          <TextInput
-            label="Last Name"
-            placehoder="Enter the Last Name"
-            containerStyles={{
-              borderBottomWidth: 1,
-              borderBottomColor: '#000',
-              marginBottom: 20,
-            }}
-          />
+          {index === 2 ? (
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 20,
+                  marginBottom: 20,
+                  flex: 1,
+                }}>
+                <TextInput
+                  label="Title"
+                  placehoder="Mr."
+                  containerStyles={{
+                    flex: 1,
+                    marginRight: 20,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#000',
+                  }}
+                />
+                <TextInput
+                  label="Occupation"
+                  placehoder=""
+                  containerStyles={{
+                    flex: 1,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#000',
+                  }}
+                />
+              </View>
+              <TextInput
+                label="First Name"
+                placehoder="Enter the First Name"
+                containerStyles={{
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#000',
+                  marginBottom: 20,
+                }}
+              />
+              <TextInput
+                label="Middle Name ( Optional )"
+                placehoder="Enter the Middle Name"
+                containerStyles={{
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#000',
+                  marginBottom: 20,
+                }}
+              />
+              <TextInput
+                label="Last Name"
+                placehoder="Enter the Last Name"
+                containerStyles={{
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#000',
+                  marginBottom: 20,
+                }}
+              />
+            </View>
+          ) : (
+            <View style={{marginTop: 20}}>
+              <TextInput
+                label="Company Name"
+                placehoder="Enter the Company Name"
+                containerStyles={{
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#000',
+                  marginBottom: 20,
+                }}
+              />
+              <DropDown label="Company Type" />
+              <TextInput
+                label="Company TIN / EIN Number"
+                placehoder="Enter Company TIN / EIN Number"
+                containerStyles={{
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#000',
+                  marginBottom: 20,
+                }}
+              />
+              <TextInput
+                label="Company Website"
+                placehoder="Enter Company Website"
+                containerStyles={{
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#000',
+                  marginBottom: 20,
+                }}
+              />
+              <TextInput
+                label="Contact Person Name"
+                placehoder="Enter Contact Person Name"
+                containerStyles={{
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#000',
+                  marginBottom: 20,
+                }}
+              />
+              <TextInput
+                label="Position In Company"
+                placehoder="Enter Position In Company"
+                containerStyles={{
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#000',
+                  marginBottom: 20,
+                }}
+              />
+            </View>
+          )}
+
           <TextInput
             label="Password"
             placehoder="Enter the Password"
