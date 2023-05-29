@@ -3,6 +3,7 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {BASE_URL} from '../../../config';
 import {
   AddPropertyResponseData,
+  EditPropertyInputData,
   FurnishingListResponseData,
   FurnishingTypeResponseData,
   InviteTenantBody,
@@ -167,6 +168,19 @@ export const ownerApi = createApi({
         },
       }),
     }),
+    editPropertyDetails: builder.mutation<
+      AddPropertyResponseData,
+      EditPropertyInputData
+    >({
+      query: req => ({
+        url: `owner/update-property/${req.params}?_method=PUT`,
+        method: 'POST',
+        body: req.body,
+        headers: {
+          'Content-Type': 'multipart/form-data;',
+        },
+      }),
+    }),
   }),
 });
 
@@ -190,4 +204,6 @@ export const {
 
   useTenantInvitationDropdownMutation,
   useSendTenantInvitationMutation,
+
+  useEditPropertyDetailsMutation,
 } = ownerApi;

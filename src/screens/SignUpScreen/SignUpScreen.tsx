@@ -249,6 +249,11 @@ const SignUpScreen = (props: Props) => {
                       width: '100%',
                       justifyContent: 'center',
                       borderRadius: 6,
+                    }}
+                    onPress={() => {
+                      navigation.dispatch(
+                        CommonActions.navigate({name: 'Register'}),
+                      );
                     }}>
                     <Text
                       style={{

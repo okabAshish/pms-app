@@ -14,6 +14,7 @@ type Props = {
   created_by: number;
   user_details: any;
   term: string;
+  term_title: boolean;
   setShowInputForNewTerm: (e: boolean) => void;
   setNewTerm: (e: string) => void;
   setShowSubTermsData: (e: boolean) => void;
@@ -29,7 +30,7 @@ const AddContractSubTermsCard = (props: Props) => {
   const [checked, setChecked] = useState(false);
 
   const checkContract = () => {
-    if (contract?.title_term_data.length > 0) {
+    if (contract?.title_term_data?.length > 0) {
       let t = JSON.parse(contract?.title_term_data);
 
       const index = t.findIndex(obj => obj.title_id === props.title_id);
@@ -52,6 +53,10 @@ const AddContractSubTermsCard = (props: Props) => {
   useEffect(() => {
     checkContract();
   }, []);
+
+  useEffect(() => {
+    setChecked(props.term_title);
+  }, [props.term_title]);
 
   return (
     <View key={props.id} style={{flexDirection: 'row'}}>

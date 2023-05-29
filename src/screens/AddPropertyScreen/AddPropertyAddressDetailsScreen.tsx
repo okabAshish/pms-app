@@ -178,7 +178,11 @@ const AddPropertyAddressDetailsScreen = (props: Props) => {
       if (props.route.params.type === 'Add') {
         navigation.navigate('AddProperty-7', {type: 'Add'});
       } else {
-        navigation.navigate('AddProperty-7', {type: 'Edit'});
+        navigation.navigate('AddProperty-7', {
+          type: 'Edit',
+
+          id: props?.route?.params?.id,
+        });
       }
     } catch (err) {
       console.log(err);

@@ -22,7 +22,6 @@ import {setAddPropertyThree} from '../../features/owner/ownerSlice';
 import {
   AddPropertyInputData,
   FurnishingListData,
-  FurnishingTypeList,
 } from '../../features/ownerTypes';
 import {RootState} from '../../store';
 
@@ -65,6 +64,8 @@ const AddPropertyFurnishingScreen = (props: Props) => {
     property_furnishing_detail: [],
   });
 
+  console.log(furnishedDetails);
+
   // console.log(owner.property_furnishing_detail);
   const [getFurnishingType] = useGetFurnishingTypeMutation();
   const [getFurnishingList] = useGetFurnishingListMutation();
@@ -80,12 +81,13 @@ const AddPropertyFurnishingScreen = (props: Props) => {
           //console.log(res,"FURNISHING TYPE RES");
 
           if (res.success) {
-            const furnishingTypeList: FurnishingTypeList = res?.data;
-            const furnishingData: any = [];
-            for (let i = 0; i < furnishingTypeList.length; i++) {
-              furnishingData[i] = furnishingTypeList[i].name;
-            }
-            setFurnishedType(furnishingData);
+            // const furnishingTypeList: FurnishingTypeList = res?.data;
+            // const furnishingData: any = [];
+            // for (let i = 0; i < furnishingTypeList.length; i++) {
+
+            //   furnishingData[i] = furnishingTypeList[i].name;
+            // }
+            setFurnishedType(res.data);
             furnishingListFunction();
           }
         });
@@ -103,7 +105,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   const handleFurnishingData = () => {
     let a: Array<T> = owner.property_furnishing_detail;
 
-    console.log(a);
+    console.log(a, 'Arrat');
     let b = [];
     a.forEach(v => {
       // b.push({
@@ -115,10 +117,12 @@ const AddPropertyFurnishingScreen = (props: Props) => {
       b.push(v.furnishing_name.id);
     });
 
+    console.log(b, owner.property_furnishing_detail, 'asidnaskjdas');
+
     setFurnisingValue(b);
     setFurnishedDetails({
       ...furnishedDetails,
-      property_furnishing_detail: String(b),
+      property_furnishing_detail: JSON.stringify(b),
     });
   };
 
@@ -144,6 +148,8 @@ const AddPropertyFurnishingScreen = (props: Props) => {
             }
             setFurnishedList(furnishingCheckboxData);
 
+            console.log(owner, 'asdasd');
+
             if (owner.property_furnishing_detail.length > 0) {
               handleFurnishingData();
             }
@@ -162,11 +168,15 @@ const AddPropertyFurnishingScreen = (props: Props) => {
     setLoading(false);
   };
 
-  console.log(furnisingValue);
+  console.log(typeValue, 'Type Value');
 
   const selectedFurnishType = v => {
-    setTypeValue(v);
-    setFurnishedDetails({...furnishedDetails, furnishing_type_id: String(v)});
+    console.log(v);
+    setTypeValue(v.id);
+    setFurnishedDetails({
+      ...furnishedDetails,
+      furnishing_type_id: String(v.id),
+    });
   };
 
   const page3 = () => {
@@ -185,6 +195,8 @@ const AddPropertyFurnishingScreen = (props: Props) => {
   if (loading) {
     return <LoadingModal />;
   }
+
+  console.log(owner.property_furnishing_detail);
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -237,7 +249,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
           value={Number(typeValue)}
         />
 
-        {(typeValue == 1 || typeValue == 2) && (
+        {(typeValue == 2 || typeValue == 3) && (
           <>
             <Text
               style={{
@@ -256,7 +268,7 @@ const AddPropertyFurnishingScreen = (props: Props) => {
                 setFurnisingValue(v);
                 setFurnishedDetails({
                   ...furnishedDetails,
-                  property_furnishing_detail: v,
+                  property_furnishing_detail: JSON.stringify(v),
                 });
               }}
             />
@@ -313,7 +325,10 @@ const AddPropertyFurnishingScreen = (props: Props) => {
                   if (props.route.params.type === 'Add') {
                     navigation.navigate('AddProperty-4', {type: 'Add'});
                   } else {
-                    navigation.navigate('AddProperty-4', {type: 'Edit'});
+                    navigation.navigate('AddProperty-4', {
+                      type: 'Edit',
+                      id: props?.route?.params?.id,
+                    });
                   }
                 }
               }}>

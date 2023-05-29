@@ -20,7 +20,10 @@ import Input from '../../components/Input/Input';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import UploadImage, {Asset} from '../../components/UploadImage/UploadImage';
 import {useGetImageCategoryListMutation} from '../../features/auth/auth';
-import {useAddPropertyMutation} from '../../features/auth/owner';
+import {
+  useAddPropertyMutation,
+  useEditPropertyDetailsMutation,
+} from '../../features/auth/owner';
 import {
   AddPropertyInputData,
   AddPropertyResponseData,
@@ -66,6 +69,7 @@ const AddPropertyImages = (props: Props) => {
 
   const [getImageCategoryList] = useGetImageCategoryListMutation();
   const [addproperty] = useAddPropertyMutation();
+  const [editProperty] = useEditPropertyDetailsMutation();
 
   const remove = v => {
     let a = imageDatas;
@@ -183,6 +187,47 @@ const AddPropertyImages = (props: Props) => {
     setLoading(true);
     try {
       console.log(property);
+
+      const fd = new FormData();
+
+      let p = {};
+
+      for (const key in property) {
+        if (key !== 'property_images') {
+          p[key] = property[key];
+        }
+      }
+
+      for (const i in p) {
+        fd.append(i, p[i]);
+      }
+
+      if (imageDatas.length > 0) {
+        fd.append('image_count', imageDatas.length);
+
+        for (let i = 0; i < imageDatas.length; i++) {
+          fd.append(`property_image_file_${i + 1}`, {
+            name: imageDatas[i].imageUrl.fileName,
+            type: imageDatas[i].imageUrl.type,
+            uri: imageDatas[i].imageUrl.uri,
+          });
+          fd.append(`image_category_id_${i + 1}`, imageDatas[i].imageType);
+          fd.append(`image_caption_${i + 1}`, imageDatas[i].imageCaption);
+        }
+      } else {
+        fd.append('image_count', 0);
+      }
+
+      console.log(fd, props?.route?.params?.id);
+
+      await editProperty({body: fd, params: props?.route?.params?.id})
+        .unwrap()
+        .then((res: AddPropertyResponseData) => {
+          if (res?.success) {
+            console.log(res);
+            navigation.dispatch(CommonActions.navigate({name: 'Property'}));
+          }
+        });
     } catch (err) {
       console.warn(err.data);
     }

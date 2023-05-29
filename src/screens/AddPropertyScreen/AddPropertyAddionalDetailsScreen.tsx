@@ -58,7 +58,7 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
 
               setParking({
                 no_of_parking: Number(property.no_of_parking),
-                parkingType: String(property.parking_type),
+                parking_type: String(property.parking_type),
               });
             }
 
@@ -74,14 +74,34 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
     }
   };
 
+  console.log(parking, property, '<><><>');
+
   useEffect(() => {
     getParking();
   }, []);
 
   console.log(
-    parkingTypes.find(val => val.label === property.parking_type),
+    parkingTypes.find(val => String(val.value) === property.parking_type),
     '???????',
   );
+
+  const returnParkingVal = () => {
+    let a = parkingAvaliablity === 1 ? 1 : 2;
+    return a;
+  };
+
+  const returnBalconyVal = () => {
+    let a = balconyAvaliablity === 1 ? 1 : 2;
+    return a;
+  };
+
+  useEffect(() => {
+    returnParkingVal();
+  }, [parkingAvaliablity]);
+
+  useEffect(() => {
+    returnBalconyVal();
+  }, [balconyAvaliablity]);
 
   return (
     <SafeAreaView style={{backgroundColor: '#45485F', flex: 1}}>
@@ -131,17 +151,20 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
             Is Balcony Available:
           </Text>
           <RadioButton
-            labels={['Yes', 'No']}
+            labels={[
+              {id: 1, name: 'Yes'},
+              {id: 2, name: 'No'},
+            ]}
             containerStyles={{marginTop: 8, flexDirection: 'row'}}
             buttonContainerStyle={{marginHorizontal: 5}}
             onChange={v => {
-              if (v === 0) {
+              if (v.id === 1) {
                 setBalconyAvaliablity(1);
               } else {
                 setBalconyAvaliablity(0);
               }
             }}
-            value={balconyAvaliablity === 1 ? 0 : 1}
+            value={returnBalconyVal()}
           />
         </View>
         <View style={{marginVertical: 10}}>
@@ -150,17 +173,20 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
             Is Parking Available:
           </Text>
           <RadioButton
-            labels={['Yes', 'No']}
+            labels={[
+              {id: 1, name: 'Yes'},
+              {id: 2, name: 'No'},
+            ]}
             containerStyles={{marginTop: 8, flexDirection: 'row'}}
             buttonContainerStyle={{marginHorizontal: 5}}
             onChange={v => {
-              if (v === 0) {
+              if (v.id === 2) {
                 setParkingAvaliablity(1);
               } else {
                 setParkingAvaliablity(0);
               }
             }}
-            value={parkingAvaliablity === 1 ? 0 : 1}
+            value={returnParkingVal()}
           />
         </View>
 
@@ -188,7 +214,7 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
                 });
               }}
               value={parkingTypes.find(
-                val => val.label === property.parking_type,
+                val => String(val.value) === property.parking_type,
               )}
             />
           </View>
@@ -250,7 +276,10 @@ const AddPropertyAddionalDetailsScreen = (props: Props) => {
                 if (props.route.params.type === 'Add') {
                   navigation.navigate('AddProperty-6', {type: 'Add'});
                 } else {
-                  navigation.navigate('AddProperty-6', {type: 'Edit'});
+                  navigation.navigate('AddProperty-6', {
+                    type: 'Edit',
+                    id: props?.route?.params?.id,
+                  });
                 }
               }}>
               <Text

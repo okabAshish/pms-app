@@ -1,5 +1,4 @@
 import {faEye} from '@fortawesome/free-regular-svg-icons';
-import {faListDots} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
@@ -173,11 +172,10 @@ const MaintaenanceRequestCard = (props: Props) => {
                       issue_details: props.issue_details,
                     },
                   })
-                }
-                >
+                }>
                 <FontAwesomeIcon icon={faEye} color="#45485F" />
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={{
                   backgroundColor: 'rgba(69, 72, 95, 0.24)',
                   padding: 8,
@@ -186,7 +184,7 @@ const MaintaenanceRequestCard = (props: Props) => {
                 }}
                 onPress={() => showConfirmDialog()}>
                 <FontAwesomeIcon icon={faListDots} color="#45485F" />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </View>

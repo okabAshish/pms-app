@@ -2,7 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {Text, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
 
 type Props = {
-  labels: Array<string>;
+  labels: Array<{
+    name: string;
+    id: number;
+  }>;
   containerStyles?: ViewStyle;
   buttonContainerStyle?: ViewStyle;
   onChange: (v: number) => void;
@@ -37,49 +40,65 @@ const defaultProps: Props = {
 };
 
 const RadioButton = (props: Props) => {
-  const [checked, setChecked] = useState(props.labels[props.value]);
+  const [checked, setChecked] = useState(
+    props.labels.find(val => val.id == props.value),
+  );
 
   useEffect(() => {
-    setChecked(props.labels[props.value]);
+    setChecked(props.labels.find(val => val.id == props.value));
   }, [props.value]);
 
   return (
     <View style={{...props.containerStyles}}>
-      {props.labels.map((item, index) => (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginVertical: 4,
-            ...props.buttonContainerStyle,
-          }}>
-          <TouchableOpacity
-            style={{
-              height: props.buttonSize,
-              width: props.buttonSize,
-              backgroundColor: checked === item ? '#0EB9F2' : '#f5f5f5',
-              borderColor: props.borderColor,
-              ...props.checkBoxStyles,
-            }}
-            onPress={() => {
-              if (checked === item) {
-                setChecked('');
-                props.onChange('');
-              } else {
-                setChecked(item);
-                props.onChange(index);
-              }
-            }}>
-            {/* {checked === item && <FontAwesomeIcon icon={faCheck} />} */}
-          </TouchableOpacity>
-          <Text
-            style={{
-              ...props.textStyle,
-            }}>
-            {item}
-          </Text>
-        </View>
-      ))}
+      {props.labels.map((item, index) => {
+        console.log(checked, item, checked === item);
+        return (
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                if (checked === item) {
+                  setChecked('');
+                  props.onChange('');
+                } else {
+                  setChecked(item);
+                  props.onChange(index);
+                }
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: 4,
+                ...props.buttonContainerStyle,
+              }}>
+              <TouchableOpacity
+                style={{
+                  height: props.buttonSize,
+                  width: props.buttonSize,
+                  backgroundColor: checked === item ? '#0EB9F2' : '#f5f5f5',
+                  borderColor: props.borderColor,
+                  ...props.checkBoxStyles,
+                }}
+                onPress={() => {
+                  if (checked === item) {
+                    setChecked('');
+                    props.onChange('');
+                  } else {
+                    setChecked(item);
+                    props.onChange(item);
+                  }
+                }}>
+                {/* {checked === item && <FontAwesomeIcon icon={faCheck} />} */}
+              </TouchableOpacity>
+              <Text
+                style={{
+                  ...props.textStyle,
+                }}>
+                {item?.name}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
+      })}
     </View>
   );
 };
