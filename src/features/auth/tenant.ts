@@ -10,6 +10,8 @@ import {
   RentedPropertyListResponseData,
   TenantContactListResponseData,
   TenantContactListParam,
+  AcceptInvitationParam,
+  AcceptInvitationResponse
 } from '../tenantTypes';
 
 // Define a service using a base URL and expected endpoints
@@ -74,6 +76,18 @@ export const tenantApi = createApi({
         },
       }),
     }),
+    acceptInvitation: builder.mutation<
+    [AcceptInvitationResponse],
+    AcceptInvitationParam
+    >({
+      query: req => ({
+        url: `tenant/accept-invitation/${req.id}`,
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -84,4 +98,5 @@ export const {
   useGetTenantContactListMutation,
   useGetRentedPropertyMutation,
   useGetMaintenanceRequestMutation,
+  useAcceptInvitationMutation
 } = tenantApi;

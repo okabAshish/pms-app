@@ -1,3 +1,5 @@
+import { AnimatedTransform } from "react-native-reanimated";
+
 export interface PropertyInvitationListParam {
     limit: number;
     page: number;
@@ -16,6 +18,10 @@ export interface RentedPropertyListParam {
 export interface TenantContactListParam {
     limit: number;
     page: number;
+}
+
+export interface AcceptInvitationParam {
+    id: number;
 }
 
 export interface PropertyInvitationListResponseData {
@@ -649,3 +655,9 @@ export interface TenantContact {
         updated_at?: string;
     }
 }
+
+export interface AcceptInvitationResponse {
+    success: boolean;
+    data?: any;
+    message: string;
+  }

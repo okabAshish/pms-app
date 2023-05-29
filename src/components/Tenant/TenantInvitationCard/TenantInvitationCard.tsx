@@ -1,9 +1,13 @@
-import {faEllipsisVertical} from '@fortawesome/free-solid-svg-icons';
+import {faEye, faThumbsUp} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import { DrawerNavigationConfig } from '@react-navigation/drawer/lib/typescript/src/types';
 import { Button, Menu, Divider, PaperProvider } from 'react-native-paper';
+import {useAcceptInvitationMutation} from '../../../features/auth/tenant';
+import {AcceptInvitationResponse} from '../../../features/tenantTypes';
+import {CommonActions, useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 
 interface Props {
     invitation_id: number;
@@ -28,13 +32,37 @@ const defaultProps: Props = {
 }
 
 const TenantInvitationCard = (props: Props) => {
-    const [visible, setVisible] = useState(false);
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
 
+    const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const [acceptInvitation] = useAcceptInvitationMutation();
     const openMenu = () => {
         console.log('open');
         
         setVisible(true);
     }
+    const acceptTenantInvitation = async () => {
+        console.log(props.invitation_id);
+        try {
+            setLoading(true);
+            await acceptInvitation({id: props.invitation_id})
+                .unwrap()
+                .then(res => {
+                console.log(res);
+                if (res.success) {
+                    navigation.dispatch(
+                    CommonActions.navigate({name: 'Property-Invitation'}),
+                    );
+                } 
+                });
+            } catch (err) {
+            console.log(err);
+            }
+            setLoading(false);
+        };
 
     const closeMenu = () => setVisible(false);
     return (
@@ -238,12 +266,12 @@ const TenantInvitationCard = (props: Props) => {
                                     paddingHorizontal: 5,
                                     backgroundColor: props.status ? '#d5eee7' : '#f8b0b0',
                                 }}>
-                                {props.status ? 'Approved' : 'Cancelled'}
+                                {props.status ? 'Approved' : 'Pending'}
                             </Text>
                             </View>
                         </View>
                         
-                            <View
+                            {/* <View
                                 style={{
                                     flexDirection: 'row',
                                     justifyContent: 'center',
@@ -254,27 +282,26 @@ const TenantInvitationCard = (props: Props) => {
                                     anchor={<TouchableOpacity onPress={() =>openMenu()}>
                                         <FontAwesomeIcon icon={faEllipsisVertical} color="#00ABE4" />
                                             </TouchableOpacity>}>
-                                    <Menu.Item onPress={() => {}} title="Approve" />
-                                    <Menu.Item onPress={() => {}} title="Cancel" />
+                                    <Menu.Item onPress={() => {acceptTenantInvitation()}} title="Approve" />
                                 </Menu>
-                            </View>
+                            </View> */}
                         
-                        {/* <View style={{flex: 1}}>
+                        <View style={{flex: 1}}>
                             <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                            <TouchableOpacity
-                                style={{
-                                backgroundColor: 'rgba(69, 72, 95, 0.4)',
-                                padding: 4,
-                                borderRadius: 3,
-                                }}>
-                                <FontAwesomeIcon
-                                icon={faEye}
-                                color="rgba(0, 0, 0, 0.5)"
-                                size={12}
-                                />
-                            </TouchableOpacity>
+                                <TouchableOpacity onPress={ () => acceptTenantInvitation()}
+                                    style={{
+                                    backgroundColor: 'rgba(69, 72, 95, 0.4)',
+                                    padding: 4,
+                                    borderRadius: 3,
+                                    }}>
+                                    <FontAwesomeIcon
+                                    icon={faThumbsUp}
+                                    color="#54d2ab"
+                                    size={12}
+                                    />
+                                </TouchableOpacity>
                             </View>
-                        </View> */}
+                        </View>
                     </View>
                     </View>
                 </View>
