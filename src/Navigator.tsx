@@ -39,6 +39,8 @@ import OwnerContractsScreen from './screens/OwnerContractsScreen/OwnerContractsS
 import OwnerTenantScreen from './screens/OwnerTenantScreen/OwnerTenantScreen';
 import PropertyScreen from './screens/PropertyScreen/PropertyScreen';
 import PropertyViewScreen from './screens/PropertyViewScreen/PropertyViewScreen';
+import RegisterAddressViewScreen from './screens/RegisterViewScreen/RegisterAddressViewScreen';
+import RegisterViewScreen from './screens/RegisterViewScreen/RegisterViewScreen';
 import RentedPropertyScreen from './screens/RentedPropertyScreen/RentedPropertyScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import SliderComponent from './screens/SliderComponent/SliderComponent';
@@ -371,6 +373,14 @@ const Navigator = (props: Props) => {
           <Stack.Screen
             name="SignUp"
             component={isLoggedIn ? DashboardScreen : SignUpScreen}
+          />
+          <Stack.Screen
+            name="Register"
+            component={isLoggedIn ? DashboardScreen : RegisterViewScreen}
+          />
+          <Stack.Screen
+            name="Register-Address"
+            component={isLoggedIn ? DashboardScreen : RegisterAddressViewScreen}
           />
         </>
       </Stack.Navigator>

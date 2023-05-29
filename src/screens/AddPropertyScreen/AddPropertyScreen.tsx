@@ -143,7 +143,7 @@ const AddPropertyScreen = (props: Props) => {
                 balcony_terrace: res.data.balcony_terrace,
                 parking_available: res.data.parking_available,
                 no_of_parking: res.data.no_of_parking,
-                parking_type: res.data.parking_type_name,
+                parking_type: String(res.data.parking_type_id),
                 country_id: res.data.country_id,
                 state_id: res.data.state_id,
                 city_id: res.data.city_id,
@@ -204,10 +204,13 @@ const AddPropertyScreen = (props: Props) => {
       );
 
       if (props.route.params.type === 'Add') {
-        navigation.navigate('AddProperty-2', {type: 'Add'});
+        navigation.navigate('AddProperty-2', {
+          type: 'Add',
+        });
       } else {
         navigation.navigate('AddProperty-2', {
           type: 'Edit',
+          id: props?.route?.params?.id,
         });
       }
     } catch (err) {

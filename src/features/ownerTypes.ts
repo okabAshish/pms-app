@@ -174,6 +174,11 @@ export interface AddPropertyInputData {
   property_images: OwnerPropertyDetailsData_PropertyImages;
 }
 
+export interface EditPropertyInputData {
+  params: string;
+  body: AddPropertyInputData;
+}
+
 export interface AddPropertyResponseData {}
 
 export interface ParkingTypeListData {

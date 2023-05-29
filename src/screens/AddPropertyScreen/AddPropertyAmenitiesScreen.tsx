@@ -9,15 +9,21 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import CheckBox from '../../components/CheckBox/CheckBox';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {useGetOwnerPropertyAmenitiesListMutation} from '../../features/auth/owner';
 import {setAddPropertyFour} from '../../features/owner/ownerSlice';
+import {AddPropertyInputData} from '../../features/ownerTypes';
+import {RootState} from '../../store';
 
 type Props = {};
 
 const AddPropertyAmenitiesScreen = (props: Props) => {
+  const property: AddPropertyInputData = useSelector<RootState>(
+    state => state.owner,
+  );
+
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -46,12 +52,37 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
               });
             }
             setAmenitiesList(a);
+            handleFurnishingData();
           }
         });
     } catch (err) {
       console.log(err);
     }
     setLoading(false);
+  };
+
+  const handleFurnishingData = () => {
+    let a: Array<T> = property.property_amenities;
+
+    console.log(a, 'Arrat');
+    let b = [];
+    a.forEach(v => {
+      // b.push({
+      //   slug: v.furnishing_name.furnish_name,
+      //   title: v.furnishing_name.furnish_name,
+      //   icon: v.furnishing_name.icon,
+      //   id: v.furnishing_name.id,
+      // });
+      b.push(v.amenity_name.id);
+    });
+
+    // console.log(b, owner.property_furnishing_detail, 'asidnaskjdas');
+
+    setFurnishedDetails(b);
+    // setFurnishedDetails({
+    //   ...furnishedDetails,
+    //   property_furnishing_detail: JSON.stringify(b),
+    // });
   };
 
   useEffect(() => {
@@ -168,7 +199,10 @@ const AddPropertyAmenitiesScreen = (props: Props) => {
                 if (props.route.params.type === 'Add') {
                   navigation.navigate('AddProperty-5', {type: 'Add'});
                 } else {
-                  navigation.navigate('AddProperty-5', {type: 'Edit'});
+                  navigation.navigate('AddProperty-5', {
+                    type: 'Edit',
+                    id: props?.route?.params?.id,
+                  });
                 }
               }}>
               <Text

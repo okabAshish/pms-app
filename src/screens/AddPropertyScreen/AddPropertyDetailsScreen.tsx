@@ -63,7 +63,10 @@ const AddPropertyDetailsScreen = (props: Props) => {
       if (props.route.params.type === 'Add') {
         navigation.navigate('AddProperty-3', {type: 'Add'});
       } else {
-        navigation.navigate('AddProperty-3', {type: 'Edit'});
+        navigation.navigate('AddProperty-3', {
+          type: 'Edit',
+          id: props?.route?.params?.id,
+        });
       }
     } catch (error) {
       console.log(error);

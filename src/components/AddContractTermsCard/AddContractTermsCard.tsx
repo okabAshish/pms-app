@@ -356,6 +356,7 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
                   setShowSubTermsData={e => setShowSubTermsData(e)}
                   confirmDeleteSubMenu={e => confirmDeleteSubMenu(e)}
                   handleSubTermCheck={(a, b) => handleSubTermCheck(a, b)}
+                  term_title={Term}
                 />
               );
             })}
