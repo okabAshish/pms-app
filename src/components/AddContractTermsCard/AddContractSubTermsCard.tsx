@@ -61,7 +61,7 @@ const AddContractSubTermsCard = (props: Props) => {
   return (
     <View key={props.id} style={{flexDirection: 'row'}}>
       <RadioButton
-        labels={[props?.term]}
+        labels={[{id: props.id, name: props?.term}]}
         buttonSize={14}
         textStyle={{
           flexWrap: 'wrap',
@@ -74,9 +74,10 @@ const AddContractSubTermsCard = (props: Props) => {
         }}
         containerStyles={{flex: 1}}
         onChange={e => {
+          setChecked(!checked);
           props.handleSubTermCheck(props.id, props.title_id);
         }}
-        value={checked ? 0 : null}
+        value={checked ? props.id : ''}
       />
       {props.type === 1 && props?.created_by === props.user_details.user_id && (
         <View style={{flexDirection: 'row', alignItems: 'center'}}>

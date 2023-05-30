@@ -53,6 +53,7 @@ import PropertyInvitation from './screens/Tenant/TenantPropertyInvitation/Tenant
 import TenantBillScreen from './screens/TenantBillScreen/TenantBillScreen';
 import TenantContractScreen from './screens/TenantContractScreen/TenantContractScreen';
 import TenantMaintenanceRequestScreen from './screens/TenantMaintenanceRequestScreen/TenantMaintenanceRequestScreen';
+import UserProfileScreen from './screens/UserProfileScreen/UserProfileScreen';
 
 type Props = {};
 
@@ -291,6 +292,7 @@ const Navigator = (props: Props) => {
             component={MainternanceRequestViewScreen}
           />
           <Stack.Screen name="Notification" component={NotificationScreen} />
+          <Stack.Screen name="OwnerProfile" component={UserProfileScreen} />
         </Stack.Navigator>
       </>
     );
