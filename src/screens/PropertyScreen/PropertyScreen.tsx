@@ -13,6 +13,7 @@ const PropertyScreen = (props: Props) => {
   const navigation = useNavigation();
 
   const [propertyList, setPropertyList] = useState<OwnerPropertyListData>([]);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(2);
   const [
     onEndReachedCalledDuringMomentum,
@@ -32,6 +33,7 @@ const PropertyScreen = (props: Props) => {
         .then(res => {
           if (res.success) {
             setPropertyList(res?.data?.data);
+            setTotal(res.data?.meta.total);
             // setPage(page + 1);
           }
         });
@@ -87,17 +89,19 @@ const PropertyScreen = (props: Props) => {
     );
   };
 
+  // console.log(propertyList.length !== total);
+
   return (
     <View style={{backgroundColor: '#fff', flex: 1}}>
       <View style={{paddingHorizontal: 20, paddingVertical: 0}}>
         <FlatList
           data={propertyList}
           keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={renderFooter}
+          ListFooterComponent={propertyList.length !== total && renderFooter}
           showsVerticalScrollIndicator={false}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.9}
           onEndReached={() => {
-            reGetProperties();
+            propertyList.length !== total && reGetProperties();
           }}
           renderItem={({item, index}) => (
             <PropertyCard

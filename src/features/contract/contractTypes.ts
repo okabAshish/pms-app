@@ -135,6 +135,12 @@ export interface ContractTenantListResponseData {
   message: string;
 }
 
+// Update Contract
+export interface UpdateContractBodyData {
+  params: string;
+  body: AddContractBodyData;
+}
+
 // Add Contract Types
 export interface AddContractBodyData {
   property_id: number;

@@ -29,6 +29,8 @@ interface Props {
   handleTerm: (v: string) => void;
   terms: any;
   item: any;
+  checked: boolean;
+  subTermChecked?: any;
 }
 
 let demoTerms = [
@@ -248,6 +250,10 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
     setnewTerms(props.terms);
   }, [showSubTermsData]);
 
+  useEffect(() => {
+    setTerm(props.checked);
+  }, [props.checked]);
+
   if (loading) {
     return <LoadingModal />;
   }
@@ -357,6 +363,7 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
                   setShowSubTermsData={e => setShowSubTermsData(e)}
                   confirmDeleteSubMenu={e => confirmDeleteSubMenu(e)}
                   handleSubTermCheck={(a, b) => handleSubTermCheck(a, b)}
+                  checked={props.subTermChecked?.find(val => val === item)}
                   term_title={Term}
                 />
               );

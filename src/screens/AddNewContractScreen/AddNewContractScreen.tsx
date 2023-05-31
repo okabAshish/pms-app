@@ -18,11 +18,18 @@ import {
   useGetOwnerPropertyDetailsMutation,
   useGetOwnerPropertyListMutation,
 } from '../../features/auth/owner';
-import {setPropertyId as setP} from '../../features/contract/contractSlice';
+import {useGetContractDetailsMutation} from '../../features/contract/contract';
+import {
+  setAllContractData,
+  setPropertyId as setP,
+} from '../../features/contract/contractSlice';
+import {ContractDetails} from '../../features/contract/contractTypes';
 import {OwnerPropertyDetailsData} from '../../features/ownerTypes';
 import {RootState} from '../../store';
 
-type Props = {};
+type Props = {
+  route: any;
+};
 
 const AddNewContractScreen = (props: Props) => {
   const navigation = useNavigation();
@@ -38,7 +45,12 @@ const AddNewContractScreen = (props: Props) => {
   const [getOwnerPropertyList] = useGetOwnerPropertyListMutation();
   const [getOwnerPropertyDetails] = useGetOwnerPropertyDetailsMutation();
 
-  console.log(propertyDetails);
+  const [ContractScreenType, setContractScreenType] = useState(
+    props?.route?.params?.type,
+  );
+
+  console.log(ContractScreenType, 'TYPE');
+  console.log(contract, 'Contract - 1');
 
   const getProperties = async () => {
     setLoading(true);
@@ -58,6 +70,38 @@ const AddNewContractScreen = (props: Props) => {
             }
 
             setPropertyList(a);
+
+            if (ContractScreenType === 'Edit') {
+              console.log('EDIT');
+              getDetails();
+            } else {
+              dispatch(
+                setAllContractData({
+                  contract_period: null,
+                  grace_period: null,
+                  start_date: '',
+                  end_date: '',
+                  notice_period: '',
+                  security_deposit: '',
+                  monthly_rent: '',
+                  monthly_service_charge: '',
+                  other_charge: '',
+                  discount: '',
+                  total_rental_amount: '',
+                  total_contract_amount: '',
+                  fine_type: '',
+                  late_fee_amount: '',
+                  late_fee_grace_period: '',
+                  amount: '',
+                  property_id: '',
+                  tenant_id: '',
+                  contract_type_id: '',
+                  late_fee_applicable: '',
+                  payment_slab_data: '',
+                  title_term_data: '',
+                }),
+              );
+            }
             // setPage(page + 1);
           }
         });
@@ -83,9 +127,210 @@ const AddNewContractScreen = (props: Props) => {
     setLoading(false);
   };
 
+  const [details, setDetatils] = useState<ContractDetails>();
+
+  const [getContractDetails] = useGetContractDetailsMutation();
+
+  const getDetails = async () => {
+    setLoading(true);
+    try {
+      await getContractDetails({params: props?.route?.params?.id})
+        .unwrap()
+        .then(async res => {
+          console.log(res);
+          if (res.success) {
+            setPropertyId(res.data.property_id);
+            await getPropertyDetails(res.data.property_id);
+            setDetatils(res.data);
+
+            console.log('id:', JSON.stringify(res.data.contract_term_titles));
+
+            let arr = [];
+
+            for (let i = 0; i < res.data.contract_term_titles?.length; i++) {
+              let c = [];
+
+              for (
+                let j = 0;
+                j < res.data.contract_term_titles[i].contract_terms?.length;
+                j++
+              ) {
+                c.push(
+                  res.data.contract_term_titles[i].contract_terms[j].term_id,
+                );
+              }
+
+              arr.push({
+                title_id: res.data.contract_term_titles[i].title_id,
+                terms_data: c,
+              });
+            }
+
+            dispatch(
+              setAllContractData({
+                contract_period: res.data.contract_period,
+                grace_period: res.data.contract_start_grace_period,
+                start_date: res.data.start_date,
+                end_date: res.data.end_date,
+                notice_period: res.data.notice_period,
+                security_deposit: String(res.data.security_deposit),
+                monthly_rent: String(res.data.monthly_rent),
+                monthly_service_charge: String(res.data.monthly_service_charge),
+                other_charge: String(res.data.monthly_other_charge),
+                discount: String(res.data.discount),
+                total_rental_amount: String(
+                  res.data.total_monthly_amt *
+                    ((res.data.contract_period
+                      ? Number(res.data.contract_period)
+                      : 0) +
+                      (res.data.contract_start_grace_period
+                        ? Number(res.data.contract_start_grace_period)
+                        : 0)),
+                ),
+                total_contract_amount: String(
+                  res.data.total_monthly_amt *
+                    ((res.data.contract_period
+                      ? Number(res.data.contract_period)
+                      : 0) +
+                      (res.data.contract_start_grace_period
+                        ? Number(res.data.contract_start_grace_period)
+                        : 0)) +
+                    res.data.security_deposit,
+                ),
+                fine_type: String(res.data.late_fine_slab_type),
+                late_fee_amount: String(
+                  res.data.late_fee_amt ? res.data.late_fee_amt : '',
+                ),
+                late_fee_grace_period: res.data?.grace_period
+                  ? String(res.data?.grace_period)
+                  : '',
+                amount: '',
+                property_id: res.data.property_id,
+                tenant_id: res.data.tenant_id,
+                contract_type_id: res.data.contract_type_id,
+                late_fee_applicable: res.data.late_fee_applicable
+                  ? String(res.data.late_fee_applicable)
+                  : '',
+                payment_slab_data: JSON.stringify(
+                  res.data.contract_payment_date_amount_data,
+                ),
+                title_term_data: JSON.stringify(arr),
+              }),
+            );
+            let a = [];
+            let b = [];
+            let c = [];
+            let d = [];
+            for (
+              let i = 0;
+              i < res.data?.contract_payment_date_amount_data.length;
+              i++
+            ) {
+              a.push({
+                containerTitle: 'Payment Slabs ' + (i + 1),
+                value: [
+                  [
+                    {
+                      title: 'Date',
+                      data: '2023-04-12T12:42:16.000000Z',
+                      date: true,
+                      id: 1,
+                    },
+                    {
+                      title: 'Amount',
+                      data: '$2000',
+                      id: 2,
+                    },
+                  ],
+                  [
+                    {title: 'Fine Amount', data: '$10', id: 3},
+                    {title: 'Grace Period', data: '3', id: 4},
+                  ],
+                ],
+              });
+            }
+            // setPayment_slabs(a);
+
+            for (
+              let j = 0;
+              j <
+              res.data.contract_properties_data.contract_property_amenities
+                .length;
+              j++
+            ) {
+              b.push([
+                {
+                  title:
+                    res.data.contract_properties_data
+                      .contract_property_amenities[j].icon,
+                  data: res.data.contract_properties_data
+                    .contract_property_amenities[j].name,
+                  icon: true,
+                  id: 1,
+                },
+              ]);
+            }
+
+            // setAmenities({...amenities, value: b});
+
+            for (let l = 0; l < res.data.contract_term_titles.length; l++) {
+              for (
+                let m = 0;
+                m < res.data.contract_term_titles[l].contract_terms.length;
+                m++
+              ) {
+                d.push([
+                  {
+                    title: res.data.contract_term_titles[l].title_text,
+                    data: res.data.contract_term_titles[l].contract_terms[m]
+                      .term_text,
+                    border: true,
+                    id: l,
+                  },
+                ]);
+              }
+            }
+
+            // setTerms({...terms, value: d});
+
+            console.log(d, '<><><?');
+
+            if (
+              res.data.contract_properties_data.contract_property_furnishings
+                .length > 0
+            ) {
+              for (
+                let k = 0;
+                k <
+                res.data.contract_properties_data.contract_property_furnishings
+                  .length;
+                k++
+              ) {
+                c.push([
+                  {
+                    title:
+                      res.data.contract_properties_data
+                        .contract_property_furnishings[k].icon,
+                    data: res.data.contract_properties_data
+                      .contract_property_furnishings[k].name,
+                    icon: true,
+                    id: 1,
+                  },
+                ]);
+              }
+
+              // setFurnishing({...furnishing, value: k});
+            }
+          }
+        });
+    } catch (err) {
+      console.log(err, '<><>');
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     getProperties();
-    dispatch(setP({property_id: 0}));
   }, []);
 
   if (loading) {
@@ -199,8 +444,22 @@ const AddNewContractScreen = (props: Props) => {
               }}
               onPress={() => {
                 if (property_id !== 0) {
-                  dispatch(setP({property_id: property_id}));
-                  navigation.navigate('AddContract-2');
+                  dispatch(
+                    setP({
+                      property_id: property_id,
+                    }),
+                  );
+
+                  if (props?.route?.params?.type === 'Edit') {
+                    navigation.navigate('AddContract-2', {
+                      type: 'Edit',
+                      id: props?.route?.params?.id,
+                    });
+                  } else {
+                    navigation.navigate('AddContract-2', {
+                      type: 'Add',
+                    });
+                  }
                 }
               }}>
               <Text

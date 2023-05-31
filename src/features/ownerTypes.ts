@@ -244,6 +244,8 @@ export interface OwnerPropertyDetailsResponseData {
 }
 
 export interface OwnerPropertyDetailsDataFurnishingDetail {
+  icon: any;
+  name: any;
   id: number;
   property_id: number;
   furnishing_id: number;
@@ -255,6 +257,8 @@ export interface OwnerPropertyDetailsDataFurnishingDetails
   extends Array<OwnerPropertyDetailsDataFurnishingDetail> {}
 
 export interface OwnerPropertyDetailsData_PropertyAmenitie {
+  icon: any;
+  name: any;
   id: number;
   property_id: number;
   amenity_id: number;

@@ -17,6 +17,8 @@ const OwnerContractsScreen = (props: Props) => {
   const [contractList, setContractList] = useState<OwnerContractList>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+
   const [getOwnerContractList] = useGetOwnerContractListMutation();
 
   const getContract = async () => {
@@ -28,6 +30,7 @@ const OwnerContractsScreen = (props: Props) => {
           console.log(res);
 
           if (res.success) {
+            setTotal(res?.data?.meta?.total);
             setContractList(res?.data?.data);
           }
         });
@@ -86,11 +89,11 @@ const OwnerContractsScreen = (props: Props) => {
         <FlatList
           data={contractList}
           keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={renderFooter}
+          ListFooterComponent={total !== contractList.length && renderFooter}
           showsVerticalScrollIndicator={false}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.9}
           onEndReached={() => {
-            reGetContract();
+            total !== contractList.length && reGetContract();
           }}
           renderItem={({item, index}) => (
             <OwnerContractCard

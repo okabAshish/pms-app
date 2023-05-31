@@ -41,6 +41,8 @@ const DropDown = (props: Props) => {
   const [value, setValue] = useState(props.value);
   const [isFocus, setIsFocus] = useState(false);
 
+  console.log(value);
+
   useEffect(() => {
     setValue(props.value);
   }, [props.value]);

@@ -20,6 +20,7 @@ type Props = {
   setShowSubTermsData: (e: boolean) => void;
   setSubTermId: (e: string) => void;
   confirmDeleteSubMenu: (e: string) => void;
+  checked: any;
 };
 
 const AddContractSubTermsCard = (props: Props) => {
@@ -58,6 +59,8 @@ const AddContractSubTermsCard = (props: Props) => {
     setChecked(props.term_title);
   }, [props.term_title]);
 
+  console.log(props.checked);
+
   return (
     <View key={props.id} style={{flexDirection: 'row'}}>
       <RadioButton
@@ -77,7 +80,7 @@ const AddContractSubTermsCard = (props: Props) => {
           setChecked(!checked);
           props.handleSubTermCheck(props.id, props.title_id);
         }}
-        value={checked ? props.id : ''}
+        value={props.checked ? props.checked : checked ? props.id : ''}
       />
       {props.type === 1 && props?.created_by === props.user_details.user_id && (
         <View style={{flexDirection: 'row', alignItems: 'center'}}>

@@ -12,6 +12,8 @@ const InvitationScreen = (props: Props) => {
     [],
   );
   const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+
   const [loading, setLoading] = useState(false);
 
   const [
@@ -32,6 +34,7 @@ const InvitationScreen = (props: Props) => {
           console.log(res);
 
           if (res.success) {
+            setTotal(res.data.meta.total);
             setInvitationList(res?.data?.data);
           }
         });
@@ -93,11 +96,11 @@ const InvitationScreen = (props: Props) => {
         <FlatList
           data={invitationList}
           keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={renderFooter}
+          ListFooterComponent={total !== invitationList.length && renderFooter}
           showsVerticalScrollIndicator={false}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.9}
           onEndReached={() => {
-            reGetInvitation();
+            total !== invitationList.length && reGetInvitation();
           }}
           renderItem={({item, index}) => (
             <InvitationCard

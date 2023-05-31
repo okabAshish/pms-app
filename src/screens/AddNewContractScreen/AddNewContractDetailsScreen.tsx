@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   SafeAreaView,
   StatusBar,
   Text,
@@ -11,14 +12,22 @@ import {
   View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DatePicketInput from '../../components/DatePicketInput/DatePicketInput';
 import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {useGetContractTypeListMutation} from '../../features/contract/contract';
-import {setContractData} from '../../features/contract/contractSlice';
-import {AddContractBodyData} from '../../features/contract/contractTypes';
+import {
+  setAllContractData,
+  setContractData,
+  setUpdateChange,
+} from '../../features/contract/contractSlice';
+import {
+  AddContractBodyData,
+  ContractState,
+} from '../../features/contract/contractTypes';
+import {RootState} from '../../store';
 
 type Props = {};
 
@@ -26,26 +35,54 @@ const AddNewContractDetailsScreen = (props: Props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const owner: AddContractBodyData & ContractState = useSelector<RootState>(
+    state => state.contract,
+  );
+
+  console.log(owner, 'Contract -3');
+
   const [ContractTypeList, setContractTypeList] = useState([]);
   const [start_date, setStartDate] = useState(Date.now());
   const [contractPeriod, setContractPeriod] = useState(0);
   const [gracePeriod, setGracePeriod] = useState(0);
-  const [noticePeriod, setNoticePeriod] = useState(60);
+  const [noticePeriod, setNoticePeriod] = useState(
+    owner.notice_period ? owner.notice_period : '60',
+  );
+  const [ContractScreenType, setContractScreenType] = useState(
+    props?.route?.params?.type,
+  );
   const [switchModeType, setSwitchModeType] = useState('Percentage');
   const [contract, setContract] = useState<AddContractBodyData>({
-    contract_type_id: '',
-    contract_period: '',
-    grace_period: '',
-    start_date: Date.now(),
-    end_date: '',
-    norice_period: '',
-    security_deposit: '',
-    monthly_rent: '',
-    monthly_service_charge: '',
-    other_charge: '',
-    discount: '',
-    total_rental_amount: '',
-    total_contract_amount: '',
+    contract_type_id: owner.contract_type_id ? owner.contract_type_id : '',
+    contract_period: owner.contract_period ? owner.contract_period : '',
+    grace_period: owner.grace_period ? owner.grace_period : '',
+    start_date: owner.start_date ? owner.start_date : Date.now(),
+    end_date: owner.end_date ? owner.end_date : '',
+    notice_period: owner.notice_period ? owner.notice_period : '60',
+    security_deposit: owner.security_deposit ? owner.security_deposit : '',
+    monthly_rent: owner.monthly_rent ? owner.monthly_rent : '',
+    monthly_service_charge: owner.monthly_service_charge
+      ? owner.monthly_service_charge
+      : '',
+    other_charge: owner.other_charge ? owner.other_charge : '',
+    discount:
+      ContractScreenType === 'Edit'
+        ? owner.discount
+          ? owner.discount
+          : ''
+        : '',
+    total_rental_amount:
+      ContractScreenType === 'Edit'
+        ? owner.total_rental_amount
+          ? owner.total_rental_amount
+          : ''
+        : '',
+    total_contract_amount:
+      ContractScreenType === 'Edit'
+        ? owner.total_contract_amount
+          ? owner.total_contract_amount
+          : ''
+        : '',
   });
 
   const [last_date, setLastDate] = useState(Date.now());
@@ -64,6 +101,55 @@ const AddNewContractDetailsScreen = (props: Props) => {
     );
 
     setContract({...contract, end_date: end});
+  };
+
+  const showConfirmDialog = () => {
+    return Alert.alert('Deleting Slabs', 'Editing amounts will delete slabs', [
+      // The "Yes" button
+
+      // The "No" button
+      // Does nothing but dismiss the dialog when tapped
+      {
+        text: 'Okay',
+        onPress: () => {
+          dispatch(
+            setAllContractData({
+              contract_period: null,
+              grace_period: null,
+              start_date: '',
+              end_date: '',
+              notice_period: '',
+              security_deposit: '',
+              monthly_rent: '',
+              monthly_service_charge: '',
+              other_charge: '',
+              discount: '',
+              total_rental_amount: '',
+              total_contract_amount: '',
+              fine_type: '',
+              late_fee_amount: '',
+              late_fee_grace_period: '',
+              amount: '',
+              property_id: '',
+              tenant_id: '',
+              contract_type_id: '',
+              late_fee_applicable: '',
+              payment_slab_data: '',
+              title_term_data: '',
+            }),
+          );
+          dispatch(
+            setUpdateChange({
+              payment_slab_changed: true,
+            }),
+          );
+        },
+      },
+      {
+        text: 'Cancel',
+        onPress: () => {},
+      },
+    ]);
   };
 
   const getContractTypes = async () => {
@@ -123,8 +209,10 @@ const AddNewContractDetailsScreen = (props: Props) => {
     console.log(total_rent, contractamt);
   };
 
+  console.log(owner, 'COn');
+  console.log(contract, 'COn');
+
   const nextScreen = () => {
-    console.log(contract);
     dispatch(
       setContractData({
         contract_type_id: contract.contract_type_id,
@@ -144,7 +232,16 @@ const AddNewContractDetailsScreen = (props: Props) => {
         total_contract_amount: contract.total_contract_amount,
       }),
     );
-    navigation.navigate('AddContract-4');
+    if (ContractScreenType === 'Edit') {
+      navigation.navigate('AddContract-4', {
+        type: 'Edit',
+        id: props?.route?.params?.id,
+      });
+    } else {
+      navigation.navigate('AddContract-4', {
+        type: 'Add',
+      });
+    }
   };
 
   useEffect(() => {
@@ -222,14 +319,20 @@ const AddNewContractDetailsScreen = (props: Props) => {
               setContract({...contract, contract_type_id: Number(value)});
               //   setProperty({...property, type: value});
             }}
+            value={contract.contract_type_id}
           />
           <Input
             label="Contract period (In Months)"
             placehoder="Enter contract period"
             keyboardType="numeric"
             onChange={e => {
-              setContract({...contract, contract_period: e.nativeEvent.text});
+              if (contract.contract_period && ContractScreenType === 'Edit') {
+                showConfirmDialog();
+              } else {
+                setContract({...contract, contract_period: e.nativeEvent.text});
+              }
             }}
+            value={contract.contract_period}
           />
 
           <Input
@@ -237,8 +340,14 @@ const AddNewContractDetailsScreen = (props: Props) => {
             placehoder="0"
             keyboardType="numeric"
             onChange={e => {
-              setContract({...contract, grace_period: e.nativeEvent.text});
+              if (contract.grace_period && ContractScreenType === 'Edit') {
+                showConfirmDialog();
+              } else {
+                // setContract({...contract, contract_period: e.nativeEvent.text});
+                setContract({...contract, grace_period: e.nativeEvent.text});
+              }
             }}
+            value={contract.grace_period}
           />
           <DatePicketInput
             label="Start Date"
@@ -267,59 +376,103 @@ const AddNewContractDetailsScreen = (props: Props) => {
           <Input
             label="Security Deposit"
             onChange={e => {
-              setContract({...contract, security_deposit: e.nativeEvent.text});
+              if (contract.security_deposit && ContractScreenType === 'Edit') {
+                showConfirmDialog();
+              } else {
+                // setContract({...contract, contract_period: e.nativeEvent.text});
+                setContract({
+                  ...contract,
+                  security_deposit: e.nativeEvent.text,
+                });
+              }
             }}
             placehoder="Enter security deposit amount"
+            value={contract.security_deposit}
           />
           <Input
             label="Monthly rent"
             onChange={e => {
-              setContract({...contract, monthly_rent: e.nativeEvent.text});
+              if (contract.monthly_rent && ContractScreenType === 'Edit') {
+                showConfirmDialog();
+              } else {
+                // setContract({...contract, contract_period: e.nativeEvent.text});
+                setContract({...contract, monthly_rent: e.nativeEvent.text});
+              }
             }}
             placehoder="Enter monthly rent amount"
+            value={contract.monthly_rent}
           />
           <Input
             label="Monthly service charge"
             onChange={e => {
-              setContract({
-                ...contract,
-                monthly_service_charge: e.nativeEvent.text,
-              });
+              if (
+                contract.monthly_service_charge &&
+                ContractScreenType === 'Edit'
+              ) {
+                showConfirmDialog();
+              } else {
+                // setContract({...contract, contract_period: e.nativeEvent.text});
+                setContract({
+                  ...contract,
+                  monthly_service_charge: e.nativeEvent.text,
+                });
+              }
             }}
             placehoder="Enter service charge amount"
+            value={contract.monthly_service_charge}
           />
           <Input
             label="Other charge"
             onChange={e => {
-              setContract({...contract, other_charge: e.nativeEvent.text});
+              if (contract.other_charge && ContractScreenType === 'Edit') {
+                showConfirmDialog();
+              } else {
+                // setContract({...contract, contract_period: e.nativeEvent.text});
+                setContract({...contract, other_charge: e.nativeEvent.text});
+              }
             }}
             placehoder="Enter Other charges"
+            value={contract.other_charge}
           />
           <Input
             label="Discount"
             switchButton={true}
             switchButtonData={['Percentage', 'Number']}
             onChange={e => {
-              setContract({
-                ...contract,
-                discount: e.nativeEvent.text,
-              });
+              if (contract.contract_period && ContractScreenType === 'Edit') {
+                showConfirmDialog();
+              } else {
+                // setContract({...contract, contract_period: e.nativeEvent.text});
+                setContract({
+                  ...contract,
+                  discount: e.nativeEvent.text,
+                });
+              }
             }}
             placehoder="Enter Other charges"
             switchModeType={switchModeType}
             setSwitchModeType={val => setSwitchModeType(val)}
+            value={contract.discount}
           />
           <Input
             disabled={true}
             label="Total rental amount"
             placehoder="0"
-            value={contract.total_rental_amount}
+            value={
+              ContractScreenType === 'Edit' && owner.total_rental_amount
+                ? String(owner.total_rental_amount)
+                : contract.total_rental_amount
+            }
           />
           <Input
             disabled={true}
             label="Total Contract Amount"
             placehoder="Total Payable Amount"
-            value={contract.total_contract_amount}
+            value={
+              owner.total_contract_amount
+                ? String(owner.total_contract_amount)
+                : contract.total_contract_amount
+            }
           />
         </KeyboardAwareScrollView>
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>

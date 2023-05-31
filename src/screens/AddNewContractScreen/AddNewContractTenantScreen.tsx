@@ -16,7 +16,10 @@ import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import OwnerTenantsCard from '../../components/OwnerTenantsCard/OwnerTenantsCard';
 import {useGetOwnerTenantListMutation} from '../../features/contract/contract';
 import {setTenantId} from '../../features/contract/contractSlice';
-import {ContractTenantList} from '../../features/contract/contractTypes';
+import {
+  ContractDetails,
+  ContractTenantList,
+} from '../../features/contract/contractTypes';
 import {OwnerTenantData} from '../../features/types';
 import {RootState} from '../../store';
 
@@ -26,7 +29,9 @@ const AddNewContractTenantScreen = (props: Props) => {
   const dispatch = useDispatch();
 
   const navigation = useNavigation();
-  const contract = useSelector<RootState>(state => state.contract);
+  const contract: ContractDetails = useSelector<RootState>(
+    state => state.contract,
+  );
 
   const [tenantList, setTenantList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -34,8 +39,10 @@ const AddNewContractTenantScreen = (props: Props) => {
     useState<ContractTenantList>([]);
 
   const [selectedTenant, setSelectedTenant] = useState<OwnerTenantData>();
-  const [value, setValue] = useState(
-    String(contract?.tenant_id === 0 ? '' : contract?.tenant_id),
+  const [value, setValue] = useState(contract?.tenant_id);
+
+  const [ContractScreenType, setContractScreenType] = useState(
+    props?.route?.params?.type,
   );
 
   const [getOwnerTenantList] = useGetOwnerTenantListMutation();
@@ -45,7 +52,7 @@ const AddNewContractTenantScreen = (props: Props) => {
     setLoading(false);
     try {
       await getOwnerTenantList({
-        property_id: contract?.property_id ? contract?.property_id : 0,
+        property_id: contract?.property_id,
       })
         .unwrap()
         .then(res => {
@@ -56,17 +63,27 @@ const AddNewContractTenantScreen = (props: Props) => {
             for (let i = 0; i < res.data.length; i++) {
               a.push({
                 id: res.data[i].id,
-                label:
+                label: `${
                   res.data[i].first_name +
                   ' ' +
                   res.data[i].middle_name +
                   ' ' +
-                  res.data[i].last_name,
+                  res.data[i].last_name
+                }`,
                 value: res.data[i].id,
               });
             }
 
             setTenantList(a);
+
+            if (ContractScreenType === 'Edit') {
+              setValue(
+                res.data.find(val => val.user_id === contract?.tenant_id)?.id,
+              );
+              setSelectedTenant(
+                res.data.find(val => val.user_id === contract?.tenant_id),
+              );
+            }
             // setPage(page + 1);
           }
         });
@@ -75,6 +92,8 @@ const AddNewContractTenantScreen = (props: Props) => {
     }
     setLoading(false);
   };
+
+  console.log(contract, 'Add Contract - 2');
 
   const checkSelectedValue = v => {
     let select: OwnerTenantData = responseTenantList.find(val => val.id === v);
@@ -143,6 +162,7 @@ const AddNewContractTenantScreen = (props: Props) => {
               checkSelectedValue(v);
               // setProperty({...property, type: value});
             }}
+            value={value}
           />
           {selectedTenant?.id && (
             <OwnerTenantsCard
@@ -192,7 +212,16 @@ const AddNewContractTenantScreen = (props: Props) => {
               onPress={() => {
                 if (selectedTenant) {
                   dispatch(setTenantId({tenant_id: Number(value)}));
-                  navigation.navigate('AddContract-3');
+                  if (props?.route?.params?.type === 'Edit') {
+                    navigation.navigate('AddContract-3', {
+                      type: 'Edit',
+                      id: props?.route?.params?.id,
+                    });
+                  } else {
+                    navigation.navigate('AddContract-3', {
+                      type: 'Add',
+                    });
+                  }
                 }
               }}>
               <Text

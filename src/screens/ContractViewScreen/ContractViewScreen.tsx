@@ -107,16 +107,27 @@ const ContractViewScreen = (props: Props) => {
             setAmenities({...amenities, value: b});
 
             for (let l = 0; l < res.data.contract_term_titles.length; l++) {
-              for (
-                let m = 0;
-                m < res.data.contract_term_titles[l].contract_terms.length;
-                m++
-              ) {
+              if (res.data.contract_term_titles[l].contract_terms.length > 0) {
+                for (
+                  let m = 0;
+                  m < res.data.contract_term_titles[l].contract_terms.length;
+                  m++
+                ) {
+                  d.push([
+                    {
+                      title: res.data.contract_term_titles[l].title_text,
+                      data: res.data.contract_term_titles[l].contract_terms[m]
+                        .term_text,
+                      border: true,
+                      id: l,
+                    },
+                  ]);
+                }
+              } else {
                 d.push([
                   {
                     title: res.data.contract_term_titles[l].title_text,
-                    data: res.data.contract_term_titles[l].contract_terms[m]
-                      .term_text,
+
                     border: true,
                     id: l,
                   },
@@ -166,7 +177,7 @@ const ContractViewScreen = (props: Props) => {
     getDetails();
   }, []);
 
-  console.log(terms, 'CCCC');
+  console.log(details, 'CCCC');
 
   if (loading) {
     return <LoadingModal />;

@@ -8,14 +8,16 @@ import {
   View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import AddContractTermTitleCard from '../../components/AddContractTermTitleCard/AddContractTermTitleCard';
 import AddContractTermsCard from '../../components/AddContractTermsCard/AddContractTermsCard';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {
   useAddContractMutation,
   useGetTermsListMutation,
+  useUpToDateContractMutation,
 } from '../../features/contract/contract';
+import {setContractTermData} from '../../features/contract/contractSlice';
 import {
   AddContractBodyData,
   ContractTermList,
@@ -30,14 +32,25 @@ const AddNewContractTermsCondition = (props: Props) => {
   );
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [termTitles, setTermTitles] = useState<ContractTermList>([]);
+  const [checkedTermTitles, setCheckedTermTitles] = useState<ContractTermList>(
+    [],
+  );
+
+  console.log(props?.route?.params, 'PARAMS');
+
+  const [ContractScreenType, setContractScreenType] = useState(
+    props?.route?.params?.type,
+  );
   const [selectedTermTitles, setSelectedTermTitles] = useState([]);
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [addContract] = useAddContractMutation();
+  const [upToDateContract] = useUpToDateContractMutation();
 
   const handleSuccess = () => {
     setTimeout(() => {
@@ -52,6 +65,9 @@ const AddNewContractTermsCondition = (props: Props) => {
 
   const [getTermsList] = useGetTermsListMutation();
 
+  console.log(contract, 'Contract -5');
+  console.log(contract.title_term_data);
+
   const allTerms = async () => {
     setLoading(true);
     try {
@@ -60,6 +76,27 @@ const AddNewContractTermsCondition = (props: Props) => {
         .unwrap()
         .then(res => {
           setTermTitles(res.data);
+          if (ContractScreenType === 'Edit') {
+            let a = [...JSON.parse(contract.title_term_data)];
+            let b = [];
+
+            console.log(props?.route?.params?.terms, 'EDIT', 'RES', 'Runn');
+            setCheckedTermTitles(JSON.parse(props?.route?.params?.terms));
+
+            for (let i = 0; i < a?.length; i++) {
+              let c = [];
+
+              for (let j = 0; j < a[i].terms?.length; j++) {
+                c.push(a[i].terms[j].id);
+              }
+
+              b.push({
+                title_id: a[i].title_id,
+                terms_data: c,
+              });
+            }
+            setSelectedTermTitles(b);
+          }
         });
       // setLoading(true);
     } catch (err) {
@@ -88,6 +125,7 @@ const AddNewContractTermsCondition = (props: Props) => {
     } else {
       a.push({title_id: val, term_data: []});
     }
+    console.log(a, 'Added');
     setSelectedTermTitles(a);
   };
 
@@ -109,9 +147,42 @@ const AddNewContractTermsCondition = (props: Props) => {
     setLoading(false);
   };
 
+  const updateContract = async () => {
+    setLoading(true);
+    try {
+      console.log(contract);
+
+      let con = contract;
+
+      console.log(con, 'COn');
+
+      await upToDateContract({body: con, params: props?.route?.params?.id})
+        .unwrap()
+        .then(res => {
+          console.log(res);
+          if (res.success) {
+            navigation.navigate('Main', {scree: 'Contreact'});
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     allTerms();
   }, [showTitleModal, success]);
+
+  useEffect(() => {
+    if (props?.route?.params?.terms) {
+      dispatch(
+        setContractTermData({title_term_data: props?.route?.params?.terms}),
+      );
+      setCheckedTermTitles(JSON.parse(props?.route?.params?.terms));
+    }
+    setContractScreenType(props?.route?.params?.type);
+  }, [props?.route?.params?.type]);
 
   if (loading) {
     return <LoadingModal />;
@@ -160,26 +231,41 @@ const AddNewContractTermsCondition = (props: Props) => {
         </View>
 
         <KeyboardAwareScrollView style={{marginTop: 20}}>
-          {termTitles.map((item, index) => (
-            <AddContractTermsCard
-              item={item}
-              key={index.toString()}
-              terms={item?.terms}
-              id={item?.id}
-              title={item?.title}
-              type={item?.type}
-              created_by={item?.created_by}
-              handleValue={handleValue}
-              handleModal={handleModal}
-              title_id={`${item?.id}`}
-              handleSuccess={handleSuccess}
-              handleId={handleId}
-              handleTerm={v => {
-                console.log(v, 'asdadas');
-                handleTermsTitle(v);
-              }}
-            />
-          ))}
+          {termTitles.map((item, index) => {
+            console.log(
+              checkedTermTitles.find(val => val),
+              'lap',
+            );
+            return (
+              <AddContractTermsCard
+                item={item}
+                key={index.toString()}
+                terms={item?.terms}
+                id={item?.id}
+                title={item?.title}
+                type={item?.type}
+                created_by={item?.created_by}
+                handleValue={handleValue}
+                handleModal={handleModal}
+                title_id={`${item?.id}`}
+                handleSuccess={handleSuccess}
+                handleId={handleId}
+                handleTerm={v => {
+                  console.log(v, 'asdadas');
+                  handleTermsTitle(v);
+                }}
+                checked={
+                  checkedTermTitles.find(val => val.title_id == item.id)
+                    ? true
+                    : false
+                }
+                subTermChecked={
+                  checkedTermTitles.find(val => val.title_id == item.id)
+                    ?.terms_data
+                }
+              />
+            );
+          })}
 
           <View
             style={{
@@ -233,7 +319,11 @@ const AddNewContractTermsCondition = (props: Props) => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                saveContract();
+                if (ContractScreenType === 'Edit') {
+                  updateContract();
+                } else {
+                  saveContract();
+                }
               }}>
               <Text
                 style={{
@@ -243,7 +333,7 @@ const AddNewContractTermsCondition = (props: Props) => {
                   marginRight: 5,
                   color: '#fff',
                 }}>
-                Save
+                {ContractScreenType === 'Edit' ? 'Update' : 'Save'}
               </Text>
               {/* <FontAwesomeIcon icon={faChevronRight} size={12} color="#fff" /> */}
             </TouchableOpacity>

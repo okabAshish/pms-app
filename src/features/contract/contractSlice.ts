@@ -30,6 +30,8 @@ const contract = createSlice({
     late_fee_grace_period: '',
     payment_slab_data: '',
     title_term_data: '',
+    terms: '',
+    payment_slab_changed: false,
   } as AddContractBodyData & ContractState,
   reducers: {
     setContractDetails: (
@@ -92,6 +94,39 @@ const contract = createSlice({
       // console.log(action.payload, 'Action');
       state.title_term_data = action.payload.title_term_data;
     },
+    setAllContractData: (
+      state,
+      action: PayloadAction<ContractState & AddContractBodyData>,
+    ) => {
+      console.log('Action', action.payload.title_term_data);
+      state.property_id = action.payload.property_id;
+      state.tenant_id = action.payload.tenant_id;
+      state.contract_type_id = action.payload.contract_type_id;
+      state.contract_period = action.payload.contract_period;
+      state.grace_period = action.payload.grace_period;
+      state.start_date = action.payload.start_date;
+      state.end_date = action.payload.end_date;
+      state.notice_period = action.payload.notice_period;
+      state.security_deposit = action.payload.security_deposit;
+      state.monthly_rent = action.payload.monthly_rent;
+      state.monthly_service_charge = action.payload.monthly_service_charge;
+      state.other_charge = action.payload.other_charge;
+      state.discount = action.payload.discount;
+      state.total_rental_amount = action.payload.total_rental_amount;
+      state.total_contract_amount = action.payload.total_contract_amount;
+      state.late_fee_applicable = action.payload.late_fee_applicable;
+      state.fine_type = action.payload.fine_type;
+      state.late_fee_amount = action.payload.late_fee_amount;
+      state.late_fee_grace_period = action.payload.late_fee_grace_period;
+      state.payment_slab_data = action.payload.payment_slab_data;
+      state.title_term_data = action.payload.title_term_data;
+    },
+    setUpdateChange: (
+      state,
+      action: PayloadAction<ContractState & AddContractBodyData>,
+    ) => {
+      state.payment_slab_changed = action.payload.payment_slab_changed;
+    },
   },
 });
 
@@ -102,6 +137,8 @@ export const {
   setContractData,
   setContractSlabData,
   setContractTermData,
+  setAllContractData,
+  setUpdateChange,
 } = contract.actions;
 
 export default contract.reducer;

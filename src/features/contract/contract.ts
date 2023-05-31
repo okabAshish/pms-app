@@ -16,6 +16,7 @@ import {
   ContractTermTitleDeleteResponseData,
   ContractTermUpdateBody,
   ContractTypeListResponseData,
+  UpdateContractBodyData,
 } from './contractTypes';
 
 // Define a service using a base URL and expected endpoints
@@ -150,6 +151,19 @@ export const contractApi = createApi({
         }),
       },
     ),
+    upToDateContract: builder.mutation<
+      AddContractResponseData,
+      UpdateContractBodyData
+    >({
+      query: req => ({
+        url: `owner/update-contract/${req.params}?_method=PUT`,
+        method: 'POST',
+        body: req.body,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
     getContractDetails: builder.mutation<
       ContractDetailsResponseData,
       ContractDetailsParams
@@ -177,6 +191,7 @@ export const {
   useEditTermTitleMutation,
   useGetOwnerTenantListMutation,
   useGetContractTypeListMutation,
+  useUpToDateContractMutation,
   useAddContractMutation,
   useGetContractDetailsMutation,
 } = contractApi;

@@ -15,6 +15,7 @@ const OwnerTenantScreen = (props: Props) => {
   const [tenantList, setTenantList] = useState<OwnerTenantListData>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
 
   const [ownerAllTenantList] = useOwnerAllTenantListMutation();
 
@@ -82,11 +83,11 @@ const OwnerTenantScreen = (props: Props) => {
           data={tenantList}
           keyExtractor={({item, index}) => (item?.id + index).toString()}
           showsVerticalScrollIndicator={false}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.9}
           onEndReached={() => {
-            reGetTenants();
+            total !== tenantList.length && reGetTenants();
           }}
-          ListFooterComponent={renderFooter}
+          ListFooterComponent={total !== tenantList.length && renderFooter}
           renderItem={({item, index}) => (
             <OwnerTenantsCard
               tenant_id={'TNT_0000000' + item?.id}

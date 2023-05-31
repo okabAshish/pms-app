@@ -1,9 +1,10 @@
-import {faEye, faFilePdf} from '@fortawesome/free-solid-svg-icons';
+import {faEllipsisVertical} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
+import {Menu} from 'react-native-paper';
 
 interface Props {
   contract_id: number;
@@ -40,6 +41,57 @@ const defaultProps: Props = {
 
 const OwnerContractCard = (props: Props) => {
   const navigation = useNavigation();
+
+  const [visible, setVisible] = useState(false);
+
+  const openMenu = () => {
+    console.log('open');
+    setVisible(true);
+  };
+
+  const closeMenu = () => setVisible(false);
+
+  const menuDetails = [
+    {
+      name: 'Edit',
+      onPress: () => {
+        setVisible(false);
+        navigation.navigate('ADD', {
+          screen: 'AddContract-1',
+          params: {
+            id: props.contract_id,
+            type: 'Edit',
+          },
+        });
+      },
+    },
+    {
+      name: 'View',
+      onPress: () => {
+        setVisible(false);
+        navigation.navigate('View', {
+          screen: 'Contract-View',
+          params: {id: props.contract_id},
+        });
+      },
+    },
+    // {
+    //   name: 'Send',
+    //   onPress: () => {},
+    // },
+    // {
+    //   name: 'Delete',
+    //   onPress: () => {},
+    // },
+    // {
+    //   name: 'Complete',
+    //   onPress: () => {},
+    // },
+    // {
+    //   name: 'PDF',
+    //   onPress: () => {},
+    // },
+  ];
 
   return (
     <TouchableOpacity
@@ -276,28 +328,32 @@ const OwnerContractCard = (props: Props) => {
                   </View>
                 </View>
               </View>
-              <View
-                style={{alignItems: 'center', flexDirection: 'row', flex: 1}}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Regular',
-                    color: '#000',
-                    fontSize: 14,
-                    marginLeft: 5,
-                  }}>
-                  Action :
-                </Text>
-                <View style={{alignSelf: 'center', marginLeft: 4}}>
-                  <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity style={{marginRight: 8}}>
-                      <FontAwesomeIcon icon={faEye} size={16} color="#0AB35A" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{marginRight: 8}}>
-                      <FontAwesomeIcon icon={faFilePdf} size={16} color="" />
-                    </TouchableOpacity>
+              {/* <View
+                  style={{alignItems: 'center', flexDirection: 'row', flex: 1}}>
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Regular',
+                      color: '#000',
+                      fontSize: 14,
+                      marginLeft: 5,
+                    }}>
+                    Action :
+                  </Text>
+                  <View style={{alignSelf: 'center', marginLeft: 4}}>
+                    <View style={{flexDirection: 'row'}}>
+                      <TouchableOpacity style={{marginRight: 8}}>
+                        <FontAwesomeIcon
+                          icon={faEye}
+                          size={16}
+                          color="#0AB35A"
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={{marginRight: 8}}>
+                        <FontAwesomeIcon icon={faFilePdf} size={16} color="" />
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              </View>
+                </View> */}
             </View>
           </View>
           <View
@@ -309,7 +365,52 @@ const OwnerContractCard = (props: Props) => {
               borderTopRightRadius: 9,
               borderBottomRightRadius: 9,
             }}>
-            <View style={{justifyContent: 'flex-end', flex: 1}}>
+            <View style={{justifyContent: 'space-between', flex: 1}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                }}>
+                <Menu
+                  visible={visible}
+                  onDismiss={closeMenu}
+                  anchorPosition="bottom"
+                  contentStyle={{
+                    zIndex: 9999,
+                    // marginTop: -70,
+                    // marginLeft: -30,
+                  }}
+                  anchor={
+                    <TouchableOpacity onPress={() => setVisible(true)}>
+                      <FontAwesomeIcon icon={faEllipsisVertical} color="#fff" />
+                    </TouchableOpacity>
+                  }>
+                  {menuDetails.map((item, index) => (
+                    <Menu.Item
+                      key={index + item.name}
+                      onPress={item.onPress}
+                      title={item.name}
+                      titleStyle={{
+                        fontSize: 12,
+                        fontFamily: 'Poppins-Medium',
+                      }}
+                      contentStyle={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 0,
+                        marginHorizontal: 0,
+                        marginVertical: 0,
+                      }}
+                      style={{
+                        paddingHorizontal: 0,
+                        paddingVertical: 0,
+                        marginHorizontal: 0,
+                        marginVertical: 0,
+                        height: 24,
+                      }}
+                    />
+                  ))}
+                </Menu>
+              </View>
               <View
                 style={{
                   flexDirection: 'row',
@@ -334,6 +435,7 @@ const OwnerContractCard = (props: Props) => {
         </View>
       </View>
     </TouchableOpacity>
+    // </PaperProvider>
   );
 };
 

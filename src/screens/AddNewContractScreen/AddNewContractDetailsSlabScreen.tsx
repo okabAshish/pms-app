@@ -11,7 +11,11 @@ import DropDown from '../../components/DropDown/DropDown';
 import Input from '../../components/Input/Input';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import RadioButton from '../../components/RadioButton/RadioButton';
-import {setContractSlabData} from '../../features/contract/contractSlice';
+import {
+  setAllContractData,
+  setContractSlabData,
+  setUpdateChange,
+} from '../../features/contract/contractSlice';
 import {
   AddContractSlabList,
   ContractState,
@@ -29,6 +33,8 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
     state => state.contract,
   );
 
+  console.log(contract_details, 'COntract -3');
+
   const [switchModeTypeForLateFee, setSwitchModeTypeForLateFee] =
     useState('Percentage');
   const [parentRentalAmount, setParentRentalAmount] = useState(
@@ -45,12 +51,23 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const [slabs, setSlabs] = useState([]);
   const [fineType, setFineType] = useState('');
-  const [late_fee, setLateFee] = useState(null);
+  const [late_fee, setLateFee] = useState(
+    contract_details.late_fee_applicable
+      ? contract_details.late_fee_applicable
+      : '',
+  );
+  const [late_fee_data, setLateFeeData] = useState('');
   const [late_fee_amount, setLateFeeAmount] = useState('');
   const [lateFeeGracePeriod, setLateFeeGracePeriod] = useState('');
 
   const [late_fee_amountFixed, setLateFeeAmountFixed] = useState(false);
   const [lateFeeGracePeriodFixed, setLateFeeGracePeriodFixed] = useState(false);
+
+  const [ContractScreenType, setContractScreenType] = useState(
+    props?.route?.params?.type,
+  );
+
+  console.log(ContractScreenType, 'TYPE');
 
   const showConfirmDialog = () => {
     return Alert.alert(
@@ -130,7 +147,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
           amount: amount,
           date: date,
         };
-        if (late_fee === 0) {
+        if (late_fee_data?.id === 1) {
           if (!late_fee_amount || !lateFeeGracePeriod) {
             console.log('Error Caught');
             throw (Error.name = 'Error');
@@ -176,42 +193,101 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
     setLoading(false);
   };
 
+  console.log(slabs, 'SLABS');
+
   const nextScreen1 = () => {
     let b: AddContractSlabList = [];
 
     if (fineType === '1') {
-      for (let i = 0; i < slabs.length; i++) {
+      for (let i = 0; i < slabs?.length; i++) {
         b.push({
           payment_date: slabs[i]?.date,
-          payment_amount: slabs[i]?.amount,
+          payment_amount: slabs[i].amount,
           fine_amount: slabs[i]?.late_fee_amount,
-          grace_period: slabs[i]?.late_fee_grace_period,
+          grace_period: slabs[i]?.late_fee_grace_period
+            ? slabs[i]?.late_fee_grace_period
+            : '',
           is_deposite_included: slabs[i]?.security_deposit.length > 0 ? 1 : 0,
         });
       }
     } else {
-      for (let i = 0; i < slabs.length; i++) {
+      for (let i = 0; i < slabs?.length; i++) {
         b.push({
           payment_date: slabs[i]?.date,
           payment_amount: slabs[i]?.amount,
           fine_amount: slabs[i]?.late_fee_amount,
-          grace_period: slabs[i]?.late_fee_grace_period,
+          grace_period: slabs[i]?.late_fee_grace_period
+            ? slabs[i]?.late_fee_grace_period
+            : '',
           is_deposite_included: slabs[i]?.security_deposit.length > 0 ? 1 : 0,
         });
       }
     }
 
-    console.log(b);
+    console.log(b, 'asdsad');
 
     dispatch(
       setContractSlabData({
-        late_fee_applicable: late_fee === 0 ? 1 : 0,
+        late_fee_applicable: late_fee_data?.id === 1 ? 1 : 0,
         fine_type: fineType,
         late_fee_amount: fineType === '0' ? late_fee_amount : '',
         late_fee_grace_period: lateFeeGracePeriod,
         payment_slab_data: JSON.stringify(b),
       }),
     );
+  };
+
+  const confirmDialog = () => {
+    return Alert.alert('Deleting Slabs', 'Editing amounts will delete slabs', [
+      // The "Yes" button
+
+      // The "No" button
+      // Does nothing but dismiss the dialog when tapped
+      {
+        text: 'Okay',
+        onPress: () => {
+          dispatch(
+            setAllContractData({
+              contract_period: null,
+              grace_period: null,
+              start_date: '',
+              end_date: '',
+              notice_period: '',
+              security_deposit: '',
+              monthly_rent: '',
+              monthly_service_charge: '',
+              other_charge: '',
+              discount: '',
+              total_rental_amount: '',
+              total_contract_amount: '',
+              fine_type: '',
+              late_fee_amount: '',
+              late_fee_grace_period: '',
+              amount: '',
+              property_id: '',
+              tenant_id: '',
+              contract_type_id: '',
+              late_fee_applicable: '',
+              payment_slab_data: '',
+              title_term_data: '',
+            }),
+          );
+
+          dispatch(
+            setUpdateChange({
+              payment_slab_changed: true,
+            }),
+          );
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+          }
+        },
+      },
+      {
+        text: 'Cancel',
+        onPress: () => {},
+      },
+    ]);
   };
 
   useEffect(() => {
@@ -223,6 +299,33 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
     setLateFeeAmount('');
     setLateFeeAmountFixed(false);
   }, [fineType, contract_details.start_date]);
+
+  const runAddSlab = () => {
+    if (contract_details.payment_slab_data) {
+      let a = [...JSON.parse(contract_details.payment_slab_data)];
+      let b = [];
+
+      a.forEach((v, index) => {
+        console.log(v.is_deposite_included);
+        b.push({
+          date: v.payment_date,
+          amount: v.payment_amount,
+          late_fee_amount: v.payment_date,
+          late_fee_grace_period: v.grace_period,
+          security_deposit:
+            v.is_deposite_included === 1
+              ? contract_details.security_deposit
+              : 0,
+        });
+      });
+
+      setSlabs(b);
+    }
+  };
+
+  useEffect(() => {
+    runAddSlab();
+  }, [contract_details.payment_slab_data]);
 
   let lastSlab = slabs.slice(-1)[0];
 
@@ -264,13 +367,40 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
       console.log('Error building');
     } else {
       nextScreen1();
-      navigation.navigate('AddContract-5');
+      if (ContractScreenType === 'Edit') {
+        navigation.navigate('AddContract-5', {
+          type: 'Edit',
+          terms: contract_details.title_term_data,
+          id: props?.route?.params?.id,
+        });
+      } else {
+        navigation.navigate('AddContract-5', {
+          type: 'Add',
+        });
+      }
     }
   };
+
+  useEffect(() => {
+    if (contract_details?.payment_slab_data && ContractScreenType === 'Edit') {
+      setParentRentalAmount('0');
+    } else {
+      setParentRentalAmount(contract_details.total_rental_amount);
+    }
+  }, [
+    contract_details.total_rental_amount,
+    contract_details?.payment_slab_data,
+  ]);
 
   if (loading) {
     return <LoadingModal />;
   }
+
+  useEffect(() => {
+    setContractScreenType(props?.route?.params?.type);
+  }, [props?.route?.params?.type]);
+
+  console.log(late_fee === '0', late_fee, 'Late');
 
   return (
     <View style={{backgroundColor: '#45485F', flex: 1}}>
@@ -337,7 +467,11 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
                                 color: '#000',
                                 marginHorizontal: 10,
                               }}>
-                              {dayjs(item?.date).format('DD/MM/YYYY')}
+                              {!item?.created_at
+                                ? dayjs(item?.date).format('DD/MM/YYYY')
+                                : dayjs(item?.payment_date).format(
+                                    'DD/MM/YYYY',
+                                  )}
                             </Text>
                           </View>
                           <View
@@ -357,7 +491,7 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
                                 : ''}
                             </Text>
                           </View>
-                          {late_fee === 0 && (
+                          {late_fee_data?.id === 1 && (
                             <View>
                               <View
                                 style={{
@@ -425,7 +559,14 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
                             zIndex: 1000,
                           }}
                           onPress={() => {
-                            deleteItem(item);
+                            if (
+                              contract_details.payment_slab_data &&
+                              ContractScreenType === 'Edit'
+                            ) {
+                              confirmDialog();
+                            } else {
+                              deleteItem(item);
+                            }
                           }}>
                           <FontAwesomeIcon icon={faX} size={12} />
                         </TouchableOpacity>
@@ -440,24 +581,39 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
           <RadioButton
             labels={[{id: 1, name: 'Late fee applicable?'}]}
             onChange={i => {
-              console.log(i);
+              console.log(i, 'onChange');
               if (slabs.length > 0) {
                 confirmDeleteSlab();
-                setLateFee(i);
+                setLateFee(0);
+                setLateFeeData(i);
               } else {
-                setLateFee(i);
+                setLateFee('');
+                setLateFeeData(i);
               }
             }}
+            value={late_fee_data ? late_fee_data?.id : ''}
           />
 
-          {late_fee === 0 && (
+          {late_fee_data?.id === 1 && (
             <DropDown
               label="Fine Type"
               datas={[
                 {id: 1, label: 'For all', value: '0'},
                 {id: 2, label: 'Individual slab', value: '1'},
               ]}
-              onChange={val => setFineType(val)}
+              onChange={val => {
+                if (
+                  contract_details.fine_type &&
+                  ContractScreenType === 'Edit'
+                ) {
+                  confirmDialog();
+                } else if (slabs > 0) {
+                  showConfirmDialog();
+                } else {
+                  // deleteItem(item);
+                  setFineType(val);
+                }
+              }}
             />
           )}
 
@@ -479,14 +635,22 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
           )}
 
           <>
-            {late_fee === 0 ? (
+            {late_fee_data?.id === 1 ? (
               <View>
                 <Input
                   label="Late fee amount"
                   switchButton={true}
                   switchButtonData={['Percentage', 'Number']}
                   onChange={e => {
-                    setLateFeeAmount(e.nativeEvent.text);
+                    if (
+                      contract_details.late_fee_amount &&
+                      ContractScreenType === 'Edit'
+                    ) {
+                      confirmDialog();
+                    } else {
+                      // deleteItem(item);
+                      setLateFeeAmount(e.nativeEvent.text);
+                    }
                   }}
                   value={late_fee_amount}
                   placehoder="Enter as 10% or Simply 100"
@@ -498,7 +662,17 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
                   label="Grace period (In days)"
                   placehoder="Enter the grace period"
                   value={lateFeeGracePeriod}
-                  onChange={e => setLateFeeGracePeriod(e.nativeEvent.text)}
+                  onChange={e => {
+                    if (
+                      contract_details.late_fee_grace_period &&
+                      ContractScreenType === 'Edit'
+                    ) {
+                      confirmDialog();
+                    } else {
+                      // deleteItem(item);
+                      setLateFeeGracePeriod(e.nativeEvent.text);
+                    }
+                  }}
                   disabled={lateFeeGracePeriodFixed}
                 />
               </View>
@@ -510,7 +684,14 @@ const AddNewContractDetailsSlabScreen = (props: Props) => {
               label="Amount"
               placehoder="Enter amount"
               value={amount}
-              onChange={e => setAmount(e.nativeEvent.text)}
+              onChange={e => {
+                if (contract_details.amount && ContractScreenType === 'Edit') {
+                  confirmDialog();
+                } else {
+                  // deleteItem(item);
+                  setAmount(e.nativeEvent.text);
+                }
+              }}
             />
             <DatePicketInput
               label="Date"
