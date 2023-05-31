@@ -19,6 +19,7 @@ const PropertyScreen = (props: Props) => {
     setOnEndReachedCalledDuringMomentum,
   ] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
 
   console.log(onEndReachedCalledDuringMomentum, propertyList.length, page);
 
@@ -31,6 +32,7 @@ const PropertyScreen = (props: Props) => {
         .unwrap()
         .then(res => {
           if (res.success) {
+            setTotal(res.data.meta.total);
             setPropertyList(res?.data?.data);
             // setPage(page + 1);
           }
@@ -93,11 +95,11 @@ const PropertyScreen = (props: Props) => {
         <FlatList
           data={propertyList}
           keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={renderFooter}
+          ListFooterComponent={propertyList.length !== total && renderFooter}
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={0.5}
           onEndReached={() => {
-            reGetProperties();
+            propertyList.length !== total && reGetProperties();
           }}
           renderItem={({item, index}) => (
             <PropertyCard

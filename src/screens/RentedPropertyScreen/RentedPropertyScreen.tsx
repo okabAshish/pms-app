@@ -11,6 +11,7 @@ const RentedPropertyScreen = (props: Props) => {
   const [rentedPropertyData, setRentedPropertyData] = useState<RentedPropertyList>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
 
   const [getRentedProperty] = useGetRentedPropertyMutation();
 
@@ -23,6 +24,7 @@ const RentedPropertyScreen = (props: Props) => {
           console.log(res);
 
           if (res.success) {
+            setTotal(res.data.meta.total);
             setRentedPropertyData(res?.data?.data);
           }
         });
@@ -85,11 +87,11 @@ const RentedPropertyScreen = (props: Props) => {
       <FlatList
           data={rentedPropertyData}
           keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={renderFooter}
+          ListFooterComponent={rentedPropertyData.length !== total && renderFooter}
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={0.5}
           onEndReached={() => {
-            reGetProperty();
+            rentedPropertyData.length !== total && reGetProperty();
           }}
           renderItem={({item, index}) => (
             <RentedPropertyCard

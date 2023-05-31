@@ -25,7 +25,9 @@ import {
   CityListRequestData,
   RegisterResponseData, 
   RegisterRequestData,
-  UserProfileResponseData
+  UserProfileResponseData,
+  CompanyTypeResponseData,
+  UserProfileDetailResponseData
 } from '../types';
 
 // Define a service using a base URL and expected endpoints
@@ -205,17 +207,35 @@ export const authApi = createApi({
         },
       }),      
     }),
-    AddRegisterData: builder.mutation<RegisterResponseData, RegisterRequestData>({
+    addRegisterData: builder.mutation<RegisterResponseData, RegisterRequestData>({
       query: req => ({
         url: 'owner-register',
         method: 'POST',
-        body: req,
+        body: req.body,
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
       }),      
     }),
     UserProfileData: builder.mutation<UserProfileResponseData, {}>({
+      query: req => ({
+        url: 'profile',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),      
+    }),
+    getCompanyTypeList: builder.mutation<CompanyTypeResponseData, {}>({
+      query: req => ({
+        url: 'company-type-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),      
+    }),
+    getUserProfileDetail: builder.mutation<UserProfileDetailResponseData, {}>({
       query: req => ({
         url: 'profile',
         method: 'GET',
@@ -245,5 +265,8 @@ export const {
   useGetTitleListMutation,
   useGetStateListMutation,
   useGetCityListMutation,
-  useUserProfileDataMutation
+  useUserProfileDataMutation,
+  useGetCompanyTypeListMutation,
+  useAddRegisterDataMutation,
+  useGetUserProfileDetailMutation
 } = authApi;

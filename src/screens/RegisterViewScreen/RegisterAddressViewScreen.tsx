@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {
+  Alert,
   ImageBackground,
   SafeAreaView,
   ScrollView,
@@ -13,19 +13,28 @@ import {
 import TextInput from './TextInput';
 import DropDown from '../../components/DropDown/DropDown';
 import {StateListResponse, CityListResponse} from '../../features/types';
-import {useGetStateListMutation, useGetCityListMutation} from '../../features/auth/auth';
+import {useGetStateListMutation, useGetCityListMutation, useAddRegisterDataMutation} from '../../features/auth/auth';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-
+import AddContractSubTermsCard from '../../components/AddContractTermsCard/AddContractSubTermsCard';
+import {useDispatch} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CommonActions, useNavigation} from '@react-navigation/native';
+import {setLoggedIn, setToken, setUser} from '../../features/auth/authProfile';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 
 type Props = {};
 
 const RegisterAddressViewScreen = (props: Props) => {
-  const oldRegister=useSelector<RootState>(state=>state.auth)
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const oldRegister=useSelector<RootState>(state=>state.auth)
+
   const [getStateList] = useGetStateListMutation();
   const [getCityList] = useGetCityListMutation();
-  
+  const [addRegisterData] = useAddRegisterDataMutation();
+
   const [loading, setLoading] = React.useState(false);
   const [index, setIndex] = React.useState(2);
   const [user, setUser] = React.useState({email: ''});
@@ -45,9 +54,9 @@ const RegisterAddressViewScreen = (props: Props) => {
     city: 0,
     zip: ''
   });
-  console.log(oldRegister.register);
+  console.log('older data:',oldRegister.register);
   const getStateListData = async() => {
-    setLoading(true);
+    //setLoading(true);
     try {
       await getStateList({})
         .unwrap()
@@ -72,19 +81,17 @@ const RegisterAddressViewScreen = (props: Props) => {
       // }, 350);
       console.log(err, 'EERRRR');
     }
-    setLoading(false);
+    //setLoading(false);
   }
 
-  const getCityListData = async id => {
-    console.log('id',id);
-    
-    setLoading(true);
+  const getCityListData = async id => {    
+    //setLoading(true);
     try {
       await getCityList({id: id})
         .unwrap()
         .then(res => {
           if (res.success) {
-            const cityListContent: StateListResponse = res?.data;
+            const cityListContent: CityListResponse = res?.data;
             const cityDropdownData: any = [];
             for (let i = 0; i < cityListContent.length; i++) {
               cityDropdownData[i] = {
@@ -97,17 +104,14 @@ const RegisterAddressViewScreen = (props: Props) => {
           }
         });
     } catch (err) {
-      // dispatch(setError({error: true, message: err}));
-      // setTimeout(() => {
-      //   dispatch(setError({error: false, message: ''}));
-      // }, 350);
       console.log(err, 'EERRRR');
     }
-    setLoading(false);
+    //setLoading(false);
   }
 
   const submitRegisterForm = () => {
-    console.log('called again');
+    console.log('Submit Form');
+    
     try {
       for (const key in addressData) {
         if (
@@ -119,15 +123,52 @@ const RegisterAddressViewScreen = (props: Props) => {
           throw (Error.name = `${key} is empty`);
         }
       }
-      console.log(addressData);
+      AddUser();
     } catch (error) {
       console.log(error);
     }
   }
 
+    const AddUser = async () => {
+      let req = {...oldRegister.register, ...addressData};
+      console.log('total:',req);
+      
+      setLoading(true);
+      try {
+        await addRegisterData({body: req})
+          .unwrap()
+          .then(async res => {
+            console.log('api run');
+            if (res?.success) {
+              await AsyncStorage.setItem('token', res?.data?.token);
+              await AsyncStorage.setItem('role_id', String.apply(2));
+              let user = JSON.stringify(res.data?.user_detail);
+              await AsyncStorage.setItem('user', user);
+              console.log('success');
+              //}
+              //dispatch(setUser(user));
+              dispatch(setToken(res?.data?.token));
+              dispatch(setLoggedIn(true));
+              navigation.dispatch(
+                CommonActions.navigate({name: 'Main', path: 'DashBoard'}),
+              );
+            }else{
+              console.warn('Fail to Register');
+            }
+          });
+      } catch (err) {
+        console.log(err, 'EERRRR');
+      }
+      setLoading(false);
+    }
+  
   useEffect(() => {
     getStateListData();
   }, []);
+
+  if(loading){
+    return <LoadingModal />;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
@@ -286,9 +327,6 @@ const RegisterAddressViewScreen = (props: Props) => {
               }}
               onPress={() => {
                 submitRegisterForm()
-                // navigation.dispatch(
-                //   CommonActions.navigate({name: 'Register-Address'}),
-                // );
               }}>
               <Text
                 style={{

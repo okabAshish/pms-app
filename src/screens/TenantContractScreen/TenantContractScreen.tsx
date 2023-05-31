@@ -12,6 +12,7 @@ const TenantContractScreen = (props: Props) => {
   const [contactList, setContactList] = useState<TenantContactList>([],);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
 
   const [getTenantContactList] = useGetTenantContactListMutation();
 
@@ -24,6 +25,7 @@ const TenantContractScreen = (props: Props) => {
           console.log(res);
 
           if (res.success) {
+            setTotal(res.data.meta.total);
             setContactList(res?.data?.data);
           }
         });
@@ -85,11 +87,11 @@ const TenantContractScreen = (props: Props) => {
       <FlatList
           data={contactList}
           keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={renderFooter}
+          ListFooterComponent={contactList.length !== total && renderFooter}
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={0.5}
           onEndReached={() => {
-            reGetContract();
+            contactList.length !== total && reGetContract();
           }}
           renderItem={({item, index}) => (
             <TenantContractScreenCard

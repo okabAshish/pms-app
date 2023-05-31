@@ -12,6 +12,7 @@ const TenantMaintenanceRequestScreen = (props: Props) => {
   const [maintenanceList, setMaintenanceList] = useState<MaintenanceRequestList>([],);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
 
   const [getMaintenanceRequest] = useGetMaintenanceRequestMutation();
 
@@ -24,6 +25,7 @@ const TenantMaintenanceRequestScreen = (props: Props) => {
           console.log(res);
 
           if (res.success) {
+            setTotal(res.data.meta.total);
             setMaintenanceList(res?.data?.data);
           }
         });
@@ -86,11 +88,11 @@ const TenantMaintenanceRequestScreen = (props: Props) => {
         <FlatList
             data={maintenanceList}
             keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={renderFooter}
+            ListFooterComponent={maintenanceList.length!=total && renderFooter}
             showsVerticalScrollIndicator={false}
             onEndReachedThreshold={0.5}
             onEndReached={() => {
-              reGetMaintenance();
+              maintenanceList.length!=total && reGetMaintenance();
             }}
             renderItem={({item, index}) => (
               <TenantMaintenanceRequestCard

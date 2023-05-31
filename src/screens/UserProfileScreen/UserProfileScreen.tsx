@@ -5,7 +5,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {CommonActions, useNavigation} from '@react-navigation/native';
-import React from 'react';
+import {useGetUserProfileDetailMutation} from '../../features/auth/auth';
+import {UserProfileDetailResponseData} from '../../features/types';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -15,11 +17,47 @@ import {
   Image,
 } from 'react-native';
 import Input from '../../components/Input/Input';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {logOut} from '../../features/auth/authProfile';
 
 type Props = {};
 
 const UserProfileScreen = (props: Props) => {
   const navigation = useNavigation();
+  const [getUserProfileDetail] = useGetUserProfileDetailMutation();
+  const [loading, setLoading] = React.useState(false);
+  const [firstName, setFirstName] = React.useState('');
+  const [lastName, setLastName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const dispatch = useDispatch();
+
+  const getUserProfileData = async() => {
+    console.log('called');
+    
+    setLoading(true);
+    try {
+      await getUserProfileDetail({})
+        .unwrap()
+        .then(res => {
+          if (res.success) {
+            console.log(res);
+            
+            setFirstName(res.data.first_name);
+            setLastName(res.data.last_name);
+            setEmail(res?.data?.user_details.email);
+          }
+        });
+    } catch (err) {
+      console.log(err, 'EERRRR');
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getUserProfileData();
+  }, []);
+
   return (
     <SafeAreaView
       style={{
@@ -119,9 +157,9 @@ const UserProfileScreen = (props: Props) => {
             zIndex: -1,
             paddingHorizontal: 30,
           }}>
-          <Input label="First name" placehoder="Enter First name" />
-          <Input label="Last name" placehoder="Enter First name" />
-          <Input label="Email Address" placehoder="Enter First name" />
+          <Input label="First name" placehoder="Enter First name"  value={firstName}/>
+          <Input label="Last name" placehoder="Enter First name" value={lastName} />
+          <Input label="Email Address" placehoder="Enter First name" value={email} />
 
           <TouchableOpacity
             style={{
@@ -169,10 +207,11 @@ const UserProfileScreen = (props: Props) => {
               justifyContent: 'center',
               marginTop: 15,
             }}
-            onPress={() => {
-              navigation.dispatch(
-                CommonActions.navigate({name: 'OTP-Verification'}),
-              );
+            onPress={async () => {
+              await AsyncStorage.removeItem('token');
+              await AsyncStorage.removeItem('user');
+              dispatch(logOut());
+              navigation.dispatch(CommonActions.navigate({name: 'SignUp'}));
             }}>
             <Text
               style={{

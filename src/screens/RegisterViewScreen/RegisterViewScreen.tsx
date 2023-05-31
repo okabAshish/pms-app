@@ -12,7 +12,8 @@ import {
 import PhoneInput from 'react-native-phone-number-input';
 import DropDown from '../../components/DropDown/DropDown';
 import TextInput from './TextInput';
-import {useGetTitleListMutation} from '../../features/auth/auth';
+import {useGetTitleListMutation, useGetCompanyTypeListMutation} from '../../features/auth/auth';
+import {CompanyTypeResponse} from '../../features/types';
 import {TitleList} from '../../features/types';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import {useDispatch} from 'react-redux';
@@ -26,6 +27,7 @@ const RegisterViewScreen = (props: Props) => {
 
   const [loading, setLoading] = React.useState(false);  
   const [index, setIndex] = React.useState(2);
+  const [companyTypeList, setCompanyTypeList] = React.useState([]);
   
   const [titleListData, setTitleListData] = React.useState([]);
   const [user, setUser] = React.useState({
@@ -51,11 +53,12 @@ const RegisterViewScreen = (props: Props) => {
   });
   const [error, setError] = React.useState('');
   const [getTitleList] = useGetTitleListMutation();
+  const [getCompanyTypeList] = useGetCompanyTypeListMutation();
 
   let titleArray = [];
 
   const nextScreen = () => {
-    console.log('called');
+    console.log('personal detail');
     try {
       for (const key in user) {
         if (
@@ -66,7 +69,6 @@ const RegisterViewScreen = (props: Props) => {
           throw (Error.name = `${key} is empty`);
         }
       }
-      console.log(user);
       if (index==2) {
         for (const key in individualDetail) {
           if (
@@ -77,26 +79,27 @@ const RegisterViewScreen = (props: Props) => {
             throw (Error.name = `${key} is empty`);
           }
         }
-        //console.log(individualDetail);
       }else{
-        // for (const key in companyDetail) {
-        //   if (
-        //     companyDetail[key] === null ||
-        //     companyDetail[key] === '' ||
-        //     companyDetail[key] === undefined
-        //   ) {
-        //     throw (Error.name = `${key} is empty`);
-        //   }
-        // }
-        //console.log(companyDetail);
+        for (const key in companyDetail) {
+          if (
+            companyDetail[key] === null ||
+            companyDetail[key] === '' ||
+            companyDetail[key] === undefined
+          ) {
+            throw (Error.name = `${key} is empty`);
+          }
+        }
+      }
+      if(user.password!==user.confirm_password){
+        throw (Error.name = 'Password and confirm password not match');
       }
       dispatch(
         setRegister({
           account_type: index == 2 ? 1 : 2,
           email: user.email,
-          phone: user.phone,    
+          phone_number: user.phone,    
           password: user.password,
-          confirm_password: user.confirm_password,
+          //confirm_password: user.confirm_password,
           title_id: individualDetail.title_id,
           occupation: individualDetail.occupation,
           first_name: individualDetail.first_name,
@@ -104,10 +107,10 @@ const RegisterViewScreen = (props: Props) => {
           last_name: individualDetail.last_name,
           company_name: companyDetail.company_name,
           company_type_id: companyDetail.company_type_id,
-          tin_or_ein: companyDetail,
-          company_website: companyDetail,
-          contact_person: companyDetail,
-          position_in_company: companyDetail
+          tin_or_ein: companyDetail.tin_or_ein,
+          company_website: companyDetail.company_website,
+          contact_person: companyDetail.contact_person,
+          position_in_company: companyDetail.position_in_company
         }),
       );
       navigation.dispatch(
@@ -146,14 +149,41 @@ const RegisterViewScreen = (props: Props) => {
       // setTimeout(() => {
       //   dispatch(setError({error: false, message: ''}));
       // }, 350);
-      console.log(err, 'EERRRR');
+      console.log(err, 'Title List');
+    }
+    setLoading(false);
+  }
+
+  const getCompanyTypeListData = async() => {
+    setLoading(true);
+    try {
+      await getCompanyTypeList({})
+        .unwrap()
+        .then(res => {
+          if (res.success) {
+            const CompanyTypeListContent: CompanyTypeResponse = res?.data;
+            const CompanyTypeDropdownData: any = [];
+            for (let i = 0; i < CompanyTypeListContent.length; i++) {
+              CompanyTypeDropdownData[i] = {
+                label: CompanyTypeListContent[i].name,
+                id: CompanyTypeListContent[i].id,
+                value: CompanyTypeListContent[i].id,
+              };
+            }
+            setCompanyTypeList(CompanyTypeDropdownData);
+          }
+        });
+    } catch (err) {
+      console.log(err, 'Company Type error');
     }
     setLoading(false);
   }
 
   useEffect(() => {
     getTitleListData();
+    getCompanyTypeListData();
   }, []);
+
 
   return (
     <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
@@ -355,7 +385,11 @@ const RegisterViewScreen = (props: Props) => {
                 value={companyDetail.company_name}
                 onChange={val => setCompanyDetail({...companyDetail, company_name: val.nativeEvent.text})}
               />
-              <DropDown label="Company Type" />
+              <DropDown 
+                label="Company Type"
+                datas={companyTypeList}
+                onChange={val => setCompanyDetail({...companyDetail, company_type_id: val})} 
+                />
               <TextInput
                 label="Company TIN / EIN Number"
                 placehoder="Enter Company TIN / EIN Number"
