@@ -1149,3 +1149,179 @@ export interface OwnerBillListResponseData {
   data: {data: OwnerBillList};
   message: string;
 }
+
+export interface TitleListData {
+  id: number;
+  name: string;
+  description?: string;
+  status?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TitleList extends Array<TitleListData>{}
+
+export interface TitleListResponseData {
+  success: boolean;
+  data: TitleList;
+  message: string;
+}
+
+export interface StateListData {
+  id: number;
+  name: string;
+  state_code?: string;
+  country_id?: number;
+  country_code?: string;
+}
+
+export interface StateListResponse extends Array<StateListData> {}
+
+export interface StateListResponseData {
+  success: boolean;
+  data: StateListResponse;
+  message: string;
+}
+
+export interface CityListRequestData {
+  id: number;
+}
+
+export interface CityListData {
+  id: number;
+  name: string;
+  state_id?: number;
+  country_id?: number;
+  country_code?: string;
+}
+
+export interface CityListResponse extends Array<CityListData> {}
+
+export interface CityListResponseData {
+  success: boolean;
+  data: CityListResponse;
+  message: string;
+}
+
+export interface RegisterRequestData {
+  account_type: number;
+  title_id: number;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  occupation: string;
+  password: string;
+  confirm_password: string;
+  address: string;
+  address_two: string;
+  city: number;
+  state: number;
+  zip: string;
+  countryId: number;
+  company_website: string;
+  contact_person: string;
+  company_name: string;
+  company_type_id: string;
+  region_code: string;
+  tin_or_ein: string;
+  position_in_company: string;
+}
+
+export interface RegisterResponseData {
+  success?: boolean;
+  data: {
+      token: string;
+      user_detail: {
+          user_id: number;
+          title_id: string;
+          first_name: string;
+          middle_name: string;
+          last_name: string;
+          phone?: string;
+          address?: string;
+          address_two?: string;
+          city?: any;
+          state?: any;
+          zip?: string;
+          account_type?: any;
+          nationality?: any;
+          national_id?: any;
+          passport_number?: string;
+          passport_expiry?: any;
+          profile_photo?: any;
+          company_website?: string;
+          contact_person?: string;
+          company_name?: string;
+          company_type_id?: any;
+          region_code?: string;
+          tin_or_ein?: any;
+          position_in_company?: string;
+          occupation?: string;
+          updated_at?: string;
+          created_at?: string;
+          id?: number;
+      }
+  },
+  message: string;
+}
+
+export interface UserProfileResponseData {
+  success?: boolean
+  data: {
+      id: number;
+      user_id: number;
+      title_id: number;
+      first_name: string;
+      middle_name: string;
+      last_name: string;
+      email?: any;
+      phone?: string;
+      address1?: string;
+      address2?: string;
+      city_id?: number;
+      state_id?: number;
+      zip?: string;
+      account_type?: number;
+      nationality?: number;
+      national_id?: any;
+      passport_number?: any;
+      passport_expiry?: any;
+      visa_number?: any;
+      visa_expiry?: any;
+      profile_photo?: any;
+      company_type_id?: any;
+      company_name?: any;
+      contact_person?: any;
+      contact_person_position_in_company?: any;
+      contact_number?: any;
+      contact_number_region_code?: any;
+      company_website?: any;
+      company_tin_ein_number?: any;
+      property_id?: any;
+      occupation?: any;
+      region_code?: string;
+      annual_income?: string;
+      is_employed?: number;
+      tenant_company_name?: string;
+      tenant_company_ph_number?: string;
+      tenant_company_address_one?: string;
+      tenant_company_address_two?: any;
+      tenant_company_state_id?: string;
+      tenant_company_city_id?: string;
+      tenant_job_title?: any;
+      tenant_source_of_income?: any;
+      is_previously_rented?: number;
+      reason_of_leaving_previous_property?: string;
+      created_at?: string;
+      updated_at?: string;
+      user_details?: {
+          id?: number;
+          name?: any;
+          email?: string;
+          role_id?: number;
+      }
+  },
+  message?: string;
+}

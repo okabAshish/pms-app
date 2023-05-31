@@ -1,5 +1,5 @@
 import {CommonActions, useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   ImageBackground,
   SafeAreaView,
@@ -12,15 +12,148 @@ import {
 import PhoneInput from 'react-native-phone-number-input';
 import DropDown from '../../components/DropDown/DropDown';
 import TextInput from './TextInput';
-
+import {useGetTitleListMutation} from '../../features/auth/auth';
+import {TitleList} from '../../features/types';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
+import {useDispatch} from 'react-redux';
+//import {setError} from '../../features/error/error';
+import {setRegister} from '../../features/auth/authProfile';
 type Props = {};
 
 const RegisterViewScreen = (props: Props) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
+  const [loading, setLoading] = React.useState(false);  
   const [index, setIndex] = React.useState(2);
-  const [user, setUser] = React.useState({email: ''});
+  
+  const [titleListData, setTitleListData] = React.useState([]);
+  const [user, setUser] = React.useState({
+    email: '',
+    phone: '',    
+    password: '',
+    confirm_password: ''
+  });
+  const [individualDetail, setIndividualDetail] = React.useState({
+    title_id: null,
+    occupation: '',
+    first_name: '',
+    middle_name: '',
+    last_name: '',
+  });
+  const [companyDetail, setCompanyDetail] = React.useState({    
+    company_name: '',
+    company_type_id: '',
+    tin_or_ein: '',
+    company_website: '',
+    contact_person: '',
+    position_in_company: ''
+  });
   const [error, setError] = React.useState('');
+  const [getTitleList] = useGetTitleListMutation();
+
+  let titleArray = [];
+
+  const nextScreen = () => {
+    console.log('called');
+    try {
+      for (const key in user) {
+        if (
+          user[key] === null ||
+          user[key] === '' ||
+          user[key] === undefined
+        ) {
+          throw (Error.name = `${key} is empty`);
+        }
+      }
+      console.log(user);
+      if (index==2) {
+        for (const key in individualDetail) {
+          if (
+            (individualDetail[key] === null ||
+            individualDetail[key] === '' ||
+            individualDetail[key] === undefined) && (key !== 'middle_name')
+          ) {
+            throw (Error.name = `${key} is empty`);
+          }
+        }
+        //console.log(individualDetail);
+      }else{
+        // for (const key in companyDetail) {
+        //   if (
+        //     companyDetail[key] === null ||
+        //     companyDetail[key] === '' ||
+        //     companyDetail[key] === undefined
+        //   ) {
+        //     throw (Error.name = `${key} is empty`);
+        //   }
+        // }
+        //console.log(companyDetail);
+      }
+      dispatch(
+        setRegister({
+          account_type: index == 2 ? 1 : 2,
+          email: user.email,
+          phone: user.phone,    
+          password: user.password,
+          confirm_password: user.confirm_password,
+          title_id: individualDetail.title_id,
+          occupation: individualDetail.occupation,
+          first_name: individualDetail.first_name,
+          middle_name: individualDetail.middle_name,
+          last_name: individualDetail.last_name,
+          company_name: companyDetail.company_name,
+          company_type_id: companyDetail.company_type_id,
+          tin_or_ein: companyDetail,
+          company_website: companyDetail,
+          contact_person: companyDetail,
+          position_in_company: companyDetail
+        }),
+      );
+      navigation.dispatch(
+        CommonActions.navigate({name: 'Register-Address'}),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getTitleListData = async() => {
+    setLoading(true);
+    try {
+      // setLoading(true);
+      await getTitleList({})
+        .unwrap()
+        .then(res => {
+          if (res.success) {
+            //setPropertyTypeList(res?.data)
+
+            const titleListContent: TitleList = res?.data;
+            const titleDropdownData: any = [];
+            for (let i = 0; i < titleListContent.length; i++) {
+              titleDropdownData[i] = {
+                label: titleListContent[i].name,
+                id: titleListContent[i].id,
+                value: titleListContent[i].id,
+              };
+            }
+            setTitleListData(titleDropdownData);
+          }
+        });
+      // setLoading(true);
+    } catch (err) {
+      // dispatch(setError({error: true, message: err}));
+      // setTimeout(() => {
+      //   dispatch(setError({error: false, message: ''}));
+      // }, 350);
+      console.log(err, 'EERRRR');
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getTitleListData();
+  }, []);
 
   return (
     <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
@@ -103,6 +236,8 @@ const RegisterViewScreen = (props: Props) => {
               borderBottomColor: '#000',
               marginBottom: 20,
             }}
+            value={user.email}
+            onChange={val => setUser({...user, email: val.nativeEvent.text}) }
           />
           <View>
             <Text
@@ -123,6 +258,8 @@ const RegisterViewScreen = (props: Props) => {
               textInputStyle={{fontFamily: 'Poppins-Regular', fontSize: 14}}
               codeTextStyle={{fontFamily: 'Poppins-Regular', fontSize: 14}}
               textContainerStyle={{backgroundColor: '#fff'}}
+              value={user.phone}
+              onChangeText ={val => setUser({...user, phone: val})}
             />
           </View>
           {index === 2 ? (
@@ -134,16 +271,31 @@ const RegisterViewScreen = (props: Props) => {
                   marginBottom: 20,
                   flex: 1,
                 }}>
-                <TextInput
+                  <DropDown label="Title"
+                  datas={titleListData}
+                  onChange={val => {
+                    setIndividualDetail({...individualDetail, title_id: val});
+                  }} 
+                  containerStyles={{
+                    flex: 1,
+                    marginRight: 20,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#000',
+                  }}/>
+                {/* <TextInput
                   label="Title"
                   placehoder="Mr."
+                  datas={titleListData}
+                  onChange={val => {
+                    setIndividualDetail({...individualDetail, title_id: val});
+                  }}
                   containerStyles={{
                     flex: 1,
                     marginRight: 20,
                     borderBottomWidth: 1,
                     borderBottomColor: '#000',
                   }}
-                />
+                /> */}
                 <TextInput
                   label="Occupation"
                   placehoder=""
@@ -152,6 +304,8 @@ const RegisterViewScreen = (props: Props) => {
                     borderBottomWidth: 1,
                     borderBottomColor: '#000',
                   }}
+                  value={individualDetail.occupation}
+                  onChange={val => setIndividualDetail({...individualDetail, occupation: val.nativeEvent.text})}
                 />
               </View>
               <TextInput
@@ -162,6 +316,8 @@ const RegisterViewScreen = (props: Props) => {
                   borderBottomColor: '#000',
                   marginBottom: 20,
                 }}
+                value={individualDetail.first_name}
+                onChange={val => setIndividualDetail({...individualDetail, first_name: val.nativeEvent.text})}
               />
               <TextInput
                 label="Middle Name ( Optional )"
@@ -171,6 +327,8 @@ const RegisterViewScreen = (props: Props) => {
                   borderBottomColor: '#000',
                   marginBottom: 20,
                 }}
+                value={individualDetail.middle_name}
+                onChange={val => setIndividualDetail({...individualDetail, middle_name: val.nativeEvent.text})}
               />
               <TextInput
                 label="Last Name"
@@ -180,6 +338,8 @@ const RegisterViewScreen = (props: Props) => {
                   borderBottomColor: '#000',
                   marginBottom: 20,
                 }}
+                value={individualDetail.last_name}
+                onChange={val => setIndividualDetail({...individualDetail, last_name: val.nativeEvent.text})}
               />
             </View>
           ) : (
@@ -192,6 +352,8 @@ const RegisterViewScreen = (props: Props) => {
                   borderBottomColor: '#000',
                   marginBottom: 20,
                 }}
+                value={companyDetail.company_name}
+                onChange={val => setCompanyDetail({...companyDetail, company_name: val.nativeEvent.text})}
               />
               <DropDown label="Company Type" />
               <TextInput
@@ -202,6 +364,8 @@ const RegisterViewScreen = (props: Props) => {
                   borderBottomColor: '#000',
                   marginBottom: 20,
                 }}
+                value={companyDetail.tin_or_ein}
+                onChange={val => setCompanyDetail({...companyDetail, tin_or_ein: val.nativeEvent.text})}
               />
               <TextInput
                 label="Company Website"
@@ -211,6 +375,8 @@ const RegisterViewScreen = (props: Props) => {
                   borderBottomColor: '#000',
                   marginBottom: 20,
                 }}
+                value={companyDetail.company_website}
+                onChange={val => setCompanyDetail({...companyDetail, company_website: val.nativeEvent.text})}
               />
               <TextInput
                 label="Contact Person Name"
@@ -220,6 +386,8 @@ const RegisterViewScreen = (props: Props) => {
                   borderBottomColor: '#000',
                   marginBottom: 20,
                 }}
+                value={companyDetail.contact_person}
+                onChange={val => setCompanyDetail({...companyDetail, contact_person: val.nativeEvent.text})}
               />
               <TextInput
                 label="Position In Company"
@@ -229,6 +397,8 @@ const RegisterViewScreen = (props: Props) => {
                   borderBottomColor: '#000',
                   marginBottom: 20,
                 }}
+                value={companyDetail.position_in_company}
+                onChange={val => setCompanyDetail({...companyDetail, position_in_company: val.nativeEvent.text})}
               />
             </View>
           )}
@@ -243,6 +413,8 @@ const RegisterViewScreen = (props: Props) => {
               marginBottom: 20,
             }}
             secureTextEntry={true}
+            value={user.password}
+            onChange={val => setUser({...user, password: val.nativeEvent.text})}
           />
           <TextInput
             label="Confirm password"
@@ -253,6 +425,8 @@ const RegisterViewScreen = (props: Props) => {
               marginBottom: 20,
             }}
             secureTextEntry={true}
+            value={user.confirm_password}
+            onChange={val => setUser({...user, confirm_password: val.nativeEvent.text})}
           />
 
           <View style={{marginVertical: 20}}>
@@ -300,9 +474,7 @@ const RegisterViewScreen = (props: Props) => {
                 backgroundColor: '#00ABE4',
               }}
               onPress={() => {
-                navigation.dispatch(
-                  CommonActions.navigate({name: 'Register-Address'}),
-                );
+                nextScreen()
               }}>
               <Text
                 style={{

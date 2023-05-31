@@ -60,7 +60,7 @@ const AddPropertyScreen = (props: Props) => {
   // const [size, setSize] = useState('');
   // const [builtYear, setBuiltYear] = useState('');
   // const [hoeFee, setHoeFee] = useState('');
-  // const [feeDuration, setFeeDuration] = useState('');
+  // const [feeDuration, setFeeDuration] = useState(''); 
 
   let [property, setProperty] = useState({
     title: '',
