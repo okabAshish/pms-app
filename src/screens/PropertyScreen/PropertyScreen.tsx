@@ -20,7 +20,6 @@ const PropertyScreen = (props: Props) => {
     setOnEndReachedCalledDuringMomentum,
   ] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(0);
 
   console.log(onEndReachedCalledDuringMomentum, propertyList.length, page);
 
