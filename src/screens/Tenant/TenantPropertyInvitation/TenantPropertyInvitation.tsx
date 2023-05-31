@@ -13,6 +13,7 @@ const InvitationScreen = (props: Props) => {
   );
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
 
   const [getPropertyInvitation] = useGetPropertyInvitationMutation();
 
@@ -25,6 +26,7 @@ const InvitationScreen = (props: Props) => {
           console.log(res);
 
           if (res.success) {
+            setTotal(res.data.meta.total);
             setInvitationList(res?.data?.data);
           }
         });
@@ -86,11 +88,11 @@ const InvitationScreen = (props: Props) => {
         <FlatList
           data={invitationList}
           keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={renderFooter}
+          ListFooterComponent={invitationList.length !== total && renderFooter}
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={0.5}
           onEndReached={() => {
-            reGetInvitation();
+            invitationList.length !== total && reGetInvitation();
           }}
           renderItem={({item, index}) => (
             <TenantInvitationCard

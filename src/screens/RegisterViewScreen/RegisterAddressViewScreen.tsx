@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
+  Alert,
   ImageBackground,
   SafeAreaView,
   ScrollView,
@@ -11,15 +11,165 @@ import {
 } from 'react-native';
 
 import TextInput from './TextInput';
+import DropDown from '../../components/DropDown/DropDown';
+import {StateListResponse, CityListResponse} from '../../features/types';
+import {useGetStateListMutation, useGetCityListMutation, useAddRegisterDataMutation} from '../../features/auth/auth';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import AddContractSubTermsCard from '../../components/AddContractTermsCard/AddContractSubTermsCard';
+import {useDispatch} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CommonActions, useNavigation} from '@react-navigation/native';
+import {setLoggedIn, setToken, setUser} from '../../features/auth/authProfile';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 
 type Props = {};
 
 const RegisterAddressViewScreen = (props: Props) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
+  const oldRegister=useSelector<RootState>(state=>state.auth)
+
+  const [getStateList] = useGetStateListMutation();
+  const [getCityList] = useGetCityListMutation();
+  const [addRegisterData] = useAddRegisterDataMutation();
+
+  const [loading, setLoading] = React.useState(false);
   const [index, setIndex] = React.useState(2);
   const [user, setUser] = React.useState({email: ''});
   const [error, setError] = React.useState('');
+  const [countryList, setCountryList] = React.useState([{
+    label: 'United State',
+    id: 233,
+    value: 233
+  }]);
+  const [stateList, setStateList] = React.useState([]);
+  const [cityList, setCityList] = React.useState([]);
+  const [addressData, setAddressData] = React.useState({
+    address: '',
+    address_two: '',
+    countryId: 233,
+    state: 0,
+    city: 0,
+    zip: ''
+  });
+  console.log('older data:',oldRegister.register);
+  const getStateListData = async() => {
+    //setLoading(true);
+    try {
+      await getStateList({})
+        .unwrap()
+        .then(res => {
+          if (res.success) {
+            const stateListContent: StateListResponse = res?.data;
+            const stateDropdownData: any = [];
+            for (let i = 0; i < stateListContent.length; i++) {
+              stateDropdownData[i] = {
+                label: stateListContent[i].name,
+                id: stateListContent[i].id,
+                value: stateListContent[i].id,
+              };
+            }
+            setStateList(stateDropdownData);
+          }
+        });
+    } catch (err) {
+      // dispatch(setError({error: true, message: err}));
+      // setTimeout(() => {
+      //   dispatch(setError({error: false, message: ''}));
+      // }, 350);
+      console.log(err, 'EERRRR');
+    }
+    //setLoading(false);
+  }
+
+  const getCityListData = async id => {    
+    //setLoading(true);
+    try {
+      await getCityList({id: id})
+        .unwrap()
+        .then(res => {
+          if (res.success) {
+            const cityListContent: CityListResponse = res?.data;
+            const cityDropdownData: any = [];
+            for (let i = 0; i < cityListContent.length; i++) {
+              cityDropdownData[i] = {
+                label: cityListContent[i].name,
+                id: cityListContent[i].id,
+                value: cityListContent[i].id,
+              };
+            }
+            setCityList(cityDropdownData);
+          }
+        });
+    } catch (err) {
+      console.log(err, 'EERRRR');
+    }
+    //setLoading(false);
+  }
+
+  const submitRegisterForm = () => {
+    console.log('Submit Form');
+    
+    try {
+      for (const key in addressData) {
+        if (
+          (addressData[key] === null ||
+          addressData[key] === '' ||
+          addressData[key] === undefined) &&
+          key !== 'address_two'
+        ) {
+          throw (Error.name = `${key} is empty`);
+        }
+      }
+      AddUser();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+    const AddUser = async () => {
+      let req = {...oldRegister.register, ...addressData};
+      console.log('total:',req);
+      
+      setLoading(true);
+      try {
+        await addRegisterData({body: req})
+          .unwrap()
+          .then(async res => {
+            console.log('api run');
+            if (res?.success) {
+              await AsyncStorage.setItem('token', res?.data?.token);
+              await AsyncStorage.setItem('role_id', String.apply(2));
+              let user = JSON.stringify(res.data?.user_detail);
+              await AsyncStorage.setItem('user', user);
+              console.log('success');
+              //}
+              //dispatch(setUser(user));
+              dispatch(setToken(res?.data?.token));
+              dispatch(setLoggedIn(true));
+              navigation.dispatch(
+                CommonActions.navigate({name: 'Main', path: 'DashBoard'}),
+              );
+            }else{
+              console.warn('Fail to Register');
+            }
+          });
+      } catch (err) {
+        console.log(err, 'EERRRR');
+      }
+      setLoading(false);
+    }
+  
+  useEffect(() => {
+    getStateListData();
+  }, []);
+
+  if(loading){
+    return <LoadingModal />;
+  }
+
   return (
     <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
       <StatusBar backgroundColor={'rgba(210, 244, 255, 0.25)'} />
@@ -40,6 +190,18 @@ const RegisterAddressViewScreen = (props: Props) => {
         </ImageBackground>
         <View style={{marginTop: 50, paddingHorizontal: 30}}>
           <TextInput
+            label="Address 1"
+            placehoder="Enter the Address"
+            containerStyles={{
+              flex: 1,
+              marginBottom: 20,
+              borderBottomWidth: 1,
+              borderBottomColor: '#000',
+            }}
+            value={addressData.address}
+            onChange={e => setAddressData({...addressData, address: e.nativeEvent.text})}
+          />
+          <TextInput
             label="Address 2 (Optional)"
             placehoder="Enter the Address"
             containerStyles={{
@@ -48,6 +210,8 @@ const RegisterAddressViewScreen = (props: Props) => {
               borderBottomWidth: 1,
               borderBottomColor: '#000',
             }}
+            value={addressData.address_two}
+            onChange={e => setAddressData({...addressData, address_two: e.nativeEvent.text})}
           />
           <View
             style={{
@@ -56,22 +220,29 @@ const RegisterAddressViewScreen = (props: Props) => {
               marginBottom: 20,
               flex: 1,
             }}>
-            <TextInput
+            <DropDown
+              datas={countryList}
+              value={countryList.find(
+                val => val.id == 233,
+              )}
               label="Nationality"
-              placehoder="Enter the Nationality"
               containerStyles={{
                 flex: 1,
                 marginRight: 20,
                 borderBottomWidth: 1,
                 borderBottomColor: '#000',
               }}
+              value="United State"
             />
-            <TextInput
+            <DropDown
+              datas={stateList}
+              onChange={val => {
+                setAddressData({...addressData, state: val});
+                getCityListData(val)
+              }} 
               label="State"
-              placehoder="Enter the State"
               containerStyles={{
                 flex: 1,
-
                 borderBottomWidth: 1,
                 borderBottomColor: '#000',
               }}
@@ -84,9 +255,12 @@ const RegisterAddressViewScreen = (props: Props) => {
               marginBottom: 20,
               flex: 1,
             }}>
-            <TextInput
+            <DropDown
+              datas={cityList}
+              onChange={val => {
+                setAddressData({...addressData, city: val});
+              }}
               label="City"
-              placehoder="Enter the City"
               containerStyles={{
                 flex: 1,
                 marginRight: 20,
@@ -99,10 +273,11 @@ const RegisterAddressViewScreen = (props: Props) => {
               placehoder="Enter the Zip"
               containerStyles={{
                 flex: 1,
-
                 borderBottomWidth: 1,
                 borderBottomColor: '#000',
               }}
+              value={addressData.zip}
+              onChange={e => setAddressData({...addressData, zip: e.nativeEvent.text})}
             />
           </View>
 
@@ -151,9 +326,7 @@ const RegisterAddressViewScreen = (props: Props) => {
                 backgroundColor: '#00ABE4',
               }}
               onPress={() => {
-                // navigation.dispatch(
-                //   CommonActions.navigate({name: 'Register-Address'}),
-                // );
+                submitRegisterForm()
               }}>
               <Text
                 style={{

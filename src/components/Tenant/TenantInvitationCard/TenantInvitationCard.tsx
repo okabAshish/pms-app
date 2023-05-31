@@ -1,4 +1,4 @@
-import {faEllipsisVertical} from '@fortawesome/free-solid-svg-icons';
+import {faEye, faThumbsUp} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
@@ -265,18 +265,18 @@ const TenantInvitationCard = (props: Props) => {
 
               {/* <View style={{flex: 1}}>
                             <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                            <TouchableOpacity
-                                style={{
-                                backgroundColor: 'rgba(69, 72, 95, 0.4)',
-                                padding: 4,
-                                borderRadius: 3,
-                                }}>
-                                <FontAwesomeIcon
-                                icon={faEye}
-                                color="rgba(0, 0, 0, 0.5)"
-                                size={12}
-                                />
-                            </TouchableOpacity>
+                                <TouchableOpacity onPress={ () => acceptTenantInvitation()}
+                                    style={{
+                                    backgroundColor: 'rgba(69, 72, 95, 0.4)',
+                                    padding: 4,
+                                    borderRadius: 3,
+                                    }}>
+                                    <FontAwesomeIcon
+                                    icon={faThumbsUp}
+                                    color="#54d2ab"
+                                    size={12}
+                                    />
+                                </TouchableOpacity>
                             </View>
                         </View> */}
             </View>

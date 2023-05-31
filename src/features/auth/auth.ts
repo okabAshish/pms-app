@@ -19,6 +19,15 @@ import {
   StateOfCountryListParams,
   StateOfCountryListResponseData,
   TenantDashboardResponseData,
+  TitleListResponseData,
+  StateListResponseData,
+  CityListResponseData,
+  CityListRequestData,
+  RegisterResponseData, 
+  RegisterRequestData,
+  UserProfileResponseData,
+  CompanyTypeResponseData,
+  UserProfileDetailResponseData
 } from '../types';
 
 // Define a service using a base URL and expected endpoints
@@ -169,7 +178,71 @@ export const authApi = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
-      }),
+      }),      
+    }),
+    getTitleList: builder.mutation<TitleListResponseData, {}>({
+      query: req => ({
+        url: 'title-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),      
+    }),
+    getStateList: builder.mutation<StateListResponseData, {}>({
+      query: req => ({
+        url: 'state-list/233',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),      
+    }),
+    getCityList: builder.mutation<CityListResponseData, CityListRequestData>({
+      query: req => ({
+        url: `city-list/${req.id}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),      
+    }),
+    addRegisterData: builder.mutation<RegisterResponseData, RegisterRequestData>({
+      query: req => ({
+        url: 'owner-register',
+        method: 'POST',
+        body: req.body,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),      
+    }),
+    UserProfileData: builder.mutation<UserProfileResponseData, {}>({
+      query: req => ({
+        url: 'profile',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),      
+    }),
+    getCompanyTypeList: builder.mutation<CompanyTypeResponseData, {}>({
+      query: req => ({
+        url: 'company-type-list',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),      
+    }),
+    getUserProfileDetail: builder.mutation<UserProfileDetailResponseData, {}>({
+      query: req => ({
+        url: 'profile',
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),      
     }),
   }),
 });
@@ -189,4 +262,11 @@ export const {
   useGetStateOfCountryMutation,
   useGetCityOfStateMutation,
   useGetImageCategoryListMutation,
+  useGetTitleListMutation,
+  useGetStateListMutation,
+  useGetCityListMutation,
+  useUserProfileDataMutation,
+  useGetCompanyTypeListMutation,
+  useAddRegisterDataMutation,
+  useGetUserProfileDetailMutation
 } = authApi;

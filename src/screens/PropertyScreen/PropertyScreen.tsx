@@ -20,6 +20,7 @@ const PropertyScreen = (props: Props) => {
     setOnEndReachedCalledDuringMomentum,
   ] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
 
   console.log(onEndReachedCalledDuringMomentum, propertyList.length, page);
 
@@ -32,6 +33,7 @@ const PropertyScreen = (props: Props) => {
         .unwrap()
         .then(res => {
           if (res.success) {
+            setTotal(res.data.meta.total);
             setPropertyList(res?.data?.data);
             setTotal(res.data?.meta.total);
             // setPage(page + 1);

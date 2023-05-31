@@ -19,6 +19,31 @@ const authProfile = createSlice({
     loading: false,
     isLoggedIn: false as Auth['isLoggedIn'],
     token: '' as Auth['token'],
+    register:{
+      account_type: null,
+      title_id: null,
+      first_name: "",
+      middle_name: "",
+      last_name: "",
+      email: "",
+      phone_number: "",
+      occupation: "",
+      password: "",
+      confirm_password: "",
+      address: "",
+      address_two: "",
+      city: null,
+      state: null,
+      zip: "",
+      countryId: null,
+      company_website: "",
+      contact_person: "",
+      company_name: "",
+      company_type_id: "",
+      region_code: "",
+      tin_or_ein: "",
+      position_in_company: "",
+    }
   },
   reducers: {
     setUser: (state, action: PayloadAction<any>) => {
@@ -35,9 +60,12 @@ const authProfile = createSlice({
       state.isLoggedIn = false;
       state.user = {} as Auth['user'];
     },
+    setRegister:  (state, action: PayloadAction<any>) => {
+      state.register = action.payload;
+    },
   },
 });
 
-export const {setUser, setToken, setLoggedIn, logOut} = authProfile.actions;
+export const {setUser, setToken, setLoggedIn, logOut, setRegister} = authProfile.actions;
 
 export default authProfile.reducer;
