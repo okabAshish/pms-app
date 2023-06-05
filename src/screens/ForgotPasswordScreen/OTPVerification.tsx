@@ -1,7 +1,8 @@
 import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {CommonActions, useNavigation} from '@react-navigation/native';
-import React, {useRef} from 'react';
+import dayjs from 'dayjs';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Image,
   ImageBackground,
@@ -14,13 +15,29 @@ import {
 } from 'react-native';
 
 import OtpInputs from 'react-native-otp-inputs';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
+import {
+  useForgotPasswordCheckUserMutation,
+  useForgotPasswordVerifyUserMutation,
+} from '../../features/auth/auth';
 
 type Props = {};
 
 const OTPVerification = (props: Props) => {
   const navigation = useNavigation();
 
+  const [time, setTime] = useState(10);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setError] = React.useState('');
+  const [OTP, setOTP] = React.useState('');
+
   let otpInput = useRef(null);
+
+  const subtractTimer = () => {
+    setInterval(() => {
+      setTime(time - 1);
+    }, 1000);
+  };
 
   const clearText = () => {
     otpInput.current.clear();
@@ -29,6 +46,82 @@ const OTPVerification = (props: Props) => {
   const setText = () => {
     otpInput.current.setValue('1234');
   };
+
+  const [checkUser] = useForgotPasswordCheckUserMutation();
+  const [verifyUser] = useForgotPasswordVerifyUserMutation();
+
+  useEffect(() => {
+    if (time > 0) {
+      const interval = setInterval(() => {
+        setTime(time - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [time]);
+
+  const handleCheckUser = async () => {
+    console.log('run');
+    setLoading(true);
+    const {email, role_id} = props.route?.params;
+    try {
+      if (!email) {
+        setError('Please enter Valid Email Or Phone Number');
+        return;
+      }
+
+      await checkUser({
+        body: {username: email, role_id: role_id},
+      })
+        .unwrap()
+        .then(res => {
+          console.log(res);
+          if (res.success) {
+          } else {
+            setError(res.message);
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
+
+  const handleVerifyOtp = async () => {
+    console.log('runnn');
+    try {
+      const {email, user_id, role_id} = props.route?.params;
+
+      if (!OTP) {
+        setError('Not a Valid Otp');
+      }
+
+      await verifyUser({
+        body: {user_id: user_id, otp: OTP},
+      })
+        .unwrap()
+        .then(res => {
+          console.log(res);
+          if (res.success) {
+            navigation.dispatch(
+              CommonActions.navigate({
+                name: 'New-Password',
+                params: {
+                  user_id: user_id,
+                },
+              }),
+            );
+          } else {
+            setError(res.message);
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
@@ -135,9 +228,24 @@ const OTPVerification = (props: Props) => {
               fontFamily: 'Poppins-Regular',
               color: '#000',
             }}
-            handleChange={code => console.log(code)}
+            handleChange={code => {
+              setOTP(code);
+              setError('');
+            }}
             numberOfInputs={4}
           />
+
+          {errorMessage && (
+            <Text
+              style={{
+                fontFamily: 'Proppins-Medium',
+                fontSize: 12,
+                color: 'red',
+                marginTop: 15,
+              }}>
+              {errorMessage}
+            </Text>
+          )}
 
           <TouchableOpacity
             style={{
@@ -152,9 +260,7 @@ const OTPVerification = (props: Props) => {
               justifyContent: 'center',
             }}
             onPress={() => {
-              navigation.dispatch(
-                CommonActions.navigate({name: 'New-Password'}),
-              );
+              handleVerifyOtp();
             }}>
             <Text
               style={{
@@ -183,10 +289,14 @@ const OTPVerification = (props: Props) => {
                   justifyContent: 'center',
                   marginVertical: 20,
                   marginRight: 6,
-                }}>
+                }}
+                onPress={() => {
+                  handleCheckUser();
+                }}
+                disabled={time > 0}>
                 <Text
                   style={{
-                    color: 'red',
+                    color: time > 0 ? 'gray' : 'red',
                     fontFamily: 'Poppins-Medium',
                     fontSize: 14,
                     textDecorationLine: 'underline',
@@ -209,7 +319,7 @@ const OTPVerification = (props: Props) => {
                 fontFamily: 'Poppins-Medium',
                 fontSize: 14,
               }}>
-              00:24
+              {time > 0 && dayjs().second(time).format('00:ss')}
             </Text>
           </View>
         </View>

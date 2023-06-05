@@ -1,7 +1,7 @@
 import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {CommonActions, useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   ImageBackground,
@@ -12,12 +12,59 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
+import {useForgotPasswordCheckUserMutation} from '../../features/auth/auth';
 import Input from '../RegisterViewScreen/TextInput';
 
 type Props = {};
 
 const ForgotPasswordScreen = (props: Props) => {
   const navigation = useNavigation();
+  const [email, setEmail] = React.useState('');
+  const [phone, setPhone] = React.useState('');
+  const [error, setError] = React.useState('');
+  const [loading, setLoading] = useState(false);
+
+  const [checkUser] = useForgotPasswordCheckUserMutation();
+
+  const handleCheckUser = async () => {
+    setLoading(true);
+    try {
+      if (!email) {
+        setError('Please enter Valid Email Or Phone Number');
+        return;
+      }
+
+      await checkUser({
+        body: {username: email, role_id: props.route?.params?.role_id},
+      })
+        .unwrap()
+        .then(res => {
+          // console.log(res);
+          if (res.success) {
+            navigation.dispatch(
+              CommonActions.navigate({
+                name: 'OTP-Verification',
+                params: {
+                  email: email,
+                  user_id: res.data.user_id,
+                  role_id: props.route?.params?.role_id,
+                },
+              }),
+            );
+          } else {
+            setError(res.message);
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
+
+  if (loading) {
+    return <LoadingModal />;
+  }
 
   return (
     <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
@@ -91,13 +138,20 @@ const ForgotPasswordScreen = (props: Props) => {
           </View>
 
           <Input
-            label="E-Mail Address"
-            placehoder="Enter Email Address"
+            label="E-Mail Address / Phone Number"
+            placehoder="Enter Email Address (OR) Phone number"
             containerStyles={{
               borderBottomWidth: 1,
               borderBottomColor: '#000',
-              marginVertical: 30,
+              marginTop: 30,
+              marginBottom: 10,
             }}
+            onChange={e => {
+              setEmail(e.nativeEvent.text);
+              setError('');
+            }}
+            value={email}
+            errorMessage={error}
           />
 
           <TouchableOpacity
@@ -112,9 +166,7 @@ const ForgotPasswordScreen = (props: Props) => {
               justifyContent: 'center',
             }}
             onPress={() => {
-              navigation.dispatch(
-                CommonActions.navigate({name: 'OTP-Verification'}),
-              );
+              handleCheckUser();
             }}>
             <Text
               style={{

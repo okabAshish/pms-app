@@ -348,6 +348,12 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
         <View style={{paddingHorizontal: 12, marginTop: 20}}>
           {showSubTermsData &&
             newTerms.map((item, index) => {
+              console.log(
+                props.subTermChecked,
+
+                'Test Lab',
+              );
+
               return (
                 <AddContractSubTermsCard
                   id={item.id}
@@ -363,7 +369,8 @@ const AddContractTermsCard = (props: Props & ContractTermListSingleData) => {
                   setShowSubTermsData={e => setShowSubTermsData(e)}
                   confirmDeleteSubMenu={e => confirmDeleteSubMenu(e)}
                   handleSubTermCheck={(a, b) => handleSubTermCheck(a, b)}
-                  checked={props.subTermChecked?.find(val => val === item)}
+                  checked={props.subTermChecked?.find(val => val === item.id)}
+                  terms={props.subTermChecked}
                   term_title={Term}
                 />
               );

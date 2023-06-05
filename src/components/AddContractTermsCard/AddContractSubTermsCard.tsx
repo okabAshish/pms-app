@@ -28,7 +28,7 @@ const AddContractSubTermsCard = (props: Props) => {
 
   const contract = useSelector<RootState>(s => s.contract);
 
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState('');
 
   const checkContract = () => {
     if (contract?.title_term_data?.length > 0) {
@@ -56,10 +56,17 @@ const AddContractSubTermsCard = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    setChecked(props.term_title);
-  }, [props.term_title]);
+    console.log(props.checked && props.term_title, 'cHECk');
+    if (props.terms?.length > 0) {
+      setChecked(props.checked);
+    } else if (props.term_title) {
+      setChecked(props.id);
+    } else if (!props.term_title) {
+      setChecked('');
+    }
+  }, [props.checked, props.term_title]);
 
-  console.log(props.checked);
+  console.log(props.checked, '[][]');
 
   return (
     <View key={props.id} style={{flexDirection: 'row'}}>
@@ -77,10 +84,10 @@ const AddContractSubTermsCard = (props: Props) => {
         }}
         containerStyles={{flex: 1}}
         onChange={e => {
-          setChecked(!checked);
+          setChecked(props.id);
           props.handleSubTermCheck(props.id, props.title_id);
         }}
-        value={props.checked ? props.checked : checked ? props.id : ''}
+        value={checked ? checked : ''}
       />
       {props.type === 1 && props?.created_by === props.user_details.user_id && (
         <View style={{flexDirection: 'row', alignItems: 'center'}}>

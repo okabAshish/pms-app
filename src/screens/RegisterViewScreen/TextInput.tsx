@@ -30,6 +30,7 @@ type Props = {
   inputProps?: TextInputProps;
   inputStyles?: ViewStyle;
   secureTextEntry: boolean;
+  errorMessage: string;
 };
 
 const defaultProps: Props = {
@@ -64,41 +65,54 @@ const Input = (props: Props) => {
   }, [props.value]);
 
   return (
-    <View style={{marginVertical: 10, ...props.containerStyles}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginBottom: 5,
-        }}>
+    <>
+      <View style={{marginTop: 10, ...props.containerStyles}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 5,
+          }}>
+          <Text
+            style={{
+              color: '#000',
+              fontFamily: 'Poppins-Medium',
+              fontSize: 12,
+              letterSpacing: 1,
+            }}>
+            {props?.label}
+          </Text>
+        </View>
+        <TextInput
+          onChange={props.onChange}
+          style={{
+            ...props.inputStyles,
+          }}
+          placeholder={props.placehoder}
+          placeholderTextColor={'rgba(0,0,0,0.4)'}
+          autoFocus={props.autoFoucs}
+          autoCapitalize={props.autoCapitalize}
+          autoComplete={props.autoComplete}
+          autoCorrect={props.autoCorrect}
+          value={value}
+          editable={!props.disabled}
+          keyboardType={props.keyboardType}
+          secureTextEntry={props.secureTextEntry}
+          {...props.inputProps}
+        />
+      </View>
+      {props.errorMessage && (
         <Text
           style={{
-            color: '#000',
-            fontFamily: 'Poppins-Medium',
+            fontFamily: 'Proppins-Medium',
             fontSize: 12,
-            letterSpacing: 1,
+            color: 'red',
+            marginBottom: 5,
           }}>
-          {props?.label}
+          {props.errorMessage}
         </Text>
-      </View>
-      <TextInput
-        onChange={props.onChange}
-        style={{
-          ...props.inputStyles,
-        }}
-        placeholder={props.placehoder}
-        placeholderTextColor={'rgba(0,0,0,0.4)'}
-        autoFocus={props.autoFoucs}
-        autoCapitalize={props.autoCapitalize}
-        autoComplete={props.autoComplete}
-        autoCorrect={props.autoCorrect}
-        value={value}
-        editable={!props.disabled}
-        keyboardType={props.keyboardType}
-        secureTextEntry={props.secureTextEntry}
-        {...props.inputProps}
-      />
-    </View>
+      )}
+    </>
   );
 };
 

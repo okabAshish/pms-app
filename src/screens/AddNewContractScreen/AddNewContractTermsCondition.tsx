@@ -232,10 +232,13 @@ const AddNewContractTermsCondition = (props: Props) => {
 
         <KeyboardAwareScrollView style={{marginTop: 20}}>
           {termTitles.map((item, index) => {
-            console.log(
-              checkedTermTitles.find(val => val),
-              'lap',
-            );
+            // console.log(
+            //   checkedTermTitles.find(val => val.title_id === item.id)
+            //     ?.terms_data,
+
+            //   'asdadasda',
+            // );
+
             return (
               <AddContractTermsCard
                 item={item}
@@ -260,7 +263,7 @@ const AddNewContractTermsCondition = (props: Props) => {
                     : false
                 }
                 subTermChecked={
-                  checkedTermTitles.find(val => val.title_id == item.id)
+                  checkedTermTitles.find(val => val.title_id === item.id)
                     ?.terms_data
                 }
               />

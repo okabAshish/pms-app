@@ -193,7 +193,12 @@ const SignUpScreen = (props: Props) => {
                   <TouchableOpacity
                     onPress={() => {
                       navigation.dispatch(
-                        CommonActions.navigate({name: 'Reset-Password'}),
+                        CommonActions.navigate({
+                          name: 'Reset-Password',
+                          params: {
+                            role_id: index,
+                          },
+                        }),
                       );
                     }}>
                     <Text

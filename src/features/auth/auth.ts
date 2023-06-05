@@ -3,9 +3,18 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {BASE_URL} from '../../../config';
 import {
   Auth,
+  CityListRequestData,
+  CityListResponseData,
   CityOfStateListParams,
   CityOfStateListResponseData,
+  CompanyTypeResponseData,
   CountryListResponseData,
+  ForgotPasswordCheckUserRequestBody,
+  ForgotPasswordCheckUserResponseData,
+  ForgotPasswordNewPasswordRequestBody,
+  ForgotPasswordNewPasswordResponseData,
+  ForgotPasswordVerifyUserRequestBody,
+  ForgotPasswordVerifyUserResponseData,
   ImageCategoryListResponseData,
   ListParams,
   LoginBody,
@@ -16,18 +25,15 @@ import {
   OwnerMaintenanceRequestListResponseData,
   OwnerPropertListResponseData,
   OwnerTenantListResponseData,
+  RegisterRequestData,
+  RegisterResponseData,
+  StateListResponseData,
   StateOfCountryListParams,
   StateOfCountryListResponseData,
   TenantDashboardResponseData,
   TitleListResponseData,
-  StateListResponseData,
-  CityListResponseData,
-  CityListRequestData,
-  RegisterResponseData, 
-  RegisterRequestData,
+  UserProfileDetailResponseData,
   UserProfileResponseData,
-  CompanyTypeResponseData,
-  UserProfileDetailResponseData
 } from '../types';
 
 // Define a service using a base URL and expected endpoints
@@ -178,7 +184,7 @@ export const authApi = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
-      }),      
+      }),
     }),
     getTitleList: builder.mutation<TitleListResponseData, {}>({
       query: req => ({
@@ -187,7 +193,7 @@ export const authApi = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
-      }),      
+      }),
     }),
     getStateList: builder.mutation<StateListResponseData, {}>({
       query: req => ({
@@ -196,7 +202,7 @@ export const authApi = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
-      }),      
+      }),
     }),
     getCityList: builder.mutation<CityListResponseData, CityListRequestData>({
       query: req => ({
@@ -205,9 +211,12 @@ export const authApi = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
-      }),      
+      }),
     }),
-    addRegisterData: builder.mutation<RegisterResponseData, RegisterRequestData>({
+    addRegisterData: builder.mutation<
+      RegisterResponseData,
+      RegisterRequestData
+    >({
       query: req => ({
         url: 'owner-register',
         method: 'POST',
@@ -215,7 +224,7 @@ export const authApi = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
-      }),      
+      }),
     }),
     UserProfileData: builder.mutation<UserProfileResponseData, {}>({
       query: req => ({
@@ -224,7 +233,7 @@ export const authApi = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
-      }),      
+      }),
     }),
     getCompanyTypeList: builder.mutation<CompanyTypeResponseData, {}>({
       query: req => ({
@@ -233,7 +242,7 @@ export const authApi = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
-      }),      
+      }),
     }),
     getUserProfileDetail: builder.mutation<UserProfileDetailResponseData, {}>({
       query: req => ({
@@ -242,7 +251,46 @@ export const authApi = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
-      }),      
+      }),
+    }),
+    forgotPasswordCheckUser: builder.mutation<
+      ForgotPasswordCheckUserResponseData,
+      ForgotPasswordCheckUserRequestBody
+    >({
+      query: req => ({
+        url: 'check-user',
+        method: 'POST',
+        body: req.body,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    forgotPasswordVerifyUser: builder.mutation<
+      ForgotPasswordVerifyUserResponseData,
+      ForgotPasswordVerifyUserRequestBody
+    >({
+      query: req => ({
+        url: 'verify-otp',
+        method: 'POST',
+        body: req.body,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    forgotPasswordNewPassword: builder.mutation<
+      ForgotPasswordNewPasswordResponseData,
+      ForgotPasswordNewPasswordRequestBody
+    >({
+      query: req => ({
+        url: 'change-password',
+        method: 'POST',
+        body: req.body,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
     }),
   }),
 });
@@ -268,5 +316,8 @@ export const {
   useUserProfileDataMutation,
   useGetCompanyTypeListMutation,
   useAddRegisterDataMutation,
-  useGetUserProfileDetailMutation
+  useGetUserProfileDetailMutation,
+  useForgotPasswordCheckUserMutation,
+  useForgotPasswordVerifyUserMutation,
+  useForgotPasswordNewPasswordMutation,
 } = authApi;

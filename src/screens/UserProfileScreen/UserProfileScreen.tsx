@@ -1,12 +1,7 @@
-import {
-  faChevronLeft,
-  faEllipsisV,
-  faLock,
-} from '@fortawesome/free-solid-svg-icons';
+import {faChevronLeft, faLock, faUser} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions, useNavigation} from '@react-navigation/native';
-import {useGetUserProfileDetailMutation} from '../../features/auth/auth';
-import {UserProfileDetailResponseData} from '../../features/types';
 import React, {useEffect} from 'react';
 import {
   SafeAreaView,
@@ -14,11 +9,10 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
 } from 'react-native';
-import Input from '../../components/Input/Input';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
+import Input from '../../components/Input/Input';
+import {useGetUserProfileDetailMutation} from '../../features/auth/auth';
 import {logOut} from '../../features/auth/authProfile';
 
 type Props = {};
@@ -30,11 +24,13 @@ const UserProfileScreen = (props: Props) => {
   const [firstName, setFirstName] = React.useState('');
   const [lastName, setLastName] = React.useState('');
   const [email, setEmail] = React.useState('');
+  const [phone, setPhone] = React.useState('');
+
   const dispatch = useDispatch();
 
-  const getUserProfileData = async() => {
+  const getUserProfileData = async () => {
     console.log('called');
-    
+
     setLoading(true);
     try {
       await getUserProfileDetail({})
@@ -42,17 +38,18 @@ const UserProfileScreen = (props: Props) => {
         .then(res => {
           if (res.success) {
             console.log(res);
-            
+
             setFirstName(res.data.first_name);
             setLastName(res.data.last_name);
             setEmail(res?.data?.user_details.email);
+            setPhone(res?.data?.phone);
           }
         });
     } catch (err) {
       console.log(err, 'EERRRR');
     }
     setLoading(false);
-  }
+  };
 
   useEffect(() => {
     getUserProfileData();
@@ -62,7 +59,7 @@ const UserProfileScreen = (props: Props) => {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#F7FEFF',
         paddingVertical: 14,
       }}>
       <ScrollView>
@@ -131,8 +128,9 @@ const UserProfileScreen = (props: Props) => {
               borderColor: '#efefef',
               backgroundColor: '#efefef',
               zIndex: 999,
+              padding: 40,
             }}>
-            <Image
+            {/* <Image
               width={200}
               height={200}
               style={{
@@ -141,15 +139,25 @@ const UserProfileScreen = (props: Props) => {
                 borderColor: '#efefef',
                 zIndex: 999,
               }}
-            />
+            /> */}
+            <FontAwesomeIcon icon={faUser} size={90} />
           </View>
         </View>
         <View
           style={{
             borderTopWidth: 1,
-            elevation: 2,
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+
+            elevation: 5,
             backgroundColor: '#fff',
-            borderRadius: 12,
+            borderTopLeftRadius: 12,
+            borderTopRightRadius: 12,
+
             paddingTop: 30,
             shadowColor: 'rgba(0,0,0,0.6)',
             borderColor: '#f3f3f3',
@@ -157,9 +165,33 @@ const UserProfileScreen = (props: Props) => {
             zIndex: -1,
             paddingHorizontal: 30,
           }}>
-          <Input label="First name" placehoder="Enter First name"  value={firstName}/>
-          <Input label="Last name" placehoder="Enter First name" value={lastName} />
-          <Input label="Email Address" placehoder="Enter First name" value={email} />
+          <Input
+            label="First name"
+            placehoder="Enter First name"
+            value={firstName}
+          />
+          <Input
+            label="Last name"
+            placehoder="Enter Last name"
+            value={lastName}
+          />
+          {email && (
+            <Input
+              label="Email Address"
+              placehoder="Enter Email Address"
+              value={email}
+              disabled
+            />
+          )}
+
+          {phone && (
+            <Input
+              label="Phone Number"
+              placehoder="Enter Phone Number"
+              value={phone}
+              disabled
+            />
+          )}
 
           <TouchableOpacity
             style={{

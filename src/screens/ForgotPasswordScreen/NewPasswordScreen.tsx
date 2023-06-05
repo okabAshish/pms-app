@@ -1,7 +1,7 @@
 import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {CommonActions, useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   ImageBackground,
@@ -12,12 +12,58 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
+import {useForgotPasswordNewPasswordMutation} from '../../features/auth/auth';
 import Input from '../RegisterViewScreen/TextInput';
 
 type Props = {};
 
 const NewPasswordScreen = (props: Props) => {
   const navigation = useNavigation();
+
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const [newPassword] = useForgotPasswordNewPasswordMutation();
+
+  const handleForgotPassword = async () => {
+    setLoading(true);
+    try {
+      const {email, user_id, role_id} = props.route?.params;
+
+      if (!password || !confirmPassword) {
+        setError('Password is Empty');
+      } else if (password !== confirmPassword) {
+        setError('Password do not match');
+      }
+
+      await newPassword({
+        body: {
+          user_id: user_id,
+          password: password,
+          confirm_password: confirmPassword,
+        },
+      })
+        .unwrap()
+        .then(res => {
+          if (res.success) {
+            navigation.dispatch(CommonActions.navigate({name: 'SignUp'}));
+          }
+        });
+    } catch (err) {
+      console.log(err?.data.data);
+      setErrorMessage(err?.data?.message);
+    }
+    setLoading(false);
+  };
+
+  if (loading) {
+    return <LoadingModal />;
+  }
+
   return (
     <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
       <StatusBar backgroundColor={'rgba(210, 244, 255, 0.25)'} />
@@ -78,6 +124,11 @@ const NewPasswordScreen = (props: Props) => {
               borderBottomColor: '#000',
               marginVertical: 30,
             }}
+            onChange={e => {
+              setError('');
+              setPassword(e.nativeEvent.text);
+            }}
+            errorMessage={!password ? error : ''}
           />
           <Input
             secureTextEntry
@@ -88,7 +139,24 @@ const NewPasswordScreen = (props: Props) => {
               borderBottomColor: '#000',
               marginVertical: 30,
             }}
+            onChange={e => {
+              setError('');
+              setConfirmPassword(e.nativeEvent.text);
+            }}
+            errorMessage={!confirmPassword ? error : ''}
           />
+
+          {errorMessage && (
+            <Text
+              style={{
+                fontFamily: 'Proppins-Medium',
+                fontSize: 12,
+                color: 'red',
+                marginTop: 15,
+              }}>
+              {errorMessage}
+            </Text>
+          )}
 
           <TouchableOpacity
             style={{
@@ -103,7 +171,7 @@ const NewPasswordScreen = (props: Props) => {
               justifyContent: 'center',
             }}
             onPress={() => {
-              navigation.dispatch(CommonActions.navigate({name: 'SignUp'}));
+              handleForgotPassword();
             }}>
             <Text
               style={{
