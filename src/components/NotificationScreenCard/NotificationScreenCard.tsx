@@ -3,7 +3,15 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Text, View} from 'react-native';
 
-type Props = {};
+type Props = {
+  notification_message: string;
+  sender_name: string;
+};
+
+const defaultProps: Props = {
+  notification_message: 'notification message',
+  sender_name: 'Sender Name',
+};
 
 const NotificationScreenCard = (props: Props) => {
   return (
@@ -52,17 +60,19 @@ const NotificationScreenCard = (props: Props) => {
           marginVertical: 6,
           textTransform: 'capitalize',
         }}>
-        Djcjdn
+        {props.sender_name}
       </Text>
       <Text
         style={{
           color: 'rgba(0,0,0,0.5)',
           fontFamily: 'Poppins_regular',
         }}>
-        NotificationScreenCard
+        {props.notification_message}
       </Text>
     </View>
   );
 };
+
+NotificationScreenCard.defaultProps = defaultProps;
 
 export default NotificationScreenCard;

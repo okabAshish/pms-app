@@ -7,6 +7,7 @@ import {RootState} from '@reduxjs/toolkit/dist/query/core/apiState';
 import {authApi} from './features/auth/auth';
 import authProfile from './features/auth/authProfile';
 import {ownerApi} from './features/auth/owner';
+import {tenantApi} from './features/auth/tenant';
 import {contractApi} from './features/contract/contract';
 import contract from './features/contract/contractSlice';
 import error from './features/error/error';
@@ -23,12 +24,14 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [contractApi.reducerPath]: contractApi.reducer,
     [ownerApi.reducerPath]: ownerApi.reducer,
+    [tenantApi.reducerPath]: tenantApi.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({serializableCheck: false}).concat(
       authApi.middleware,
       ownerApi.middleware,
       contractApi.middleware,
+      tenantApi.middleware,
     ),
 });
 

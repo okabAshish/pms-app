@@ -1428,12 +1428,60 @@ export interface ForgotPasswordVerifyUserRequestBody {
   body: {user_id: string; otp: string};
 }
 
-export interface ForgotPasswordNewPasswordResponseData {
+export interface NotificationUserResponseBody {
   success: boolean;
-  data: any;
+  data: NotificationUserData;
   message: string;
+}
+
+export interface NotificationUserData {
+  current_page: number;
+  data: NotificationUserDataList;
+  first_page_url: string;
+  from: number;
+  last_page: number;
+  last_page_url: string;
+  links: Array<{
+    url?: any;
+    label: any;
+    active: boolean;
+  }>;
+  next_page_url: string;
+  path: string;
+  per_page: string;
+  prev_page_url?: any;
+  to: number;
+  total: number;
+}
+
+export interface NotificationUserDataList
+  extends Array<NotificationUserSingleData> {}
+
+export interface NotificationUserSingleData {
+  id: string;
+  type: string;
+  notifiable_type: string;
+  notifiable_id: number;
+  data: {
+    receiver_user_id: number;
+    sender_user_id: number;
+    sender_profile_model_path: string;
+    redirect_url: string;
+  };
+  notification_message: string;
+  sender_name: string;
+  read_at?: any;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ForgotPasswordNewPasswordRequestBody {
   body: {user_id: string; password: string; confirm_password: string};
+}
+
+export interface NotificationUserRequestBody {
+  params: {
+    limit: string;
+    page: string;
+  };
 }

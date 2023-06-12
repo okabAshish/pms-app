@@ -29,6 +29,7 @@ import AddPropertyFurnishingScreen from './screens/AddPropertyScreen/AddProperty
 import AddPropertyImages from './screens/AddPropertyScreen/AddPropertyImages';
 import AddPropertyScreen from './screens/AddPropertyScreen/AddPropertyScreen';
 import BillsScreen from './screens/BillsScreen/BillsScreen';
+import ContractPDFView from './screens/ContractPDFView/ContractPDFView';
 import ContractViewScreen from './screens/ContractViewScreen/ContractViewScreen';
 import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen/ForgotPasswordScreen';
@@ -49,6 +50,7 @@ import RentedPropertyScreen from './screens/RentedPropertyScreen/RentedPropertyS
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import SliderComponent from './screens/SliderComponent/SliderComponent';
 import TenantSliderComponent from './screens/SliderComponent/TenantSliderComponent';
+import TenantAddMaintenanceRequestScreen from './screens/Tenant/TenantAddMaintenanceRequestScreen/TenantAddMaintenanceRequestScreen';
 import PropertyInvitation from './screens/Tenant/TenantPropertyInvitation/TenantPropertyInvitation';
 import TenantBillScreen from './screens/TenantBillScreen/TenantBillScreen';
 import TenantContractScreen from './screens/TenantContractScreen/TenantContractScreen';
@@ -276,6 +278,13 @@ const Navigator = (props: Props) => {
               title: 'Add Contract',
             })}
           />
+          <Stack.Screen
+            name="AddMaintenanceRequest"
+            component={TenantAddMaintenanceRequestScreen}
+            options={() => ({
+              title: 'Add Maintenance Request',
+            })}
+          />
         </Stack.Navigator>
       </>
     );
@@ -293,6 +302,7 @@ const Navigator = (props: Props) => {
           />
           <Stack.Screen name="Notification" component={NotificationScreen} />
           <Stack.Screen name="OwnerProfile" component={UserProfileScreen} />
+          <Stack.Screen name="Contract-PDF-View" component={ContractPDFView} />
         </Stack.Navigator>
       </>
     );
@@ -353,7 +363,15 @@ const Navigator = (props: Props) => {
           drawerWidth={300}
           renderNavigationView={
             () =>
-              userRole === 2 ? <SliderComponent /> : <TenantSliderComponent />
+              userRole === 2 ? (
+                <SliderComponent
+                  closeDrawer={() => drawer.current?.closeDrawer()}
+                />
+              ) : (
+                <TenantSliderComponent
+                  closeDrawer={() => drawer.current?.closeDrawer()}
+                />
+              )
             //userRole === 2 ? console.log('owner') : console.log('tenant')
           }>
           <Stack.Navigator screenOptions={{headerShown: false}}>

@@ -107,6 +107,8 @@ const OTPVerification = (props: Props) => {
                 name: 'New-Password',
                 params: {
                   user_id: user_id,
+                  type: 'FORGOT',
+                  name: 'New Password',
                 },
               }),
             );

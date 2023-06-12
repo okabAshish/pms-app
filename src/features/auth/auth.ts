@@ -18,6 +18,8 @@ import {
   ImageCategoryListResponseData,
   ListParams,
   LoginBody,
+  NotificationUserRequestBody,
+  NotificationUserResponseBody,
   OwnerBillListResponseData,
   OwnerDashboardResponseData,
   OwnerInvitationListParams,
@@ -292,6 +294,31 @@ export const authApi = createApi({
         },
       }),
     }),
+    resetPasswordNewPassword: builder.mutation<
+      ForgotPasswordNewPasswordResponseData,
+      ForgotPasswordNewPasswordRequestBody
+    >({
+      query: req => ({
+        url: 'change-password',
+        method: 'POST',
+        body: req.body,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    getUserAllNotification: builder.mutation<
+      NotificationUserResponseBody,
+      NotificationUserRequestBody
+    >({
+      query: req => ({
+        url: `notification-list?limit=${req.params.limit}&page=${req.params.page}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -320,4 +347,6 @@ export const {
   useForgotPasswordCheckUserMutation,
   useForgotPasswordVerifyUserMutation,
   useForgotPasswordNewPasswordMutation,
+  useResetPasswordNewPasswordMutation,
+  useGetUserAllNotificationMutation,
 } = authApi;

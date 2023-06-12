@@ -1,5 +1,6 @@
 import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {
@@ -12,14 +13,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useDispatch} from 'react-redux';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
-import {useForgotPasswordNewPasswordMutation} from '../../features/auth/auth';
+import {
+  useForgotPasswordNewPasswordMutation,
+  useResetPasswordNewPasswordMutation,
+} from '../../features/auth/auth';
+import {logOut} from '../../features/auth/authProfile';
 import Input from '../RegisterViewScreen/TextInput';
 
 type Props = {};
 
 const NewPasswordScreen = (props: Props) => {
+  const {type, name} = props.route.params;
+
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,6 +37,7 @@ const NewPasswordScreen = (props: Props) => {
   const [loading, setLoading] = useState(false);
 
   const [newPassword] = useForgotPasswordNewPasswordMutation();
+  const [resetPassword] = useResetPasswordNewPasswordMutation();
 
   const handleForgotPassword = async () => {
     setLoading(true);
@@ -50,6 +60,37 @@ const NewPasswordScreen = (props: Props) => {
         .unwrap()
         .then(res => {
           if (res.success) {
+            navigation.dispatch(CommonActions.navigate({name: 'SignUp'}));
+          }
+        });
+    } catch (err) {
+      console.log(err?.data.data);
+      setErrorMessage(err?.data?.message);
+    }
+    setLoading(false);
+  };
+
+  const handleResetpassword = async () => {
+    setLoading(true);
+    try {
+      if (!password || !confirmPassword) {
+        setError('Password is Empty');
+      } else if (password !== confirmPassword) {
+        setError('Password do not match');
+      }
+
+      await resetPassword({
+        body: {
+          password: password,
+          confirm_password: confirmPassword,
+        },
+      })
+        .unwrap()
+        .then(async res => {
+          if (res.success) {
+            await AsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('user');
+            dispatch(logOut());
             navigation.dispatch(CommonActions.navigate({name: 'SignUp'}));
           }
         });
@@ -104,7 +145,7 @@ const NewPasswordScreen = (props: Props) => {
                 fontSize: 24,
                 height: 36,
               }}>
-              OTP Verification
+              {name}
             </Text>
           </View>
         </ImageBackground>
@@ -171,7 +212,11 @@ const NewPasswordScreen = (props: Props) => {
               justifyContent: 'center',
             }}
             onPress={() => {
-              handleForgotPassword();
+              if (type === 'FORGOT') {
+                handleForgotPassword();
+              } else {
+                handleResetpassword();
+              }
             }}>
             <Text
               style={{

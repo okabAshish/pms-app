@@ -5,11 +5,15 @@ import {
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
+import React, {useState} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {Menu} from 'react-native-paper';
+import {useDispatch} from 'react-redux';
 
 interface Props {
+  id: string;
   contract_number: string;
   end_date: string;
   owner_name: string;
@@ -22,10 +26,50 @@ const defaultProps: Props = {
   end_date: 'N/A',
   owner_name: 'N/A',
   owner_contact: 'N/A',
-  created_at: 'N/A'
-}
+  created_at: 'N/A',
+};
 
 const TenantContractScreenCard = (props: Props) => {
+  const navigation = useNavigation();
+  const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch();
+
+  const openMenu = () => {
+    console.log('open');
+    setVisible(true);
+  };
+
+  const closeMenu = () => setVisible(false);
+
+  const menuDetails = [
+    {
+      name: 'Vacant Property',
+      onPress: () => {
+        setVisible(false);
+      },
+    },
+    {
+      name: 'View',
+      onPress: () => {
+        setVisible(false);
+        navigation.navigate('View', {
+          screen: 'Contract-View',
+          params: {
+            id: props.id,
+          },
+        });
+      },
+    },
+
+    {
+      name: 'Request Pending',
+      onPress: () => {
+        setVisible(false);
+        // showConfirmDialog();
+      },
+    },
+  ];
+
   return (
     <View
       style={{
@@ -104,11 +148,54 @@ const TenantContractScreenCard = (props: Props) => {
             </View>
           </View>
         </View>
-        <View
-          style={{flex: 1, justifyContent: 'flex-end', flexDirection: 'row'}}>
-          <TouchableOpacity>
-            <FontAwesomeIcon icon={faEllipsisVertical} color="#fff" />
-          </TouchableOpacity>
+        <View style={{flex: 1}}>
+          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <Menu
+              visible={visible}
+              onDismiss={closeMenu}
+              anchorPosition="bottom"
+              contentStyle={{
+                zIndex: 9999,
+                // marginTop: -70,
+                // marginLeft: -30,
+              }}
+              anchor={
+                <TouchableOpacity onPress={() => setVisible(true)}>
+                  <FontAwesomeIcon
+                    icon={faEllipsisVertical}
+                    color="#fff"
+                    size={12}
+                  />
+                </TouchableOpacity>
+              }>
+              {menuDetails.map((item, index) => {
+                return (
+                  <Menu.Item
+                    key={item.name + index}
+                    onPress={item.onPress}
+                    title={item.name}
+                    titleStyle={{
+                      fontSize: 12,
+                      fontFamily: 'Poppins-Medium',
+                    }}
+                    contentStyle={{
+                      paddingHorizontal: 10,
+                      paddingVertical: 0,
+                      marginHorizontal: 0,
+                      marginVertical: 0,
+                    }}
+                    style={{
+                      paddingHorizontal: 0,
+                      paddingVertical: 0,
+                      marginHorizontal: 0,
+                      marginVertical: 0,
+                      height: 24,
+                    }}
+                  />
+                );
+              })}
+            </Menu>
+          </View>
         </View>
       </View>
     </View>

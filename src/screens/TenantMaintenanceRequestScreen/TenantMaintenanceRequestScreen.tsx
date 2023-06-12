@@ -1,15 +1,29 @@
-import React, {useState, useEffect} from 'react';
-import {SafeAreaView, View, ActivityIndicator, FlatList, ScrollView} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  View,
+} from 'react-native';
+import AddFloatingButton from '../../components/AddFloatingButton/AddFloatingButton';
+import LoadingModal from '../../components/LoadingModal/LoadingModal';
 import TenantMaintenanceRequestCard from '../../components/TenantMaintenanceRequestCard/TenantMaintenanceRequestCard';
 import {useGetMaintenanceRequestMutation} from '../../features/auth/tenant';
 import {MaintenanceRequestList} from '../../features/tenantTypes';
-import LoadingModal from '../../components/LoadingModal/LoadingModal';
-
 
 type Props = {};
 
+let reload = false;
+
 const TenantMaintenanceRequestScreen = (props: Props) => {
-  const [maintenanceList, setMaintenanceList] = useState<MaintenanceRequestList>([],);
+  const navigation = useNavigation();
+
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const [maintenanceList, setMaintenanceList] =
+    useState<MaintenanceRequestList>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
@@ -60,7 +74,7 @@ const TenantMaintenanceRequestScreen = (props: Props) => {
 
   useEffect(() => {
     getMaintenance();
-  }, []);
+  }, [refreshKey, props.route?.params?.refresh]);
 
   const renderFooter = () => {
     return (
@@ -81,31 +95,42 @@ const TenantMaintenanceRequestScreen = (props: Props) => {
     return <LoadingModal />;
   }
 
-
   return (
     <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
       <ScrollView style={{paddingHorizontal: 20, paddingVertical: 20}}>
         <FlatList
-            data={maintenanceList}
-            keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={maintenanceList.length!=total && renderFooter}
-            showsVerticalScrollIndicator={false}
-            onEndReachedThreshold={0.5}
-            onEndReached={() => {
-              maintenanceList.length!=total && reGetMaintenance();
-            }}
-            renderItem={({item, index}) => (
-              <TenantMaintenanceRequestCard
-                property_name= {item?.property_details?.property_name}
-                priority= {item?.maintenance_priority?.priority_name}
-                category= {item?.maintenance_category?.category_name}
-                issue_date= {item?.issue_date}
-                assign_vendor= {item?.vendor_detail?.vendor_name}
-                status= {item?.maintenance_status?.status_name}
-              />
-            )}
-          />        
+          data={maintenanceList}
+          keyExtractor={(item, index) => index.toString()}
+          ListFooterComponent={maintenanceList.length != total && renderFooter}
+          showsVerticalScrollIndicator={false}
+          onEndReachedThreshold={0.5}
+          onEndReached={() => {
+            maintenanceList.length != total && reGetMaintenance();
+          }}
+          renderItem={({item, index}) => (
+            <TenantMaintenanceRequestCard
+              property_name={item?.property_details?.property_name}
+              priority={item?.maintenance_priority?.priority_name}
+              category={item?.maintenance_category?.category_name}
+              issue_date={item?.issue_date}
+              assign_vendor={item?.vendor_detail?.vendor_name}
+              status={item?.maintenance_status?.status_name}
+              id={item.id}
+              refresh={() => setRefreshKey(refreshKey + 1)}
+            />
+          )}
+        />
       </ScrollView>
+      <AddFloatingButton
+        onPress={() =>
+          navigation.navigate('ADD', {
+            screen: 'AddMaintenanceRequest',
+            params: {
+              type: 'Add',
+            },
+          })
+        }
+      />
     </SafeAreaView>
   );
 };

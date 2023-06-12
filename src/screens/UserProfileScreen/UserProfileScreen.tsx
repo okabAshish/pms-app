@@ -208,7 +208,13 @@ const UserProfileScreen = (props: Props) => {
             }}
             onPress={() => {
               navigation.dispatch(
-                CommonActions.navigate({name: 'OTP-Verification'}),
+                CommonActions.navigate({
+                  name: 'New-Password',
+                  params: {
+                    name: 'Reset Password',
+                    type: 'RESET',
+                  },
+                }),
               );
             }}>
             <Text

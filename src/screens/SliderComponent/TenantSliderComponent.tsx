@@ -12,7 +12,9 @@ import {useDispatch} from 'react-redux';
 import {logOut} from '../../features/auth/authProfile';
 import {setPageName} from '../../features/pageName/pageName';
 
-type Props = {};
+type Props = {
+  closeDrawer: () => void;
+};
 
 const TenantSliderComponent = (props: Props) => {
   const navigation = useNavigation();
@@ -32,6 +34,7 @@ const TenantSliderComponent = (props: Props) => {
         dispatch(setPageName('Dashboard'));
         setActive('Dashboard');
         navigation.dispatch(CommonActions.navigate({name: 'Dashboard'}));
+        props.closeDrawer();
       },
     },
     {
@@ -47,6 +50,7 @@ const TenantSliderComponent = (props: Props) => {
         navigation.dispatch(
           CommonActions.navigate({name: 'Tenant-Maintenance-Request'}),
         );
+        props.closeDrawer();
       },
     },
     {
@@ -59,6 +63,7 @@ const TenantSliderComponent = (props: Props) => {
         dispatch(setPageName('Contract List'));
         setActive('My-Contract');
         navigation.dispatch(CommonActions.navigate({name: 'Tenant-Contracts'}));
+        props.closeDrawer();
       },
     },
     {
@@ -74,6 +79,7 @@ const TenantSliderComponent = (props: Props) => {
         navigation.dispatch(
           CommonActions.navigate({name: 'Tenant-Rented-Property'}),
         );
+        props.closeDrawer();
       },
     },
     {
@@ -89,6 +95,7 @@ const TenantSliderComponent = (props: Props) => {
         navigation.dispatch(
           CommonActions.navigate({name: 'Property-Invitation'}),
         );
+        props.closeDrawer();
       },
     },
 
@@ -114,6 +121,7 @@ const TenantSliderComponent = (props: Props) => {
 
         setActive('Tenant-Bills');
         // navigation.dispatch(CommonActions.navigate({name: 'Tenant'}));
+        props.closeDrawer();
       },
     },
     {
@@ -126,6 +134,7 @@ const TenantSliderComponent = (props: Props) => {
 
         setActive('Tenant-Bill-Transaction');
         navigation.dispatch(CommonActions.navigate({name: 'Tenant-Bill'}));
+        props.closeDrawer();
       },
     },
 

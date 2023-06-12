@@ -92,7 +92,7 @@ const MaintenanceRequestsScreen = (props: Props) => {
               tenant={'Tenant'}
               priority={item.maintenance_priority.priority_name}
               category={item.maintenance_category.category_name}
-              assigned_vendor={item.vendor_detail.vendor_name}
+              assigned_vendor={item?.vendor_detail?.vendor_name}
               status={item.maintenance_status.status_name}
               issue_details={item.issue_details}
               key={index.toString()}

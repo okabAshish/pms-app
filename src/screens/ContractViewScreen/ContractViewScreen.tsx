@@ -524,6 +524,12 @@ const ContractViewScreen = (props: Props) => {
               paddingHorizontal: 15,
               paddingVertical: 5,
               marginHorizontal: 10,
+            }}
+            onPress={() => {
+              navigation.navigate('View', {
+                screen: 'Contract-PDF-View',
+                params: {id: props.route.params.id},
+              });
             }}>
             <Text style={{fontFamily: 'Poppins-Medium', color: '#fff'}}>
               View PDF

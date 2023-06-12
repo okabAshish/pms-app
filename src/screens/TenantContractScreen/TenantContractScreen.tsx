@@ -1,15 +1,20 @@
-import React, {useState, useEffect} from 'react';
-import {View, SafeAreaView, ScrollView, FlatList, ActivityIndicator} from 'react-native';
-import TenantContractScreenCard from '../../components/TenantContractScreenCard/TenantContractScreenCard';
+import React, {useEffect, useState} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  View,
+} from 'react-native';
 import LoadingModal from '../../components/LoadingModal/LoadingModal';
+import TenantContractScreenCard from '../../components/TenantContractScreenCard/TenantContractScreenCard';
 import {useGetTenantContactListMutation} from '../../features/auth/tenant';
 import {TenantContactList} from '../../features/tenantTypes';
-
 
 type Props = {};
 
 const TenantContractScreen = (props: Props) => {
-  const [contactList, setContactList] = useState<TenantContactList>([],);
+  const [contactList, setContactList] = useState<TenantContactList>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
@@ -45,10 +50,7 @@ const TenantContractScreen = (props: Props) => {
         .then(res => {
           if (res.success) {
             // console.log()
-            let arr: TenantContactList = [
-              ...contactList,
-              ...res?.data?.data,
-            ];
+            let arr: TenantContactList = [...contactList, ...res?.data?.data];
             setContactList(arr);
           }
         });
@@ -84,7 +86,7 @@ const TenantContractScreen = (props: Props) => {
   return (
     <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
       <ScrollView style={{paddingHorizontal: 20, paddingVertical: 20}}>
-      <FlatList
+        <FlatList
           data={contactList}
           keyExtractor={(item, index) => index.toString()}
           ListFooterComponent={contactList.length !== total && renderFooter}
@@ -95,18 +97,22 @@ const TenantContractScreen = (props: Props) => {
           }}
           renderItem={({item, index}) => (
             <TenantContractScreenCard
-              contract_number = {item?.contract_number}
-              end_date = {item?.end_date}
-              owner_name = {item?.contract_owner_data?.first_name+' '+item?.contract_owner_data?.last_name}
-              owner_contact = {item?.contract_owner_data?.phone}
-              created_at = {item?.created_at}
+              contract_number={item?.contract_number}
+              end_date={item?.end_date}
+              owner_name={
+                item?.contract_owner_data?.first_name +
+                ' ' +
+                item?.contract_owner_data?.last_name
+              }
+              owner_contact={item?.contract_owner_data?.phone}
+              created_at={item?.created_at}
+              id={item.id}
             />
           )}
         />
-        
       </ScrollView>
     </SafeAreaView>
   );
-}; 
+};
 
 export default TenantContractScreen;

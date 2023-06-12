@@ -87,10 +87,16 @@ const OwnerContractCard = (props: Props) => {
     //   name: 'Complete',
     //   onPress: () => {},
     // },
-    // {
-    //   name: 'PDF',
-    //   onPress: () => {},
-    // },
+    {
+      name: 'PDF',
+      onPress: () => {
+        setVisible(false);
+        navigation.navigate('View', {
+          screen: 'Contract-PDF-View',
+          params: {id: props.contract_id},
+        });
+      },
+    },
   ];
 
   return (

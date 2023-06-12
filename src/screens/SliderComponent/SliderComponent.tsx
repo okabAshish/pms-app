@@ -12,7 +12,9 @@ import {useDispatch} from 'react-redux';
 import {logOut} from '../../features/auth/authProfile';
 import {setPageName} from '../../features/pageName/pageName';
 
-type Props = {};
+type Props = {
+  closeDrawer: () => void;
+};
 
 const SliderComponent = (props: Props) => {
   const navigation = useNavigation();
@@ -32,6 +34,7 @@ const SliderComponent = (props: Props) => {
         dispatch(setPageName('Dashboard'));
         setActive('Dashboard');
         navigation.dispatch(CommonActions.navigate({name: 'Dashboard'}));
+        props.closeDrawer();
       },
     },
     {
@@ -45,6 +48,7 @@ const SliderComponent = (props: Props) => {
 
         setActive('Property');
         navigation.dispatch(CommonActions.navigate({name: 'Property'}));
+        props.closeDrawer();
       },
     },
     {
@@ -69,6 +73,7 @@ const SliderComponent = (props: Props) => {
 
         setActive('Tenant-List');
         navigation.dispatch(CommonActions.navigate({name: 'Tenant'}));
+        props.closeDrawer();
       },
     },
     {
@@ -80,6 +85,7 @@ const SliderComponent = (props: Props) => {
         dispatch(setPageName('Invitation List'));
         navigation.dispatch(CommonActions.navigate({name: 'Invitation-List'}));
         setActive('Invitation-List');
+        props.closeDrawer();
       },
     },
     {
@@ -91,6 +97,7 @@ const SliderComponent = (props: Props) => {
 
         setActive('Invitation');
         navigation.dispatch(CommonActions.navigate({name: 'Invitation'}));
+        props.closeDrawer();
       },
     },
     {
@@ -104,6 +111,7 @@ const SliderComponent = (props: Props) => {
 
         setActive('Contract');
         navigation.dispatch(CommonActions.navigate({name: 'Contracts'}));
+        props.closeDrawer();
       },
     },
     {
@@ -117,6 +125,7 @@ const SliderComponent = (props: Props) => {
 
         setActive('Maintenance-Request');
         navigation.dispatch(CommonActions.navigate({name: 'Maintenance'}));
+        props.closeDrawer();
       },
     },
     {
@@ -130,6 +139,7 @@ const SliderComponent = (props: Props) => {
 
         setActive('Bills');
         navigation.dispatch(CommonActions.navigate({name: 'Bill'}));
+        props.closeDrawer();
       },
     },
   ];
